@@ -5,6 +5,15 @@ import reducer from './reducers';
 
 const devMode = process.env.NODE_ENV === 'development';
 
+// listenerMiddleware.startListening({
+//   actionCreator: userData,
+//   // type: a,
+//   effect: async (action, listenerApi) => {
+//     console.log("hi")
+//     listenerApi.dispatch(setUser(false))
+//   }
+// })
+
 export const store = configureStore({
   reducer,
   middleware: [thunk as ThunkMiddleware, logger],

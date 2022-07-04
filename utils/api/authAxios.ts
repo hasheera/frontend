@@ -11,7 +11,7 @@ const AuthAxios = axios.create({
 AuthAxios.interceptors.request.use(
   config => {
     config.headers = {
-      'Authorization': `Bearer ${Cookies.get('access_token')}`,
+      'Authorization': `Bearer ${Cookies.get('token')}`,
       'Cache-Control': 'no-cache',
       'Pragma': 'no-cache',
       'Expires': '0'

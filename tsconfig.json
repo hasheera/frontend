@@ -6,7 +6,6 @@
     "paths": {
       "@public/*": ["public/*"],
       "@components/*": ["components/*"],
-      "@store/*": ["store/*"],
       "@utils/*": ["utils/*"]
     },
     "allowJs": true,

@@ -1,2 +1,2 @@
-// eslint-disable-next-line import/prefer-default-export
 export { default as userReducer } from "./user";
+export { default as cartsReducer } from "./carts";

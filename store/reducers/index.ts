@@ -1,7 +1,8 @@
-import { userReducer } from '../slices';
+import { cartsReducer, userReducer } from '../slices';
 
 const reducer = {
-  user: userReducer
+  user: userReducer,
+  carts: cartsReducer
 };
 
 export default reducer
