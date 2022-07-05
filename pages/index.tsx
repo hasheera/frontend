@@ -1,16 +1,9 @@
-/* eslint-disable arrow-body-style */
-import { chakra } from '@chakra-ui/react'
-import VendorDashBoardLayout from '@components/Layout/VendorDashBoardLayout'
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Link from 'next/link'
 
-const Home: NextPage = () => {
-  return (
-    <VendorDashBoardLayout>
-      hi
-    </VendorDashBoardLayout>
+import { chakra } from '@chakra-ui/react'
+import type { NextPage } from 'next'
+
+const Home: NextPage = () => (
+    <chakra.div>Loading...</chakra.div>
   )
-}
 
 export default Home

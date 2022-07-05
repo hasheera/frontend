@@ -1,8 +1,9 @@
-import { cartsReducer, userReducer } from '../slices';
+import { cartsReducer, shopsReducer, userReducer } from '../slices';
 
 const reducer = {
   user: userReducer,
-  carts: cartsReducer
+  carts: cartsReducer,
+  shops: shopsReducer
 };
 
 export default reducer

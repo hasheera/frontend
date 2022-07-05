@@ -1,10 +1,10 @@
 import { chakra } from "@chakra-ui/react";
 import { ReactNode, useEffect } from "react";
-// import VendorSideBar from "@components/Navbar/VendorSideBar";
+import VendorSideBar from "@components/Navbar/VendorSideBar";
 import VendorNavbarHeader from "@components/Navbar/VendorNavbarHeader";
 // import MobileFooterNav from "@components/Navbar/MobileFooterNav";
 import { useAppDispatch, useAppSelector } from "hooks";
-import { getUser, setUser, userData } from "store/slices/user";
+import { userData } from "store/slices/user";
 
 interface Props {
   children: ReactNode;
@@ -24,7 +24,7 @@ const VendorDashBoardLayout = ({ children }: Props) => {
 
   return (
     <>
-      {/* <VendorSideBar /> */}
+      <VendorSideBar />
       <chakra.div
         minH="100vh"
         ml={{ lg: "278px" }}

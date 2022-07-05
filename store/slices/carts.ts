@@ -13,10 +13,9 @@ export type cartsState = {
 
 export const getOpenCart = createAsyncThunk(
     "openCarts",
-    async(_, { rejectWithValue }) => {
-      const shopId = Cookies.get("shopId");
+    async(id, { rejectWithValue }) => {
       try {
-        const response = await AuthAxios.get(`/oga/cart/open/${1 || shopId}`);
+        const response = await AuthAxios.get(`/oga/cart/open/${id}`);
   
         return response.data;
       } catch(ex) {

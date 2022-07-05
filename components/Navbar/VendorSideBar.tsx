@@ -1,13 +1,14 @@
+/* eslint-disable camelcase */
 import {
+  chakra,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
   useDisclosure,
 } from "@chakra-ui/react";
-import { chakra } from "@chakra-ui/system";
 import CreateShop from "@components/Modals/CreateShop";
-import { ShopContext } from "@providers/shopProvider";
+import { useAppSelector } from "hooks";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -26,11 +27,12 @@ import {
   UserIcon,
   WalletIcon,
 } from "public/assets";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { shopsData } from "store/slices/shops";
 
 const VendorSideBar = () => {
+  const { vendorShops, singleShop } = useAppSelector(shopsData)
   const createShopModal = useDisclosure();
-  const { allVendorShops, vendorSingleShop } = useContext(ShopContext);
   const [otherShops, setOtherShops] = useState([]);
   const [activeLink, setActiveLink] = useState({
     overview: false,
@@ -46,14 +48,14 @@ const VendorSideBar = () => {
   ];
 
   useEffect(() => {
-    if (allVendorShops.loaded && vendorSingleShop.loaded) {
-      const filtered = allVendorShops.data.filter(
+    if (vendorShops.loaded && singleShop.loaded) {
+      const filtered = vendorShops.shops.filter(
         (shop: { shop_id: number }) =>
-          shop.shop_id !== vendorSingleShop.selected.shop_id
+          shop.shop_id !== singleShop.selectedShop.shop_id
       );
       setOtherShops(filtered);
     }
-  }, [allVendorShops, vendorSingleShop]);
+  }, [vendorShops, singleShop]);
 
   useEffect(() => {
     if (router.pathname.includes("dashboard")) {
@@ -86,6 +88,7 @@ const VendorSideBar = () => {
         more: true,
       });
     }
+    return null
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
@@ -103,7 +106,7 @@ const VendorSideBar = () => {
 
   return (
     <chakra.div
-      d={{ base: "none", lg: "block" }}
+      display={{ base: "none", lg: "block" }}
       pos="fixed"
       left={0}
       top={0}
@@ -128,17 +131,17 @@ const VendorSideBar = () => {
       <chakra.div mt="68px">
         <Link
           href={
-            vendorSingleShop.loaded
-              ? `/vendor/dashboard/${vendorSingleShop.selected?.shop.name
+            singleShop.loaded
+              ? `/vendor/dashboard/${singleShop.selectedShop.shop.name
                   .split(" ")
                   .join("-")
-                  .toLowerCase()}-${vendorSingleShop.selected?.shop_id}`
+                  .toLowerCase()}-${singleShop.selectedShop.shop_id}`
               : ""
           }
           passHref
         >
           <chakra.a
-            d="flex"
+            display="flex"
             alignItems="center"
             p="10px"
             borderRadius="5px"
@@ -171,18 +174,18 @@ const VendorSideBar = () => {
 
         <Link
           href={
-            vendorSingleShop.loaded
-              ? `/vendor/products/${vendorSingleShop.selected?.shop.name
+            singleShop.loaded
+              ? `/vendor/products/${singleShop.selectedShop?.shop.name
                   .split(" ")
                   .join("-")
-                  .toLowerCase()}-${vendorSingleShop.selected?.shop_id}`
+                  .toLowerCase()}-${singleShop.selectedShop?.shop_id}`
               : ""
           }
           passHref
         >
           <chakra.a
             mt="22px"
-            d="flex"
+            display="flex"
             alignItems="center"
             p="10px"
             borderRadius="5px"
@@ -214,18 +217,18 @@ const VendorSideBar = () => {
 
         <Link
           href={
-            vendorSingleShop.loaded
-              ? `/vendor/import/${vendorSingleShop.selected?.shop.name
+            singleShop.loaded
+              ? `/vendor/import/${singleShop.selectedShop?.shop.name
                   .split(" ")
                   .join("-")
-                  .toLowerCase()}-${vendorSingleShop.selected?.shop_id}`
+                  .toLowerCase()}-${singleShop.selectedShop?.shop_id}`
               : ""
           }
           passHref
         >
           <chakra.a
             mt="22px"
-            d="flex"
+            display="flex"
             alignItems="center"
             p="10px"
             borderRadius="5px"
@@ -257,18 +260,18 @@ const VendorSideBar = () => {
 
         <Link
           href={
-            vendorSingleShop.loaded
-              ? `/vendor/transactions/${vendorSingleShop.selected?.shop.name
+            singleShop.loaded
+              ? `/vendor/transactions/${singleShop.selectedShop?.shop.name
                   .split(" ")
                   .join("-")
-                  .toLowerCase()}-${vendorSingleShop.selected?.shop_id}`
+                  .toLowerCase()}-${singleShop.selectedShop?.shop_id}`
               : ""
           }
           passHref
         >
           <chakra.a
             mt="22px"
-            d="flex"
+            display="flex"
             alignItems="center"
             p="10px"
             borderRadius="5px"
@@ -345,12 +348,12 @@ const VendorSideBar = () => {
                 <MenuItem h="45px" px="15px" _hover={{ bg: "#F7F8FA" }}>
                   <Link
                     href={
-                      vendorSingleShop.loaded
-                        ? `/vendor/customers/${vendorSingleShop.selected?.shop.name
+                      singleShop.loaded
+                        ? `/vendor/customers/${singleShop.selectedShop?.shop.name
                             .split(" ")
                             .join("-")
                             .toLowerCase()}-${
-                            vendorSingleShop.selected?.shop_id
+                            singleShop.selectedShop?.shop_id
                           }`
                         : ""
                     }
@@ -358,7 +361,7 @@ const VendorSideBar = () => {
                   >
                     <chakra.a
                       w="full"
-                      d="flex"
+                      display="flex"
                       alignItems="center"
                       fontSize="0.875rem"
                       fontWeight="500"
@@ -376,12 +379,12 @@ const VendorSideBar = () => {
                 <MenuItem h="45px" px="15px" _hover={{ bg: "#F7F8FA" }}>
                   <Link
                     href={
-                      vendorSingleShop.loaded
-                        ? `/vendor/team/${vendorSingleShop.selected?.shop.name
+                      singleShop.loaded
+                        ? `/vendor/team/${singleShop.selectedShop?.shop.name
                             .split(" ")
                             .join("-")
                             .toLowerCase()}-${
-                            vendorSingleShop.selected?.shop_id
+                            singleShop.selectedShop?.shop_id
                           }`
                         : ""
                     }
@@ -389,7 +392,7 @@ const VendorSideBar = () => {
                   >
                     <chakra.a
                       w="full"
-                      d="flex"
+                      display="flex"
                       alignItems="center"
                       fontSize="0.875rem"
                       fontWeight="500"
@@ -405,10 +408,11 @@ const VendorSideBar = () => {
                 </MenuItem>
 
                 <MenuItem h="45px" px="15px" _hover={{ bg: "#F7F8FA" }}>
+                  {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                   <Link href="#" passHref>
                     <chakra.a
                       w="full"
-                      d="flex"
+                      display="flex"
                       alignItems="center"
                       fontSize="0.875rem"
                       fontWeight="500"
@@ -424,10 +428,11 @@ const VendorSideBar = () => {
                 </MenuItem>
 
                 <MenuItem h="45px" px="15px" _hover={{ bg: "#F7F8FA" }}>
+                  {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                   <Link href="#" passHref>
                     <chakra.a
                       w="full"
-                      d="flex"
+                      display="flex"
                       alignItems="center"
                       fontSize="0.875rem"
                       fontWeight="500"
@@ -443,10 +448,11 @@ const VendorSideBar = () => {
                 </MenuItem>
 
                 <MenuItem h="45px" px="15px" _hover={{ bg: "#F7F8FA" }}>
+                  {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                   <Link href="#" passHref>
                     <chakra.a
                       w="full"
-                      d="flex"
+                      display="flex"
                       alignItems="center"
                       fontSize="0.875rem"
                       fontWeight="500"
@@ -464,12 +470,12 @@ const VendorSideBar = () => {
                 <MenuItem h="45px" px="15px" _hover={{ bg: "#F7F8FA" }}>
                   <Link
                     href={
-                      vendorSingleShop.loaded
-                        ? `/vendor/settings/${vendorSingleShop.selected?.shop.name
+                      singleShop.loaded
+                        ? `/vendor/settings/${singleShop.selectedShop?.shop.name
                             .split(" ")
                             .join("-")
                             .toLowerCase()}-${
-                            vendorSingleShop.selected?.shop_id
+                            singleShop.selectedShop?.shop_id
                           }`
                         : ""
                     }
@@ -477,7 +483,7 @@ const VendorSideBar = () => {
                   >
                     <chakra.a
                       w="full"
-                      d="flex"
+                      display="flex"
                       alignItems="center"
                       fontSize="0.875rem"
                       fontWeight="500"
@@ -496,7 +502,7 @@ const VendorSideBar = () => {
                   <Link href="/vendor/help" passHref>
                     <chakra.a
                       w="full"
-                      d="flex"
+                      display="flex"
                       alignItems="center"
                       fontSize="0.875rem"
                       fontWeight="500"
@@ -512,10 +518,11 @@ const VendorSideBar = () => {
                 </MenuItem>
 
                 <MenuItem h="45px" px="15px" _hover={{ bg: "#F7F8FA" }}>
+                  {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                   <Link href="#" passHref>
                     <chakra.a
                       w="full"
-                      d="flex"
+                      display="flex"
                       alignItems="center"
                       fontSize="0.875rem"
                       fontWeight="500"
@@ -534,7 +541,7 @@ const VendorSideBar = () => {
           )}
         </Menu>
 
-        {vendorSingleShop.loaded && (
+        {singleShop.loaded && (
           <Menu>
             {({ isOpen }) => (
               <>
@@ -549,13 +556,13 @@ const VendorSideBar = () => {
                   w="210px"
                 >
                   <chakra.div
-                    d="flex"
+                    display="flex"
                     alignItems="center"
                     justifyContent="space-between"
                   >
-                    <chakra.div d="flex" alignItems="center">
+                    <chakra.div display="flex" alignItems="center">
                       <chakra.div
-                        d="flex"
+                        display="flex"
                         alignItems="center"
                         justifyContent="center"
                         w="46px"
@@ -564,14 +571,14 @@ const VendorSideBar = () => {
                         bg="white"
                       >
                         <Image
-                          src={vendorSingleShop.selected?.shop.logo}
+                          src={singleShop.selectedShop?.shop.logo}
                           alt=""
                           width={40}
                           height={40}
                         />
                       </chakra.div>
                       <chakra.div
-                        d="flex"
+                        display="flex"
                         flexDir="column"
                         ml="10px"
                         alignItems="flex-start"
@@ -581,14 +588,14 @@ const VendorSideBar = () => {
                           fontWeight="500"
                           fontSize="0.75rem"
                         >
-                          {vendorSingleShop.selected?.shop.name}
+                          {singleShop.selectedShop?.shop.name}
                         </chakra.span>
                         <chakra.span
                           color="rgba(27, 27, 27, 0.54)"
                           fontWeight="500"
                           fontSize="0.75rem"
                         >
-                          {vendorSingleShop.selected?.shop.shop_id}
+                          {singleShop.selectedShop?.shop.shop_id}
                         </chakra.span>
                       </chakra.div>
                     </chakra.div>
@@ -602,7 +609,7 @@ const VendorSideBar = () => {
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path
-                        d="M11.1328 9.9707L8.26708 7.10497L5.40135 9.9707"
+                        display="M11.1328 9.9707L8.26708 7.10497L5.40135 9.9707"
                         stroke="#2153CC"
                         strokeWidth="2"
                         strokeLinecap="round"
@@ -612,7 +619,7 @@ const VendorSideBar = () => {
                   </chakra.div>
                 </MenuButton>
 
-                {allVendorShops.loaded && (
+                {vendorShops.loaded && (
                   <MenuList
                     bg="white"
                     boxShadow="0px 3.66153px 21.9692px rgba(0, 0, 0, 0.04)"
@@ -637,9 +644,9 @@ const VendorSideBar = () => {
                               w="full"
                               onClick={() => handleShopClick(id, name)}
                             >
-                              <chakra.div d="flex" alignItems="center">
+                              <chakra.div display="flex" alignItems="center">
                                 <chakra.div
-                                  d="flex"
+                                  display="flex"
                                   alignItems="center"
                                   justifyContent="center"
                                   w="46px"
@@ -656,7 +663,7 @@ const VendorSideBar = () => {
                                   />
                                 </chakra.div>
                                 <chakra.div
-                                  d="flex"
+                                  display="flex"
                                   flexDir="column"
                                   ml="20px"
                                   alignItems="flex-start"
@@ -698,7 +705,7 @@ const VendorSideBar = () => {
                           color="#2153CC"
                           fontSize="0.625rem"
                           textDecor="underline"
-                          d="inline-block"
+                          display="inline-block"
                           bg="white"
                           w="280px"
                           _hover={{ color: "#2153CC", textDecor: "underline" }}
@@ -722,7 +729,7 @@ const VendorSideBar = () => {
                           mx="auto"
                           w="176px"
                           h="36px"
-                          d="flex"
+                          display="flex"
                           alignItems="center"
                           justifyContent="center"
                           bg="#2153CC"
@@ -738,7 +745,7 @@ const VendorSideBar = () => {
                           >
                             <g clipPath="url(#clip0_18374_268437)">
                               <path
-                                d="M18.1552 11.9451H12.6629V17.4374H10.8321V11.9451H5.33984V10.1144H10.8321V4.62207H12.6629V10.1144H18.1552V11.9451Z"
+                                display="M18.1552 11.9451H12.6629V17.4374H10.8321V11.9451H5.33984V10.1144H10.8321V4.62207H12.6629V10.1144H18.1552V11.9451Z"
                                 fill="white"
                               />
                             </g>
@@ -765,7 +772,7 @@ const VendorSideBar = () => {
           </Menu>
         )}
       </chakra.div>
-      <CreateShop {...createShopModal} />
+      <CreateShop isOpen={createShopModal.isOpen} onClose={createShopModal.onClose} />
     </chakra.div>
   );
 };
