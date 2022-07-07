@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { chakra, Avatar, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { chakra, Avatar, Menu, MenuButton, MenuItem, MenuList, Button } from "@chakra-ui/react";
 // import { ShopContext } from "@providers/shopProvider";
 import Cookies from "js-cookie";
 import Image from "next/image";
@@ -10,31 +10,33 @@ import {
   LogOutIcon,
   CartIcon,
   DropDownIcon,
+  ShopIcon,
 } from "public/assets";
 import { useContext, useEffect, useState } from "react";
 import { logout } from "@utils/helpers";
 import { userData } from "store/slices/user";
 import { cartsData, getOpenCart, setOpenCart } from "store/slices/carts";
-import { useDispatch , useSelector } from "react-redux";
+import { shopsData } from "store/slices/shops";
+import { useAppSelector } from "hooks";
 
 const VendorNavbarHeader = () => {
   const [otherShops, setOtherShops] = useState([]);
-  // const { allVendorShops, vendorSingleShop, batchType, transferItems } =
+  // const { allVendorShops, singleShop, batchType, transferItems } =
   //   useContext(ShopContext);
-  const { user } = useSelector(userData)
-  const { carts } = useSelector(cartsData)
-  const dispatch = useDispatch()
+  const { user } = useAppSelector(userData)
+  const { carts } = useAppSelector(cartsData)
+  const { singleShop, vendorShops } = useAppSelector(shopsData)
   const router = useRouter();
 
-  // useEffect(() => {
-  //   if (allVendorShops.loaded && vendorSingleShop.loaded) {
-  //     const filtered = allVendorShops.data.filter(
-  //       (shop: { shop_id: number }) =>
-  //         shop.shop_id !== vendorSingleShop.selected.shop_id
-  //     );
-  //     setOtherShops(filtered);
-  //   }
-  // }, [allVendorShops, vendorSingleShop]);
+  useEffect(() => {
+    if (vendorShops.loaded && singleShop.loaded) {
+      const filtered = vendorShops.shops.filter(
+        (shop: { shop_id: number }) =>
+          shop.shop_id !== singleShop.selectedShop.shop_id
+      );
+      setOtherShops(filtered);
+    }
+  }, [vendorShops, singleShop]);
   
 
   const handleShopClick = (id, name) => {
@@ -43,7 +45,7 @@ const VendorNavbarHeader = () => {
   };
 
   const goToDashboard = () => {
-    router.push("/vendor/addshop");
+    router.push("/addshop");
   };
 
   return (
@@ -67,20 +69,27 @@ const VendorNavbarHeader = () => {
       </NextLink> */}
       <chakra.div display={{ base: "block", lg: "none" }}>
         <Menu>
-          <MenuButton ml={{ base: "18px", lg: "32px" }}>
+          <MenuButton
+          as={Button}
+          bg="transparent"
+          _focus={{ backgroundColor: "transparent" }}
+          pl="0"
+          display="flex"
+          leftIcon={<ShopIcon width={24} height={24} color="#2153CC" />}
+          >
             {/* <ShopIcon width={24} height={24} color="#2153CC" /> */}
-            {/* <chakra.p fontSize="20px" fontWeight="600" color="#2153CC">
-              {vendorSingleShop.selected?.shop.name.length >= 10
-                ? `${vendorSingleShop.selected?.shop.name.substring(0, 7)}...`
-                : vendorSingleShop.selected?.shop.name}
-            </chakra.p> */}Hi
+            <chakra.p fontSize="20px" fontWeight="600" color="#2153CC">
+              {singleShop.selectedShop?.shop.name.length >= 10
+                ? `${singleShop.selectedShop?.shop.name.substring(0, 7)}...`
+                : singleShop.selectedShop?.shop.name}
+            </chakra.p>
           </MenuButton>
-          {/* {allVendorShops.loaded && ( */}
+          {vendorShops.loaded && (
             <MenuList
               h="100%"
               zIndex="1"
               maxH="500px"
-              w={`${window.innerWidth}px`}
+              maxW={`${window.innerWidth}px`}
               overflowY="scroll"
             >
               <chakra.div display="flex" justifyContent="center" alignItems="center">
@@ -146,13 +155,14 @@ const VendorNavbarHeader = () => {
                 // alignItems="center"
               >
                 <chakra.button
-                  w="380px"
+                w="100%"
+                  maxW="380px"
                   h="54px"
                   color="#fff"
                   borderRadius="8px"
                   bg="#2153CC"
                 >
-                  <chakra.p fontWeight="600" fontSize="18.86px" color="#fff">
+                  <chakra.p fontWeight="600" fontSize="0.875rem" color="#fff">
                     Create a Free Shop
                   </chakra.p>
                 </chakra.button>
@@ -168,7 +178,7 @@ const VendorNavbarHeader = () => {
                 </chakra.p>
               </MenuItem>
             </MenuList>
-          {/* )} */}
+          )}
         </Menu>
       </chakra.div>
 
@@ -178,10 +188,10 @@ const VendorNavbarHeader = () => {
             <chakra.button
               // onClick={() =>
               //   router.push(
-              //     `/vendor/cart/${vendorSingleShop.selected?.shop.name
+              //     `/cart/${singleShop.selectedShop?.shop.name
               //       .split(" ")
               //       .join("-")
-              //       .toLowerCase()}-${vendorSingleShop.selected?.shop_id}`
+              //       .toLowerCase()}-${singleShop.selectedShop?.shop_id}`
               //   )
               // }
               display="flex"

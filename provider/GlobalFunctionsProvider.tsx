@@ -3,7 +3,8 @@ import { useAppDispatch, useAppSelector } from "hooks";
 import { useRouter } from "next/router";
 import { createContext, ReactElement, useEffect, useState } from "react";
 import { getOpenCart } from "store/slices/carts";
-import { getSingleShop, getVendorShops, setSingleShop, shopsData } from "store/slices/shops";
+import { dashboardData, getDashboardData } from "store/slices/dashboard";
+import { getSingleShop, getTopSellingData, getVendorShops, setSingleShop, setTopSellingData, shopsData } from "store/slices/shops";
 import { getUser, userData } from "store/slices/user";
 
 interface GlobalFunctionsProps {
@@ -17,11 +18,11 @@ const GlobalFunctionsProvider = ({ children }: { children: ReactElement }) => {
   const [loading, setLoading] = useState(false)
   const dispatch = useAppDispatch()
   const { userLoaded } = useAppSelector(userData)
+  const { dashboard } = useAppSelector(dashboardData)
   const { vendorShops, singleShop } = useAppSelector(shopsData)
   const router = useRouter()
 
   useEffect(() => {
-    dispatch<any>(getOpenCart())
     if (!userLoaded) dispatch<any>(getUser())
     if (!vendorShops.loaded) dispatch<any>(getVendorShops())
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -31,8 +32,6 @@ const GlobalFunctionsProvider = ({ children }: { children: ReactElement }) => {
     if (vendorShops.shops && vendorShops.shops.length) {
       if (!singleShop.loaded && !router.query.singleShop) {
         const selected = vendorShops.shops[0]
-        // eslint-disable-next-line
-        // @ts-ignore 
         dispatch<any>(getSingleShop(selected.id))
         dispatch<any>(setSingleShop(selected))
         // Cookies.set("shop", selected.shop.name.split(" ").join("-").toLowerCase())
@@ -44,28 +43,40 @@ const GlobalFunctionsProvider = ({ children }: { children: ReactElement }) => {
   }, [vendorShops.shops])
 
   useEffect(() => {
-    if (router.query.singleShop) {
+    if (router.query.singleShop && vendorShops.shops?.length) {
       const querySplit = (router.query.singleShop as string).split("-");
       const shopId = querySplit[querySplit.length - 1];
-      if (vendorShops.shops) {
+      if (vendorShops.shops?.length) {
         const selected = vendorShops.shops.find((shop: { shop_id: number }) => shop.shop_id === Number(shopId))
-        // eslint-disable-next-line
-        // @ts-ignore 
+
         dispatch<any>(getSingleShop(shopId))
         dispatch<any>(setSingleShop(selected))
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router, vendorShops.shops])
+  }, [router])
+
+  const topSelling = async () => {
+    try {
+      const res = await dispatch<any>(getTopSellingData(singleShop.selectedShop.id))
+      dispatch<any>(setTopSellingData(res.payloaad.data))
+    } catch (error) {
+      return error
+    }
+    return null
+  }
 
   useEffect(() => {
     if (singleShop.loaded && singleShop.selectedShop) {
-      // eslint-disable-next-line
-      // @ts-ignore
+      const a = { id: singleShop.selectedShop.id }
       dispatch<any>(getOpenCart(singleShop.selectedShop.id))
+      if (!dashboard.loaded) dispatch<any>(getDashboardData(a))
+      topSelling()
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [singleShop.selectedShop])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [singleShop.loaded])
+
+
 
   return (
     // eslint-disable-next-line react/jsx-no-constructed-context-values

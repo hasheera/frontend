@@ -43,8 +43,8 @@ const VendorSideBar = () => {
   });
   const router = useRouter();
   const moreRoutes = [
-    "/vendor/customers/[singleShop]",
-    "/vendor/team/[singleShop]",
+    "/customers/[singleShop]",
+    "/team/[singleShop]",
   ];
 
   useEffect(() => {
@@ -132,7 +132,7 @@ const VendorSideBar = () => {
         <Link
           href={
             singleShop.loaded
-              ? `/vendor/dashboard/${singleShop.selectedShop.shop.name
+              ? `/dashboard/${singleShop.selectedShop.shop.name
                   .split(" ")
                   .join("-")
                   .toLowerCase()}-${singleShop.selectedShop.shop_id}`
@@ -175,7 +175,7 @@ const VendorSideBar = () => {
         <Link
           href={
             singleShop.loaded
-              ? `/vendor/products/${singleShop.selectedShop?.shop.name
+              ? `/products/${singleShop.selectedShop?.shop.name
                   .split(" ")
                   .join("-")
                   .toLowerCase()}-${singleShop.selectedShop?.shop_id}`
@@ -218,7 +218,7 @@ const VendorSideBar = () => {
         <Link
           href={
             singleShop.loaded
-              ? `/vendor/import/${singleShop.selectedShop?.shop.name
+              ? `/import/${singleShop.selectedShop?.shop.name
                   .split(" ")
                   .join("-")
                   .toLowerCase()}-${singleShop.selectedShop?.shop_id}`
@@ -261,7 +261,7 @@ const VendorSideBar = () => {
         <Link
           href={
             singleShop.loaded
-              ? `/vendor/transactions/${singleShop.selectedShop?.shop.name
+              ? `/transactions/${singleShop.selectedShop?.shop.name
                   .split(" ")
                   .join("-")
                   .toLowerCase()}-${singleShop.selectedShop?.shop_id}`
@@ -349,7 +349,7 @@ const VendorSideBar = () => {
                   <Link
                     href={
                       singleShop.loaded
-                        ? `/vendor/customers/${singleShop.selectedShop?.shop.name
+                        ? `/customers/${singleShop.selectedShop?.shop.name
                             .split(" ")
                             .join("-")
                             .toLowerCase()}-${
@@ -380,7 +380,7 @@ const VendorSideBar = () => {
                   <Link
                     href={
                       singleShop.loaded
-                        ? `/vendor/team/${singleShop.selectedShop?.shop.name
+                        ? `/team/${singleShop.selectedShop?.shop.name
                             .split(" ")
                             .join("-")
                             .toLowerCase()}-${
@@ -471,7 +471,7 @@ const VendorSideBar = () => {
                   <Link
                     href={
                       singleShop.loaded
-                        ? `/vendor/settings/${singleShop.selectedShop?.shop.name
+                        ? `/settings/${singleShop.selectedShop?.shop.name
                             .split(" ")
                             .join("-")
                             .toLowerCase()}-${
@@ -499,7 +499,7 @@ const VendorSideBar = () => {
                 </MenuItem>
 
                 <MenuItem h="45px" px="15px" _hover={{ bg: "#F7F8FA" }}>
-                  <Link href="/vendor/help" passHref>
+                  <Link href="/help" passHref>
                     <chakra.a
                       w="full"
                       display="flex"
@@ -718,7 +718,7 @@ const VendorSideBar = () => {
                         w="280px"
                         borderTop="0.5px solid #A3AED0"
                       >
-                        {/* <Link href="/vendor/addshop" passHref> */}
+                        {/* <Link href="/addshop" passHref> */}
                         <chakra.a
                           onClick={() => createShopModal.onOpen()}
                           textAlign="center"

@@ -15,6 +15,10 @@ export type shopsState = {
   };
   hasShop: boolean;
   hasShopRole: boolean;
+  topSellingData: {
+    loaded: boolean;
+    data: any;
+  }
 };
 
 export const getVendorShops = createAsyncThunk(
@@ -32,9 +36,22 @@ export const getVendorShops = createAsyncThunk(
 
 export const getSingleShop = createAsyncThunk(
   'getSingleShop',
-  async (id, { rejectWithValue }) => {
+  async (id: string | number, { rejectWithValue }) => {
     try {
       const response = await AuthAxios.get(`/oga/shop/product/index/${id}`);
+      return response.data;
+
+    } catch (ex) {
+      return rejectWithValue(getExceptionPayload(ex));
+    }
+  },
+);
+
+export const getTopSellingData = createAsyncThunk(
+  'getTopSellingData',
+  async (id: string | number, { rejectWithValue }) => {
+    try {
+      const response = await AuthAxios.get(`oga/shop/product/top-selling?shop_id=${id}`);
       return response.data;
 
     } catch (ex) {
@@ -55,6 +72,10 @@ export const initialState: shopsState = {
   },
   hasShop: false,
   hasShopRole: false,
+  topSellingData: {
+    loaded: false,
+    data: null
+  }
 };
 
 export const shopsSlice = createSlice({
@@ -71,6 +92,10 @@ export const shopsSlice = createSlice({
     setSingleShop: (state, action: PayloadAction<shopsState['singleShop']>) => {
       state.singleShop.loaded = true;
       state.singleShop.selectedShop = action.payload
+    },
+    setTopSellingData: (state, action: PayloadAction<shopsState['topSellingData']>) => {
+      state.topSellingData.loaded = true;
+      state.topSellingData.data = action.payload
     }
   },
   extraReducers: builder => {
@@ -87,9 +112,6 @@ export const shopsSlice = createSlice({
         if(payload.data.length) {
           state.hasShop = true
         }
-        // const selected = sorted.find(
-        //   (shop: { shop_id: number }) => shop.shop_id === Number(shopId)
-        // );
       })
       .addCase(getSingleShop.pending, state => {
         state.singleShop.loaded = false
@@ -101,7 +123,7 @@ export const shopsSlice = createSlice({
   },
 });
 
-export const { setVendorShops, setSingleShop } = shopsSlice.actions;
+export const { setVendorShops, setSingleShop, setTopSellingData } = shopsSlice.actions;
 
 export const shopsData = (state: RootState) => state.shops;
 

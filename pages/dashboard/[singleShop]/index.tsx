@@ -1,9 +1,10 @@
 /* eslint-disable arrow-body-style */
 import { chakra } from '@chakra-ui/react'
+import DesktopView from '@components/Dashboard/Desktop'
+import MobileView from '@components/Dashboard/Mobile'
 import VendorDashBoardLayout from '@components/Layout/VendorDashBoardLayout'
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Link from 'next/link'
 
 const VendorDashboard: NextPage = () => {
   return (
@@ -14,8 +15,13 @@ const VendorDashboard: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <VendorDashBoardLayout>
-        <chakra.div>Welcome to the Shop Urban Vendor app. Coming soon... <Link href="/indexa">Hi</Link></chakra.div>
-      </VendorDashBoardLayout>
+      <chakra.div display={{ base: "none", xl: "block" }}>
+        <DesktopView />
+      </chakra.div>
+      <chakra.div display={{ base: "block", xl: "none" }}>
+        <MobileView />
+      </chakra.div>
+    </VendorDashBoardLayout>
     </>
   )
 }
