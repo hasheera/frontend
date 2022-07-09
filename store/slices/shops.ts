@@ -40,6 +40,10 @@ export type shopsState = {
     data: any;
     loaded: boolean;
   };
+  shopSettings: {
+    key: string;
+    value: string;
+  }[] | any;
 };
 
 export const getVendorShops = createAsyncThunk(
@@ -99,7 +103,20 @@ export const getStockMovement = createAsyncThunk(
   'getStockMovement',
   async (id: string | number, { rejectWithValue }) => {
     try {
-      const response = await AuthAxios.delete(`/oga/shop/product/stock/transfer/shop/index?shop_id=${id}`);
+      const response = await AuthAxios.get(`/oga/shop/product/stock/transfer/shop/index?shop_id=${id}`);
+      return response;
+
+    } catch (ex) {
+      return rejectWithValue(getExceptionPayload(ex));
+    }
+  },
+);
+
+export const listShopSettings = createAsyncThunk(
+  'listShopSettings',
+  async (id: string | number, { rejectWithValue }) => {
+    try {
+      const response = await AuthAxios.get(`/oga/shop/setting/index?shop_id=${id}`);
       return response;
 
     } catch (ex) {
@@ -144,7 +161,8 @@ export const initialState: shopsState = {
   stockMovements: {
     data: null,
     loaded: false
-  }
+  },
+  shopSettings: null
 };
 
 export const shopsSlice = createSlice({
@@ -174,6 +192,9 @@ export const shopsSlice = createSlice({
     },
     setStockMovement: (state, action: PayloadAction<shopsState["stockMovements"]>) => {
       state.stockMovements = { ...action.payload, loaded: true }
+    },
+    setShopSettings: (state, action: PayloadAction<shopsState["stockMovements"]>) => {
+      state.shopSettings = action.payload
     }
   },
   extraReducers: builder => {
@@ -205,6 +226,9 @@ export const shopsSlice = createSlice({
       .addCase(getStockMovement.fulfilled, (state, { payload }) => {
         state.stockMovements.loaded = true
         state.stockMovements.data = payload.data
+      })
+      .addCase(listShopSettings.fulfilled, (state, { payload }) => {
+        state.shopSettings = payload.data.data.data
       })
   },
 });

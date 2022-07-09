@@ -49,3 +49,7 @@ export { default as NextIcon } from "./svg-icons/NextIcon";
 export { default as FilterIcon } from "./svg-icons/FilterIcon";
 export { default as AddtionIcon } from "./svg-icons/AddtionIcon";
 export { default as AddIcon } from "./svg-icons/AddIcon";
+export { default as PayLaterIcon } from "./svg-icons/PayLaterIcon";
+export { default as VisaLogo } from "./svg-icons/VisaLogo";
+export { default as MasterCardIcon } from "./svg-icons/MasterCardIcon";
+export { default as LockIcon } from "./svg-icons/LockIcon";

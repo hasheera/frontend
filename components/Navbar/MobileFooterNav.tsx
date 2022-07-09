@@ -31,6 +31,7 @@ const MobileFooterNav = () => {
   })
   const router = useRouter();
 
+  // eslint-disable-next-line consistent-return
   useEffect(() => {
     if (router.pathname.includes("dashboard")) {
       return setActiveLink({
@@ -62,7 +63,6 @@ const MobileFooterNav = () => {
         orders: true
       })
     }
-    return null
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router])
 

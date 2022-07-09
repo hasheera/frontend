@@ -27,6 +27,6 @@
     "**/*.tsx",
     "pages/transactions/[singleShop]",
     "components/Drawer/ProductSearchFilter"
-  ],
+, "components/PaymentLogo"  ],
   "exclude": ["node_modules"]
 }
