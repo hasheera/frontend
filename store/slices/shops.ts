@@ -36,6 +36,10 @@ export type shopsState = {
     loaded: boolean;
   };
   categories: { loaded: boolean; data: { id: number; name: string; }[] | null };
+  stockMovements: {
+    data: any;
+    loaded: boolean;
+  };
 };
 
 export const getVendorShops = createAsyncThunk(
@@ -91,6 +95,19 @@ export const deleteProduct = createAsyncThunk(
   },
 );
 
+export const getStockMovement = createAsyncThunk(
+  'getStockMovement',
+  async (id: string | number, { rejectWithValue }) => {
+    try {
+      const response = await AuthAxios.delete(`/oga/shop/product/stock/transfer/shop/index?shop_id=${id}`);
+      return response;
+
+    } catch (ex) {
+      return rejectWithValue(getExceptionPayload(ex));
+    }
+  },
+);
+
 export const initialState: shopsState = {
   vendorShops: {
     loaded: false,
@@ -124,6 +141,10 @@ export const initialState: shopsState = {
     loaded: false,
   },
   categories: { loaded: false, data: null },
+  stockMovements: {
+    data: null,
+    loaded: false
+  }
 };
 
 export const shopsSlice = createSlice({
@@ -150,6 +171,9 @@ export const shopsSlice = createSlice({
     },
     setSingleProduct: (state, action: PayloadAction<shopsState["singleProduct"]>) => {
       state.singleProduct = { ...action.payload, loaded: true }
+    },
+    setStockMovement: (state, action: PayloadAction<shopsState["stockMovements"]>) => {
+      state.stockMovements = { ...action.payload, loaded: true }
     }
   },
   extraReducers: builder => {
@@ -178,6 +202,10 @@ export const shopsSlice = createSlice({
         state.topSellingData.loaded = true
         state.topSellingData.data = payload.data
       })
+      .addCase(getStockMovement.fulfilled, (state, { payload }) => {
+        state.stockMovements.loaded = true
+        state.stockMovements.data = payload.data
+      })
   },
 });
 
@@ -186,7 +214,8 @@ export const {
   setSingleShop,
   setTopSellingData,
   setBatchType,
-  setSingleProduct
+  setSingleProduct,
+  setStockMovement
 } = shopsSlice.actions;
 
 export const shopsData = (state: RootState) => state.shops;

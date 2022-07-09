@@ -1,4 +1,4 @@
-import React, { Children, FC, ReactNode, useRef } from "react";
+import { FC, useRef } from "react";
 import {
   chakra,
   Spinner,
@@ -9,6 +9,7 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
 } from "@chakra-ui/react";
+
 type Props = {
   open: boolean;
   close: () => void;
@@ -45,7 +46,7 @@ const AlertDialogUI: FC<Props> = ({
           <AlertDialogFooter w="full">
             <chakra.div
               w="full"
-              d="flex"
+              display="flex"
               alignItems="center"
               justifyContent="space-around"
               mt="20px"

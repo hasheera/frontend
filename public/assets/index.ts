@@ -44,3 +44,8 @@ export { default as PencilIcon } from "./svg-icons/PencilIcon";
 export { default as SubtractionIcon } from "./svg-icons/SubtractionIcon";
 export { default as SearchIcon } from "./svg-icons/SearchIcon";
 export { default as SortIcon } from "./svg-icons/SortIcon";
+export { default as CancelIcon } from "./svg-icons/CancelIcon";
+export { default as NextIcon } from "./svg-icons/NextIcon";
+export { default as FilterIcon } from "./svg-icons/FilterIcon";
+export { default as AddtionIcon } from "./svg-icons/AddtionIcon";
+export { default as AddIcon } from "./svg-icons/AddIcon";

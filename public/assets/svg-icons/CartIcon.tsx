@@ -1,5 +1,6 @@
-const CartIcon = ({ width, height }) => {
-  return (
+import { IconType } from "./iconType";
+
+const CartIcon = ({ width, height }: IconType) => (
     <svg
       width={width}
       height={height}
@@ -34,6 +35,5 @@ const CartIcon = ({ width, height }) => {
       />
     </svg>
   );
-};
 
 export default CartIcon;

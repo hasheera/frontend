@@ -1,5 +1,4 @@
-const PagiNext = () => {
-  return (
+const PagiNext = () => (
     <svg
       width="7"
       height="11"
@@ -14,6 +13,5 @@ const PagiNext = () => {
       />
     </svg>
   );
-};
 
 export default PagiNext;

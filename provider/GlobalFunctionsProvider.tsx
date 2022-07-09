@@ -36,6 +36,13 @@ const GlobalFunctionsProvider = ({ children }: { children: ReactElement }) => {
         // Cookies.set("alphaShopId", selected.shop.shop_id);
         // Cookies.set("shopId", selected.id)
       }
+      if (!singleShop.loaded && router.query.singleShop) {
+        const querySplit = (router.query.singleShop as string).split("-");
+        const shopId = querySplit[querySplit.length - 1];
+        const selected = vendorShops.shops?.find((shop: { shop_id: number }) => shop.shop_id === Number(shopId));
+        dispatch<any>(getSingleShop(shopId));
+        dispatch<any>(setSingleShop(selected))
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vendorShops.shops])

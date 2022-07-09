@@ -1,5 +1,4 @@
-const CheckIcon = () => {
-  return (
+const CheckIcon = () => (
     <svg
       width="16"
       height="16"
@@ -13,6 +12,5 @@ const CheckIcon = () => {
       />
     </svg>
   );
-};
 
 export default CheckIcon;

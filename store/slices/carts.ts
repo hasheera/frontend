@@ -11,6 +11,10 @@ export type cartsState = {
   transactionSales: {
     loaded: boolean;
     data: any;
+  },
+  transactionExpenses: {
+    loaded: boolean;
+    data: any;
   }
 };
 
@@ -62,10 +66,27 @@ export const getTransactionSales = createAsyncThunk(
   },
 );
 
+export const getTransactionsExpenses = createAsyncThunk(
+  'transactionExpenses',
+  async (id: string | number, { rejectWithValue }) => {
+    try {
+      const response = await AuthAxios.get(`oga/shop/expense/index?shop_id=${id}`);
+
+      return response.data;
+    } catch (ex) {
+      return rejectWithValue(getExceptionPayload(ex));
+    }
+  },
+);
+
 export const initialState: cartsState = {
   cartsLoaded: false,
   carts: null,
   transactionSales: {
+    loaded: false,
+    data: null
+  },
+  transactionExpenses: {
     loaded: false,
     data: null
   }
@@ -82,6 +103,10 @@ export const cartsSlice = createSlice({
     setTransactionsSales: (state, action: PayloadAction<cartsState['transactionSales']>) => {
       state.transactionSales.loaded = true;
       state.transactionSales.data = action.payload
+    },
+    setTransactionsExpenses: (state, action: PayloadAction<cartsState['transactionExpenses']>) => {
+      state.transactionExpenses.loaded = true;
+      state.transactionExpenses.data = action.payload
     }
   },
   extraReducers: builder => {
@@ -97,10 +122,14 @@ export const cartsSlice = createSlice({
         state.transactionSales.loaded = true;
         state.transactionSales.data = payload.data;
       })
+      .addCase(getTransactionsExpenses.fulfilled, (state, { payload }) => {
+        state.transactionExpenses.loaded = true;
+        state.transactionExpenses.data = payload.data;
+      })
   },
 });
 
-export const { setOpenCart, setTransactionsSales } = cartsSlice.actions;
+export const { setOpenCart, setTransactionsSales, setTransactionsExpenses } = cartsSlice.actions;
 
 export const cartsData = (state: RootState) => state.carts;
 
