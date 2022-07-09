@@ -69,7 +69,7 @@ const ProductsUnit = () => {
   return (
     <VendorDashBoardLayout>
       <chakra.div display="flex" alignItems="center" mt="20px">
-        <NextLink href="/vendor/import" passHref>
+        <NextLink href="/import" passHref>
           <chakra.a
             display="flex"
             alignItems="center"

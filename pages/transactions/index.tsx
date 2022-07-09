@@ -13,7 +13,7 @@ const Transactions: NextPage = () => {
   useEffect(() => {
     if (singleShop.loaded) {
       router.replace(
-        `/vendor/transactions/${singleShop.selectedShop.shop.name
+        `/transactions/${singleShop.selectedShop.shop.name
           .split(" ")
           .join("-")
           .toLowerCase()}-${singleShop.selectedShop.shop_id}`

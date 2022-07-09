@@ -73,7 +73,7 @@ const Product: NextPage = () => {
 
   const goToProductTransferPage = () => {
     router.push({
-      pathname: `/vendor/product/transfer_product/${singleShop.selectedShop.id}`,
+      pathname: `/product/transfer_product/${singleShop.selectedShop.id}`,
     });
   };
 
@@ -125,7 +125,7 @@ const Product: NextPage = () => {
   const goToImportPage = () => {
     router.push(
       singleShop.loaded
-        ? `/vendor/import/${singleShop.selectedShop?.shop.name
+        ? `/import/${singleShop.selectedShop?.shop.name
           .split(" ")
           .join("-")
           .toLowerCase()}-${singleShop.selectedShop?.shop_id}`

@@ -50,7 +50,7 @@ const SalesTable = () => {
   };
 
   const goToInvoice = (orderNumber) => {
-    router.push(`/vendor/invoice/${router.query.singleShop}/${orderNumber}`);
+    router.push(`/invoice/${router.query.singleShop}/${orderNumber}`);
   };
 
   const nextPage = (url: string) => {
@@ -103,7 +103,7 @@ const SalesTable = () => {
             </Thead>
             <Tbody>
               {transactionSales.loaded &&
-                transactionSales.data.data.map((data) => (
+                transactionSales.data?.data.map((data) => (
                   <Tr
                     key={data.id}
                     onClick={() => goToInvoice(data.order_number)}
@@ -240,20 +240,20 @@ const SalesTable = () => {
               {/* 1-5 of 13 */}
             </chakra.p>
             <chakra.button
-              disabled={transactionSales.data.prev_page_url === null}
+              disabled={transactionSales.data?.prev_page_url === null}
               cursor="pointer"
               _disabled={{ cursor: "not-allowed" }}
               px="20px"
-              onClick={() => prevPage(transactionSales.data.prev_page_url)}
+              onClick={() => prevPage(transactionSales.data?.prev_page_url)}
             >
               <PagiPrev />
             </chakra.button>
             <chakra.button
-              disabled={transactionSales.data.next_page_url === null}
+              disabled={transactionSales.data?.next_page_url === null}
               cursor="pointer"
               _disabled={{ cursor: "not-allowed" }}
               px="20px"
-              onClick={() => nextPage(transactionSales.data.next_page_url)}
+              onClick={() => nextPage(transactionSales.data?.next_page_url)}
             >
               <PagiNext />
             </chakra.button>
@@ -270,7 +270,7 @@ const SalesTable = () => {
         alignItems="center"
       >
         {transactionSales.loaded &&
-          transactionSales.data.data.map((data) => (
+          transactionSales.data?.data.map((data) => (
             <chakra.div
               key={data.id}
               w="100%"

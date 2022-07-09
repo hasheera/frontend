@@ -60,7 +60,7 @@ const Categories = () => {
         {categories.map((data, i) => (
           <NextLink
             key={i}
-            href={`/vendor/import/category?name=${data}`}
+            href={`/import/category?name=${data}`}
             passHref
           >
             <chakra.div

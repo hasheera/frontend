@@ -100,7 +100,7 @@ const PopularCategories: FC = () => {
         {popularCategories.data.map((data) => (
           <NextLink
             key={data.id}
-            href={`/vendor/import/category/${singleShop.selectedShop?.shop.name
+            href={`/import/category/${singleShop.selectedShop?.shop.name
               .split(" ")
               .join("-")
               .toLowerCase()}-${singleShop.selectedShop?.shop_id}?name=${

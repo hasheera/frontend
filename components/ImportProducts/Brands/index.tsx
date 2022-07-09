@@ -91,7 +91,7 @@ const Brands: FC<Props> = ({ loaded, data }) => {
 
   const goToProducts = (slug: string, id: number, name: string) => {
     router.push({
-      pathname: `/vendor/import/search/${singleShop.selectedShop?.shop.name
+      pathname: `/import/search/${singleShop.selectedShop?.shop.name
         .split(" ")
         .join("-")
         .toLowerCase()}-${singleShop.selectedShop?.shop_id}`,

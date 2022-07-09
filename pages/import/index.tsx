@@ -12,7 +12,7 @@ const Import = () => {
   useEffect(() => {
     if (singleShop.loaded) {
       router.replace(
-        `/vendor/import/${singleShop.selectedShop.shop.name
+        `/import/${singleShop.selectedShop.shop.name
           .split(" ")
           .join("-")
           .toLowerCase()}-${singleShop.selectedShop.shop_id}`

@@ -94,7 +94,7 @@ const DashboardTable = () => {
               <ArrowUpDownIcon />
             </chakra.div>
 
-            <Link href={`/vendor/transactions/${router.query.singleShop}`} passHref>
+            <Link href={`/transactions/${router.query.singleShop}`} passHref>
               <chakra.a textDecor="underline">View all</chakra.a>
             </Link>
           </chakra.div>
@@ -115,9 +115,9 @@ const DashboardTable = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {transactionSales.loaded && transactionSales.data.data.length > 0 ? (
+              {transactionSales.loaded && transactionSales.data?.data.length > 0 ? (
                 <>
-                  {transactionSales.data.data.slice(0, 7).map((data) => (
+                  {transactionSales.data?.data.slice(0, 7).map((data) => (
                     <Tr key={data.id}>
                       {/* // # Order Number */}
                       <Td

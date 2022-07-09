@@ -38,7 +38,7 @@ const Search: NextPage = () => {
     <VendorDashBoardLayout>
       <chakra.div display="flex" alignItems="center" mt="20px">
         <NextLink
-          href={`/vendor/import/${singleShop.selectedShop?.shop.name
+          href={`/import/${singleShop.selectedShop?.shop.name
             .split(" ")
             .join("-")
             .toLowerCase()}-${singleShop.selectedShop?.shop_id}`}

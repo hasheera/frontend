@@ -542,7 +542,7 @@ const MobileView = () => {
               alignItems="center"
             >
               {transactionSales.loaded &&
-                transactionSales.data.data?.map((data) => (
+                transactionSales.data?.data?.map((data) => (
                   <chakra.div
                     key={data?.id}
                     w="393px"
