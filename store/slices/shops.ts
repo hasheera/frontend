@@ -18,7 +18,24 @@ export type shopsState = {
   topSellingData: {
     loaded: boolean;
     data: any;
-  }
+  },
+  batchType: string;
+  singleProduct: {
+    id: number;
+    product_id: number;
+    category_id: number;
+    shop_product_images: any;
+    cost_price: number;
+    sell_price: number;
+    stock_count: number;
+    restock_alert: number;
+    shop: { id: number };
+    product: { name: string };
+    product_unit: { id: number; photo: string | null; name: string };
+    expired_date: Date;
+    loaded: boolean;
+  };
+  categories: { loaded: boolean; data: { id: number; name: string; }[] | null };
 };
 
 export const getVendorShops = createAsyncThunk(
@@ -60,6 +77,20 @@ export const getTopSellingData = createAsyncThunk(
   },
 );
 
+export const deleteProduct = createAsyncThunk(
+  'deleteProduct',
+  async (arg: { id: string | number; shopId: string | number }, { rejectWithValue }) => {
+    const { id, shopId } = arg;
+    try {
+      const response = await AuthAxios.delete(`/oga/shop/product/delete/${id}?shop_id=${shopId}`);
+      return response;
+
+    } catch (ex) {
+      return rejectWithValue(getExceptionPayload(ex));
+    }
+  },
+);
+
 export const initialState: shopsState = {
   vendorShops: {
     loaded: false,
@@ -75,7 +106,24 @@ export const initialState: shopsState = {
   topSellingData: {
     loaded: false,
     data: null
-  }
+  },
+  batchType: "checkout",
+  singleProduct: {
+    id: null,
+    product_id: null,
+    category_id: null,
+    cost_price: null,
+    sell_price: null,
+    shop_product_images: null,
+    stock_count: null,
+    restock_alert: null,
+    shop: { id: null },
+    product: { name: null },
+    product_unit: { id: null, photo: null, name: null },
+    expired_date: null,
+    loaded: false,
+  },
+  categories: { loaded: false, data: null },
 };
 
 export const shopsSlice = createSlice({
@@ -84,18 +132,24 @@ export const shopsSlice = createSlice({
   reducers: {
     setVendorShops: (
       state,
-      action: PayloadAction<shopsState['vendorShops']>,
+      action: PayloadAction<shopsState["vendorShops"]>,
     ) => {
       state.vendorShops.loaded = true;
       state.vendorShops.shops = action.payload;
     },
-    setSingleShop: (state, action: PayloadAction<shopsState['singleShop']>) => {
+    setSingleShop: (state, action: PayloadAction<shopsState["singleShop"]>) => {
       state.singleShop.loaded = true;
       state.singleShop.selectedShop = action.payload
     },
-    setTopSellingData: (state, action: PayloadAction<shopsState['topSellingData']>) => {
+    setTopSellingData: (state, action: PayloadAction<shopsState["topSellingData"]>) => {
       state.topSellingData.loaded = true;
       state.topSellingData.data = action.payload
+    },
+    setBatchType: (state, action: PayloadAction<shopsState["batchType"]>) => {
+      state.batchType = action.payload
+    },
+    setSingleProduct: (state, action: PayloadAction<shopsState["singleProduct"]>) => {
+      state.singleProduct = { ...action.payload, loaded: true }
     }
   },
   extraReducers: builder => {
@@ -120,10 +174,20 @@ export const shopsSlice = createSlice({
         state.singleShop.loaded = true
         state.singleShop.shopData = payload.data
       })
+      .addCase(getTopSellingData.fulfilled, (state, { payload }) => {
+        state.topSellingData.loaded = true
+        state.topSellingData.data = payload.data
+      })
   },
 });
 
-export const { setVendorShops, setSingleShop, setTopSellingData } = shopsSlice.actions;
+export const {
+  setVendorShops,
+  setSingleShop,
+  setTopSellingData,
+  setBatchType,
+  setSingleProduct
+} = shopsSlice.actions;
 
 export const shopsData = (state: RootState) => state.shops;
 

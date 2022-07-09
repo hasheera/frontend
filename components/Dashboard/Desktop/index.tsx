@@ -46,18 +46,18 @@ const DesktopView = () => {
   const [dateToShow, setDateToShow] = useState<string>("start");
   const [directDate, setDirectDate] = useState<string>("");
 
-  useEffect(() => {
-    if (singleShop.loaded) {
-      const dash = {
-        id: singleShop.selectedShop.id,
-        directDate,
-        startDate,
-        endDate
-      }
-      dispatch<any>(getDashboardData(dash))
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [singleShop, dashboardBatchType, startDate, endDate]);
+  // useEffect(() => {
+  //   const dash = {
+  //     id: singleShop.selectedShop.id,
+  //     directDate,
+  //     startDate,
+  //     endDate
+  //   };
+  //   dispatch<any>(getDashboardData(dash));
+  //   // if (singleShop.loaded) {
+  //   // }
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [singleShop, dashboardBatchType, startDate, endDate]);
 
   const applyDate = () => {
     // getTopSellingData(startDate, endDate);
@@ -555,7 +555,7 @@ const DesktopView = () => {
           </chakra.div>
         </chakra.div>
       </chakra.div>
-      
+
       <chakra.div>
         <chakra.p
           color="#1E2134"
@@ -566,14 +566,10 @@ const DesktopView = () => {
         >
           Shop Performance Indicators
         </chakra.p>
-        <chakra.div>
-          <PerfomanceCard />
-        </chakra.div>
+        <PerfomanceCard />
       </chakra.div>
 
-      <chakra.div>
-        <DashboardTable />
-      </chakra.div>
+      <DashboardTable />
     </>
   );
 };

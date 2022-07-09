@@ -14,6 +14,28 @@ export type cartsState = {
   }
 };
 
+export const addToCart = createAsyncThunk(
+  'addToCart',
+  async (params: { quantity: number; amount: number; shopProductId: string | number; content: string; shopId: string | number }, { rejectWithValue, getState }) => {
+    const {
+      quantity,
+      amount,
+      shopProductId,
+      content,
+      shopId
+    } = params
+    const state = getState()
+    return console.log(state)
+    try {
+      const response = await AuthAxios.get(`/oga/cart/open/${id}`);
+
+      return response.data;
+    } catch (ex) {
+      return rejectWithValue(getExceptionPayload(ex));
+    }
+  },
+);
+
 export const getOpenCart = createAsyncThunk(
   'openCarts',
   async (id: number | string, { rejectWithValue }) => {
@@ -29,7 +51,7 @@ export const getOpenCart = createAsyncThunk(
 
 export const getTransactionSales = createAsyncThunk(
   'transactionSales',
-  async (id, { rejectWithValue }) => {
+  async (id: string | number, { rejectWithValue }) => {
     try {
       const response = await AuthAxios.get(`oga/order/index?shop_id=${id}`);
 
@@ -70,7 +92,11 @@ export const cartsSlice = createSlice({
       .addCase(getOpenCart.fulfilled, (state, { payload }) => {
         state.cartsLoaded = true;
         state.carts = payload.data;
-      });
+      })
+      .addCase(getTransactionSales.fulfilled, (state, { payload }) => {
+        state.transactionSales.loaded = true;
+        state.transactionSales.data = payload.data;
+      })
   },
 });
 

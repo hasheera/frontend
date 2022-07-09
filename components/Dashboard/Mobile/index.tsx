@@ -20,7 +20,7 @@ import TopSellingProducts from "@components/Dashboard/TopSellingProducts";
 import { formatPrice } from "@utils/helpers";
 import { useAppDispatch, useAppSelector } from "hooks";
 import { shopsData } from "store/slices/shops";
-import { changeDashboardBatchType, dashboardData, getDashboardData } from "store/slices/dashboard";
+import { changeDashboardBatchType, dashboardData } from "store/slices/dashboard";
 import { cartsData } from "store/slices/carts";
 import LineChart from "./LineChart";
 
@@ -33,17 +33,6 @@ const MobileView = () => {
   const dispatch = useAppDispatch()
   const [directDate, setDirectDate] = useState<string>("");
   const tabHeaders: string[] = ["Reports", "Top Products", "Orders"];
-
-  useEffect(() => {
-    if (singleShop.loaded) {
-      const dash = {
-        id: singleShop.selectedShop.id,
-        directDate
-      }
-      dispatch<any>(getDashboardData(dash))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [singleShop, dashboardBatchType]);
 
   const directDateHandle = (e: SelectEvent) => {
     setDirectDate(e.target.value);
@@ -125,23 +114,6 @@ const MobileView = () => {
                 borderRadius="5px"
                 m="10px 0px"
               >
-                {/* <Select
-                    value={directDate}
-                    onChange={directDateHandle}
-                    w="98px"
-                    h="42px"
-                    placeholder="Today"
-                    color="#1B1B1B"
-                    opacity="54%"
-                    fontSize="14px"
-                    fontWeight="500"
-                  >
-                    <option value="today">Today</option>
-                    <option value="yesterday">Yesterday</option>
-                    <option value="this_week">This Week</option>
-                    <option value="this_month">This Month</option>
-                    <option value="this_year">This year</option>
-                  </Select> */}
                 <Menu>
                   {({ isOpen }) => (
                     <>
@@ -570,7 +542,7 @@ const MobileView = () => {
               alignItems="center"
             >
               {transactionSales.loaded &&
-                transactionSales.data?.map((data) => (
+                transactionSales.data.data?.map((data) => (
                   <chakra.div
                     key={data?.id}
                     w="393px"

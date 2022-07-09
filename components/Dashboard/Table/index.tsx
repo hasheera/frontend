@@ -115,9 +115,9 @@ const DashboardTable = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {transactionSales.loaded && transactionSales.data.length > 0 ? (
+              {transactionSales.loaded && transactionSales.data.data.length > 0 ? (
                 <>
-                  {transactionSales.data.slice(0, 7).map((data) => (
+                  {transactionSales.data.data.slice(0, 7).map((data) => (
                     <Tr key={data.id}>
                       {/* // # Order Number */}
                       <Td

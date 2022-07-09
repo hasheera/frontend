@@ -10,7 +10,7 @@ const TopSellingProducts = () => {
     // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {topSellingData.loaded &&
-        topSellingData.data && topSellingData.data.map((data) => (
+        topSellingData.data && topSellingData.data.data.map((data) => (
           <TopSellingProduct key={data.id} data={data} />
         ))}
     </>
