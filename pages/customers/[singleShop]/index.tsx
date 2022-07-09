@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { NextPage } from "next";
 import VendorDashBoardLayout from "@components/Layout/VendorDashBoardLayout";
 import {
