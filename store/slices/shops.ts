@@ -44,6 +44,7 @@ export type shopsState = {
     key: string;
     value: string;
   }[] | any;
+  customers: { loaded: boolean, data: [] };
 };
 
 export const getVendorShops = createAsyncThunk(
@@ -125,6 +126,19 @@ export const listShopSettings = createAsyncThunk(
   },
 );
 
+export const getCustomers = createAsyncThunk(
+  'getCustomers',
+  async (id: string | number, { rejectWithValue }) => {
+    try {
+      const response = await AuthAxios.get(`/oga/shop/customer/index?shop_id=${id}`);
+      return response;
+
+    } catch (ex) {
+      return rejectWithValue(getExceptionPayload(ex));
+    }
+  },
+);
+
 export const initialState: shopsState = {
   vendorShops: {
     loaded: false,
@@ -162,7 +176,8 @@ export const initialState: shopsState = {
     data: null,
     loaded: false
   },
-  shopSettings: null
+  shopSettings: null,
+  customers: { loaded: false, data: [] }
 };
 
 export const shopsSlice = createSlice({
@@ -229,6 +244,10 @@ export const shopsSlice = createSlice({
       })
       .addCase(listShopSettings.fulfilled, (state, { payload }) => {
         state.shopSettings = payload.data.data.data
+      })
+      .addCase(getCustomers.fulfilled, (state, { payload }) => {
+        state.customers.loaded = true
+        state.customers.data = payload.data.data.data
       })
   },
 });

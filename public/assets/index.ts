@@ -53,3 +53,5 @@ export { default as PayLaterIcon } from "./svg-icons/PayLaterIcon";
 export { default as VisaLogo } from "./svg-icons/VisaLogo";
 export { default as MasterCardIcon } from "./svg-icons/MasterCardIcon";
 export { default as LockIcon } from "./svg-icons/LockIcon";
+export { default as SendInviteIcon } from "./svg-icons/SendInviteIcon";
+export { default as NigeriaFlag } from "./svg-icons/NigeriaFlag";
