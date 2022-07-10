@@ -11,27 +11,64 @@ export type cartsState = {
   transactionSales: {
     loaded: boolean;
     data: any;
-  },
+  };
   transactionExpenses: {
     loaded: boolean;
     data: any;
-  }
+  };
 };
 
 export const addToCart = createAsyncThunk(
   'addToCart',
-  async (params: { quantity: number; amount: number; shopProductId: string | number; content: string; shopId: string | number }, { rejectWithValue, getState }) => {
+  async (
+    params: {
+      quantity: number;
+      amount: number;
+      shopProductId: string | number;
+      content: string;
+      shopId: string | number;
+      cartLength: number;
+      cartId: number;
+      itemInCart: boolean;
+      itemId?: number;
+    },
+    { rejectWithValue },
+  ) => {
     const {
       quantity,
       amount,
       shopProductId,
       content,
-      shopId
-    } = params
-    const state = getState()
-    return console.log(state)
+      shopId,
+      cartLength,
+      cartId,
+      itemInCart,
+      itemId
+    } = params;
+    
+    let query: string;
+    console.log(params)
     try {
-      const response = await AuthAxios.get(`/oga/cart/open/${id}`);
+      if (cartLength) {
+        if (itemInCart) {
+          query = `?cart_id=${cartId}&shop_product_id=${shopProductId}&quantity=${quantity}&amount=${amount}&content=${content}`;
+        } else {
+          query = `?shop_id=${shopId}&cart_id=${cartId}&shop_product_id=${shopProductId}&quantity=${quantity}&amount=${amount}&content=${content}`;
+        }
+      }
+
+      if (!cartLength) {
+        query = `?shop_id=${shopId}&cart_item[0][shop_product_id]=${shopProductId}&cart_item[0][quantity]=${quantity}&cart_item[0][amount]=${amount}&content[0]=${content}`;
+      }
+
+      const newItem = `oga/${
+        !cartLength ? 'cart' : 'cart-item'
+      }/create${query}`;
+
+      const updateItem = `oga/cart-item/update/${itemId}${query}`;
+      const response = itemInCart
+        ? await AuthAxios.put(updateItem)
+        : await AuthAxios.post(newItem);
 
       return response.data;
     } catch (ex) {
@@ -70,7 +107,9 @@ export const getTransactionsExpenses = createAsyncThunk(
   'transactionExpenses',
   async (id: string | number, { rejectWithValue }) => {
     try {
-      const response = await AuthAxios.get(`oga/shop/expense/index?shop_id=${id}`);
+      const response = await AuthAxios.get(
+        `oga/shop/expense/index?shop_id=${id}`,
+      );
 
       return response.data;
     } catch (ex) {
@@ -84,12 +123,12 @@ export const initialState: cartsState = {
   carts: null,
   transactionSales: {
     loaded: false,
-    data: null
+    data: null,
   },
   transactionExpenses: {
     loaded: false,
-    data: null
-  }
+    data: null,
+  },
 };
 
 export const cartsSlice = createSlice({
@@ -100,14 +139,20 @@ export const cartsSlice = createSlice({
       state.cartsLoaded = true;
       state.carts = action.payload;
     },
-    setTransactionsSales: (state, action: PayloadAction<cartsState['transactionSales']>) => {
+    setTransactionsSales: (
+      state,
+      action: PayloadAction<cartsState['transactionSales']>,
+    ) => {
       state.transactionSales.loaded = true;
-      state.transactionSales.data = action.payload
+      state.transactionSales.data = action.payload;
     },
-    setTransactionsExpenses: (state, action: PayloadAction<cartsState['transactionExpenses']>) => {
+    setTransactionsExpenses: (
+      state,
+      action: PayloadAction<cartsState['transactionExpenses']>,
+    ) => {
       state.transactionExpenses.loaded = true;
-      state.transactionExpenses.data = action.payload
-    }
+      state.transactionExpenses.data = action.payload;
+    },
   },
   extraReducers: builder => {
     builder
@@ -125,11 +170,12 @@ export const cartsSlice = createSlice({
       .addCase(getTransactionsExpenses.fulfilled, (state, { payload }) => {
         state.transactionExpenses.loaded = true;
         state.transactionExpenses.data = payload.data;
-      })
+      });
   },
 });
 
-export const { setOpenCart, setTransactionsSales, setTransactionsExpenses } = cartsSlice.actions;
+export const { setOpenCart, setTransactionsSales, setTransactionsExpenses } =
+  cartsSlice.actions;
 
 export const cartsData = (state: RootState) => state.carts;
 

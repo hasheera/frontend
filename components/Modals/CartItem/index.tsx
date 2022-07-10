@@ -13,7 +13,7 @@ import { useRouter } from "next/router";
 import { AdditionIcon, PencilIcon, SubtractionIcon } from "public/assets";
 import { shopsData } from "store/slices/shops";
 import { useAppDispatch, useAppSelector } from "hooks";
-import { addToCart } from "store/slices/carts";
+import { addToCart, cartsData, getOpenCart } from "store/slices/carts";
 import ModalUI from "..";
 
 type Props = {
@@ -22,6 +22,7 @@ type Props = {
 };
 
 const CartItem: FC<Props> = ({ isOpen, onClose }) => {
+  const { carts } = useAppSelector(cartsData);
   const { singleShop, singleProduct } = useAppSelector(shopsData);
   const dispatch = useAppDispatch()
   const [price, setPrice] = useState<any>(0);
@@ -42,51 +43,39 @@ const CartItem: FC<Props> = ({ isOpen, onClose }) => {
     // setProductQuantity(1);
   }, [singleShop]);
 
-  const shopRole = () => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    const shopRoles = [
-      "cashier",
-      "manager",
-      "inventoryManager",
-      "accountant",
-      "shopOwner",
-    ];
-    const adminRoles = ["subSupperAdmin", "supperAdmin"];
-    const userRoles = user.roles.map((r: { name: string }) => r.name);
-
-    if (
-      userRoles.some((role: string) => shopRoles.includes(role)) ||
-      userRoles.some((role: string) => adminRoles.includes(role))
-    ) {
-      return true;
-    }
-    return false;
-  };
-
   const addItemToCart = async () => {
     setIsRequest(true);
     try {
-      const res: { data: any } | any = dispatch<any>(addToCart(
+      const item = carts[0].cart_items.find(i => i.shop_product_id === singleProduct.id)
+      // const itemInCart = carts[0].cart_items.some(item => item.shop_product_id === singleProduct.id)
+      const res: { data: any } | any = await dispatch<any>(addToCart(
         {
           quantity: productQuantity,
           amount: singleProduct.sell_price * productQuantity,
           shopProductId: singleProduct.id,
           content: productNote,
-          shopId: singleShop.selectedShop.id
-        },
-        // shopRole
+          shopId: singleShop.selectedShop.id,
+          cartLength: carts[0].cart_items.length || 0,
+          cartId: carts[0].id,
+          itemInCart: !!item,
+          itemId: item ? item.id : null
+        }
       ));
-      toast({
-        description:
-          res.data && res.data?.message.includes("already exist")
-            ? res.data.message
-            : "Item added to Cart",
-        status: "success",
-        duration: 1000,
-        position: "top",
-      });
-      setIsRequest(false);
-      return onClose();
+      if(res.payload) {
+        dispatch<any>(getOpenCart(singleShop.selectedShop.id))
+        toast({
+          description: res.payload.message || "Item added to Cart",
+            // res.payload.message.includes("already exist")
+            //   ? res.payload.message
+            //   : "Item added to Cart",
+          status: "success",
+          duration: 1000,
+          position: "top",
+        });
+        setIsRequest(false);
+        return onClose();
+      }
+      return res;
     } catch (error) {
       return error
     }

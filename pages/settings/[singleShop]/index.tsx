@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   chakra,
   Avatar,
@@ -13,14 +13,15 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import VendorDashBoardLayout from "@components/Layout/VendorDashBoardLayout";
-import { ErrorIcon } from "public/assets";
-import { apiCall } from "@utils/api";
-import Cookies from "js-cookie";
-import { ShopContext } from "@providers/shopProvider";
+import { ErrorIcon } from "@public/assets";
 import { NextPage } from "next";
+import { listShopSettings, shopsData } from "store/slices/shops";
+import { useAppDispatch, useAppSelector } from "hooks";
+import AuthAxios from "@utils/api/authAxios";
 
 const Settings: NextPage = () => {
-  const { vendorSingleShop, shopSettings, listShopSettings } = useContext(ShopContext);
+  const { singleShop, shopSettings } = useAppSelector(shopsData);
+  const dispatch = useAppDispatch();
   const toast = useToast();
   const [settings, setSettings] = useState({
     vat: "",
@@ -35,31 +36,14 @@ const Settings: NextPage = () => {
   //   Table Headers
   const tablrHeader: string[] = ["Name", "Users", "Permisions"];
 
-  useEffect(() => {
-    if (vendorSingleShop.loaded) {
-      const shopId = Cookies.get("shopId");
-      listShopSettings(shopId);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [vendorSingleShop]);
-
-  useEffect(() => {
-    if(shopSettings) {
-      setSettingsData(shopSettings)
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shopSettings])
-  
-
   const createOrUpdateSettings = async (key: string, value: string) => {
-    const shopId = Cookies.get("shopId");
-    const res = await apiCall(`/oga/shop/setting/create`, "POST", {
-      shop_id: shopId,
+    const res = await AuthAxios.post(`/oga/shop/setting/create`, {
+      shop_id: singleShop.selectedShop.id,
       key,
       value,
     });
     if (res.status === 200) {
-      listShopSettings(shopId);
+      listShopSettings(singleShop.selectedShop.id);
       toast({
         description: `${res.data.message}`,
         position: "top-right",
@@ -70,7 +54,7 @@ const Settings: NextPage = () => {
   };
 
   const setSettingsData = (data: any) => {
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 0; i < data.length; i+=1) {
       const element = data[i];
       if (element.key === "receipt_note") {
         setSettings({ ...settings, receipt_note: element.value });
@@ -95,6 +79,20 @@ const Settings: NextPage = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (singleShop.loaded) {
+      dispatch<any>(listShopSettings(singleShop.selectedShop.id));
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [singleShop]);
+
+  useEffect(() => {
+    if(shopSettings) {
+      setSettingsData(shopSettings)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shopSettings])
 
   return (
     <VendorDashBoardLayout>
@@ -133,11 +131,11 @@ const Settings: NextPage = () => {
           </chakra.button>
         </chakra.div>
 
-        <chakra.div d="flex" m="20px" alignItems="center">
+        <chakra.div display="flex" m="20px" alignItems="center">
           <Avatar
             size="lg"
-            src={vendorSingleShop.selected?.shop.logo}
-            name={vendorSingleShop.selected?.shop.name}
+            src={singleShop.selectedShop?.shop.logo}
+            name={singleShop.selectedShop?.shop.name}
           />
           <chakra.div ml="10px">
             <chakra.p color="#506176" fontSize="12px" fontWeight="500">
@@ -169,11 +167,11 @@ const Settings: NextPage = () => {
 
         <chakra.div
           w="600px"
-          d="flex"
+          display="flex"
           alignItems="center"
           justifyContent="space-between"
         >
-          <chakra.div d="flex" alignItems="center">
+          <chakra.div display="flex" alignItems="center">
             <Input
               value={settings.instagram}
               onChange={(e) => setSettings({ ...settings, instagram: e.target.value})}
@@ -202,11 +200,11 @@ const Settings: NextPage = () => {
         </chakra.p>
         <chakra.div
           w="600px"
-          d="flex"
+          display="flex"
           alignItems="center"
           justifyContent="space-between"
         >
-          <chakra.div d="flex" alignItems="center">
+          <chakra.div display="flex" alignItems="center">
             <Input
               value={settings.facebook}
               onChange={(e) => setSettings({ ...settings, facebook: e.target.value})}
@@ -235,11 +233,11 @@ const Settings: NextPage = () => {
         </chakra.p>
         <chakra.div
           w="600px"
-          d="flex"
+          display="flex"
           alignItems="center"
           justifyContent="space-between"
         >
-          <chakra.div d="flex" alignItems="center">
+          <chakra.div display="flex" alignItems="center">
             <Input
               value={settings.email}
               onChange={(e) => setSettings({ ...settings, email: e.target.value})}
@@ -274,11 +272,11 @@ const Settings: NextPage = () => {
 
         <chakra.div
           w="600px"
-          d="flex"
+          display="flex"
           alignItems="center"
           justifyContent="space-between"
         >
-          <chakra.div d="flex" alignItems="center">
+          <chakra.div display="flex" alignItems="center">
             <Input
               value={settings.privacy_policy}
               onChange={(e) => setSettings({ ...settings, privacy_policy: e.target.value})}
@@ -309,11 +307,11 @@ const Settings: NextPage = () => {
         </chakra.p>
         <chakra.div
           w="600px"
-          d="flex"
+          display="flex"
           alignItems="center"
           justifyContent="space-between"
         >
-          <chakra.div d="flex" alignItems="center">
+          <chakra.div display="flex" alignItems="center">
             <Input
               value={settings.term_and_conditions}
               onChange={(e) => setSettings({ ...settings, term_and_conditions: e.target.value})}
@@ -344,11 +342,11 @@ const Settings: NextPage = () => {
         </chakra.p>
         <chakra.div
           w="600px"
-          d="flex"
+          display="flex"
           alignItems="center"
           justifyContent="space-between"
         >
-          <chakra.div d="flex" alignItems="center">
+          <chakra.div display="flex" alignItems="center">
             <Input
               value={settings.vat}
               onChange={(e) => setSettings({ ...settings, vat: e.target.value})}
@@ -377,11 +375,11 @@ const Settings: NextPage = () => {
         </chakra.p>
         <chakra.div
           w="600px"
-          d="flex"
+          display="flex"
           alignItems="center"
           justifyContent="space-between"
         >
-          <chakra.div d="flex" alignItems="center">
+          <chakra.div display="flex" alignItems="center">
             <Input
               value={settings.receipt_note}
               onChange={(e) => setSettings({ ...settings, receipt_note: e.target.value})}
@@ -412,14 +410,14 @@ const Settings: NextPage = () => {
         <Table>
           <Thead>
             <Tr>
-              {tablrHeader.map((header: string, i: number) => (
-                <Th key={i} color="#333333" opacity="50%">
+              {tablrHeader.map((header: string) => (
+                <Th key={header} color="#333333" opacity="50%">
                   {header}
                 </Th>
               ))}
             </Tr>
           </Thead>
-          <Tbody></Tbody>
+          <Tbody />
         </Table>
       </TableContainer>
     </VendorDashBoardLayout>

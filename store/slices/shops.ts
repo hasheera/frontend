@@ -45,6 +45,7 @@ export type shopsState = {
     value: string;
   }[] | any;
   customers: { loaded: boolean, data: [] };
+  vendorTeam: { loaded: boolean; data: [] | null };
 };
 
 export const getVendorShops = createAsyncThunk(
@@ -139,6 +140,19 @@ export const getCustomers = createAsyncThunk(
   },
 );
 
+export const getTeams = createAsyncThunk(
+  'getTeams',
+  async (id: string | number, { rejectWithValue }) => {
+    try {
+      const response = await AuthAxios.get(`/oga/shop/owner/users/${id}`);
+      return response;
+
+    } catch (ex) {
+      return rejectWithValue(getExceptionPayload(ex));
+    }
+  },
+);
+
 export const initialState: shopsState = {
   vendorShops: {
     loaded: false,
@@ -150,7 +164,7 @@ export const initialState: shopsState = {
     selectedShop: null
   },
   hasShop: false,
-  hasShopRole: false,
+  hasShopRole: null,
   topSellingData: {
     loaded: false,
     data: null
@@ -177,7 +191,8 @@ export const initialState: shopsState = {
     loaded: false
   },
   shopSettings: null,
-  customers: { loaded: false, data: [] }
+  customers: { loaded: false, data: [] },
+  vendorTeam: { loaded: false, data: [] }
 };
 
 export const shopsSlice = createSlice({
@@ -210,6 +225,9 @@ export const shopsSlice = createSlice({
     },
     setShopSettings: (state, action: PayloadAction<shopsState["stockMovements"]>) => {
       state.shopSettings = action.payload
+    },
+    updateHasShopRole: (state, action: PayloadAction<shopsState["hasShopRole"]>) => {
+      state.hasShopRole = action.payload
     }
   },
   extraReducers: builder => {
@@ -249,6 +267,10 @@ export const shopsSlice = createSlice({
         state.customers.loaded = true
         state.customers.data = payload.data.data.data
       })
+      .addCase(getTeams.fulfilled, (state, { payload }) => {
+        state.vendorTeam.loaded = true
+        state.vendorTeam.data = payload.data.data.data
+      })
   },
 });
 
@@ -258,7 +280,8 @@ export const {
   setTopSellingData,
   setBatchType,
   setSingleProduct,
-  setStockMovement
+  setStockMovement,
+  updateHasShopRole
 } = shopsSlice.actions;
 
 export const shopsData = (state: RootState) => state.shops;
