@@ -12,6 +12,8 @@ export type userState = {
       surname: string;
       username: string;
       image: string;
+      user_shop: { shop_id: number }[];
+      contact_no: string;
     };
   };
 };

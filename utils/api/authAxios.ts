@@ -27,9 +27,9 @@ AuthAxios.interceptors.response.use(
   error => {
     const code =
       error && error.response ? error.response.status : 0;
-    if (code === 401 || code === 403 || code === 410 || code === 404) {
-      Router.push('/login');
-    }
+    // if (code === 401 || code === 403 || code === 410 || code === 404) {
+    //   Router.push('/login');
+    // }
     return Promise.reject(error);
   })
 

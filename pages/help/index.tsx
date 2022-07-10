@@ -1,20 +1,10 @@
 import { NextPage } from "next";
-import { useRouter } from "next/router";
-import React, { useContext, useEffect } from "react";
-import { ShopContext } from "@providers/shopProvider";
 import VendorDashBoardLayout from "@components/Layout/VendorDashBoardLayout";
-
 import { chakra, Input, InputGroup, InputRightElement } from "@chakra-ui/react";
+import { SearchIcon } from "@public/assets";
 
-import { SearchIcon } from "../../../public/assets";
 
-type Props = {};
-
-const Help: NextPage = (props: Props) => {
-  const { vendorSingleShop } = useContext(ShopContext);
-  const router = useRouter();
-
-  return (
+const Help: NextPage = () => (
     <VendorDashBoardLayout>
       <chakra.p color="#333333" fontWeight="600" fontSize="22.19px">
         Help Center
@@ -54,7 +44,7 @@ const Help: NextPage = (props: Props) => {
             }}
           />
           <InputRightElement>
-            <SearchIcon width="24" height="24" color="#000000CC" />
+            <SearchIcon width={24} height={24} color="#000000CC" />
           </InputRightElement>
         </InputGroup>
         <chakra.p
@@ -72,7 +62,7 @@ const Help: NextPage = (props: Props) => {
 
         <chakra.div mt="30px">
           <chakra.div
-            d="flex"
+            display="flex"
             alignItems="center"
             maxW="820px"
             h="43px"
@@ -96,7 +86,7 @@ const Help: NextPage = (props: Props) => {
             </chakra.p>
           </chakra.div>
           <chakra.div
-            d="flex"
+            display="flex"
             alignItems="center"
             maxW="820px"
             h="43px"
@@ -120,7 +110,7 @@ const Help: NextPage = (props: Props) => {
             </chakra.p>
           </chakra.div>
           <chakra.div
-            d="flex"
+            display="flex"
             alignItems="center"
             maxW="820px"
             h="43px"
@@ -148,7 +138,7 @@ const Help: NextPage = (props: Props) => {
             // h="350.5px"
             boxShadow="-11px 4px 15px rgba(0, 0, 0, 0.04)"
             m="22.5px 0px"
-            d="flex"
+            display="flex"
             alignItems="center"
           >
             <chakra.div
@@ -185,7 +175,7 @@ const Help: NextPage = (props: Props) => {
             </chakra.div>
           </chakra.div>
           <chakra.div
-            d="flex"
+            display="flex"
             alignItems="center"
             maxW="820px"
             h="43px"
@@ -210,7 +200,7 @@ const Help: NextPage = (props: Props) => {
           </chakra.div>
         </chakra.div>
         <chakra.div
-          d="flex"
+          display="flex"
           justifyContent="space-between"
           flexDir={{ base: "column", md: "row" }}
           maxW="901.95px"
@@ -252,6 +242,5 @@ const Help: NextPage = (props: Props) => {
       </chakra.div>
     </VendorDashBoardLayout>
   );
-};
 
 export default Help;
