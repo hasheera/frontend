@@ -164,7 +164,7 @@ export const initialState: shopsState = {
     selectedShop: null
   },
   hasShop: false,
-  hasShopRole: false,
+  hasShopRole: null,
   topSellingData: {
     loaded: false,
     data: null
@@ -225,6 +225,9 @@ export const shopsSlice = createSlice({
     },
     setShopSettings: (state, action: PayloadAction<shopsState["stockMovements"]>) => {
       state.shopSettings = action.payload
+    },
+    updateHasShopRole: (state, action: PayloadAction<shopsState["hasShopRole"]>) => {
+      state.hasShopRole = action.payload
     }
   },
   extraReducers: builder => {
@@ -277,7 +280,8 @@ export const {
   setTopSellingData,
   setBatchType,
   setSingleProduct,
-  setStockMovement
+  setStockMovement,
+  updateHasShopRole
 } = shopsSlice.actions;
 
 export const shopsData = (state: RootState) => state.shops;

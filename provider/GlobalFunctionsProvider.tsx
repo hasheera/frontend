@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "hooks";
 import { useRouter } from "next/router";
 import { createContext, ReactElement, useEffect, useState } from "react";
 import { getOpenCart, getTransactionSales } from "store/slices/carts";
-import { getSingleShop, getVendorShops, setSingleShop, shopsData } from "store/slices/shops";
+import { getSingleShop, getVendorShops, setSingleShop, shopsData, updateHasShopRole } from "store/slices/shops";
 import { getUser, userData } from "store/slices/user";
 
 interface GlobalFunctionsProps {
@@ -14,10 +14,10 @@ interface GlobalFunctionsProps {
 const GlobalFunctionsContext = createContext<Partial<GlobalFunctionsProps>>({});
 
 const GlobalFunctionsProvider = ({ children }: { children: ReactElement }) => {
+  const { userLoaded, user } = useAppSelector(userData)
+  const { vendorShops, singleShop, hasShop, hasShopRole } = useAppSelector(shopsData)
   const [loading, setLoading] = useState(false)
   const dispatch = useAppDispatch()
-  const { userLoaded } = useAppSelector(userData)
-  const { vendorShops, singleShop } = useAppSelector(shopsData)
   const router = useRouter()
 
   useEffect(() => {
@@ -55,6 +55,15 @@ const GlobalFunctionsProvider = ({ children }: { children: ReactElement }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [singleShop.loaded])
 
+  useEffect(() => {
+    if (userLoaded && singleShop.selectedShop) {
+      if (hasShop && hasShopRole === null) {
+        const role = user.user.user_shop.some(s => s.shop_id === singleShop.selectedShop.id)
+        dispatch<any>(updateHasShopRole(role))
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userLoaded, singleShop, hasShop])
 
 
   return (

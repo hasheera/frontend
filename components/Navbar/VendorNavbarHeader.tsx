@@ -12,7 +12,7 @@ import {
   DropDownIcon,
   ShopIcon,
 } from "public/assets";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { logout } from "@utils/helpers";
 import { userData } from "store/slices/user";
 import { cartsData, getOpenCart, setOpenCart } from "store/slices/carts";
@@ -186,14 +186,14 @@ const VendorNavbarHeader = () => {
         <chakra.div>
           {/* {batchType === "checkout" && ( */}
             <chakra.button
-              // onClick={() =>
-              //   router.push(
-              //     `/cart/${singleShop.selectedShop?.shop.name
-              //       .split(" ")
-              //       .join("-")
-              //       .toLowerCase()}-${singleShop.selectedShop?.shop_id}`
-              //   )
-              // }
+              onClick={() =>
+                router.push(
+                  `/cart/${singleShop.selectedShop?.shop.name
+                    .split(" ")
+                    .join("-")
+                    .toLowerCase()}-${singleShop.selectedShop?.shop_id}`
+                )
+              }
               display="flex"
               alignItems="center"
               pos="relative"
