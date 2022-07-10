@@ -55,3 +55,4 @@ export { default as MasterCardIcon } from "./svg-icons/MasterCardIcon";
 export { default as LockIcon } from "./svg-icons/LockIcon";
 export { default as SendInviteIcon } from "./svg-icons/SendInviteIcon";
 export { default as NigeriaFlag } from "./svg-icons/NigeriaFlag";
+export { default as ErrorIcon } from "./svg-icons/ErrorIcon";
