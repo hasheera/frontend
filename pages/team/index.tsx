@@ -1,29 +1,30 @@
-import React, { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/router";
-import { ShopContext } from "@providers/shopProvider";
 import { chakra, Spinner } from "@chakra-ui/react";
-type Props = {};
+import { useAppSelector } from "hooks";
+import { shopsData } from "store/slices/shops";
 
-const Team = (props: Props) => {
-  const { vendorSingleShop } = useContext(ShopContext);
+const Team = () => {
+  const { singleShop } = useAppSelector(shopsData);
   const router = useRouter();
 
   useEffect(() => {
-    if (vendorSingleShop.loaded) {
+    if (singleShop.loaded) {
       router.replace(
-        `/vendor/team/${vendorSingleShop.selected.shop.name
+        `/vendor/team/${singleShop.selectedShop.shop.name
           .split(" ")
           .join("-")
-          .toLowerCase()}-${vendorSingleShop.selected.shop_id}`
+          .toLowerCase()}-${singleShop.selectedShop.shop_id}`
       );
     }
-  }, [vendorSingleShop]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [singleShop]);
 
   return (
     <chakra.div
       w="100%"
       h="100vh"
-      d="flex"
+      display="flex"
       justifyContent="center"
       alignItems="center"
     >
