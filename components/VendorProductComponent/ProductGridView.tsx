@@ -66,20 +66,19 @@ const ProductGridView = ({ shopProducts }) => {
   }
 
   const cardCursor = (batch: string, stock: number, sell: number) => {
-    if(["checkout", "transfer", "stock-out"].includes(batch) && !stock) {
+    if (["checkout", "transfer", "stock-out"].includes(batch) && !stock) {
       return "not-allowed"
     }
-    if(batchType === "checkout" && !sell) {
+    if (batchType === "checkout" && !sell) {
       return "not-allowed"
     }
     return "pointer"
   }
-  
+
 
   return (
     <>
-      {shopProducts.data.length > 0 ? (
-
+      {shopProducts?.data.length > 0 ? (
         <chakra.div
           display="grid"
           gridTemplateColumns="repeat(auto-fit, minmax(240px, 1fr))"
@@ -104,10 +103,14 @@ const ProductGridView = ({ shopProducts }) => {
             }: any) => (
               <chakra.div
                 onClick={() => {
-                  if(["checkout", "transfer", "stock-out"].includes(batchType) && !stock_count) {
+                  if (batchType === "delete-product") {
+                    deleteProductDialog.onOpen();
+                    return setDeleteShopProductId(id);
+                  }
+                  if (["checkout", "transfer", "stock-out"].includes(batchType) && !stock_count) {
                     return null
                   }
-                  if(batchType === "checkout" && !sell_price) {
+                  if (batchType === "checkout" && !sell_price) {
                     return null
                   }
                   return handleProduct(
@@ -205,24 +208,6 @@ const ProductGridView = ({ shopProducts }) => {
                     )}
                     {batchType === "promote" && (
                       <chakra.button
-                        onClick={() => {
-                          handleProduct(
-                            {
-                              id,
-                              product_id,
-                              shop,
-                              cost_price,
-                              sell_price,
-                              stock_count,
-                              restock_alert,
-                              expired_date,
-                              product,
-                              product_unit,
-                              category_id,
-                            },
-                            "promote"
-                          );
-                        }}
                       >
                         <StockInCircularIcon />
                       </chakra.button>
@@ -238,10 +223,7 @@ const ProductGridView = ({ shopProducts }) => {
                     )}
                     {batchType === "delete-product" && (
                       <chakra.button
-                        onClick={() => {
-                          deleteProductDialog.onOpen();
-                          setDeleteShopProductId(id);
-                        }}
+
                       >
                         <DeleteIcon />
                       </chakra.button>
@@ -249,24 +231,6 @@ const ProductGridView = ({ shopProducts }) => {
                     {batchType === "edit-product" && (
                       <chakra.button
                         cursor="pointer"
-                        onClick={() =>
-                          handleProduct(
-                            {
-                              id,
-                              product_id,
-                              shop,
-                              shop_product_images,
-                              cost_price,
-                              sell_price,
-                              stock_count,
-                              restock_alert,
-                              expired_date,
-                              product_unit,
-                              category_id,
-                            },
-                            "edit product"
-                          )
-                        }
                       >
                         <EditCircularIcon />
                       </chakra.button>
