@@ -51,7 +51,7 @@ const VendorSideBar = () => {
     if (vendorShops.loaded && singleShop.loaded) {
       const filtered = vendorShops.shops.filter(
         (shop: { shop_id: number }) =>
-          shop.shop_id !== singleShop.selectedShop.shop_id
+          shop.shop_id !== singleShop.selectedShop?.shop_id
       );
       setOtherShops(filtered);
     }
@@ -132,10 +132,10 @@ const VendorSideBar = () => {
         <Link
           href={
             singleShop.loaded
-              ? `/dashboard/${singleShop.selectedShop.shop.name
+              ? `/dashboard/${singleShop.selectedShop?.shop?.name
                   .split(" ")
                   .join("-")
-                  .toLowerCase()}-${singleShop.selectedShop.shop_id}`
+                  .toLowerCase()}-${singleShop.selectedShop?.shop_id}`
               : ""
           }
           passHref
@@ -175,7 +175,7 @@ const VendorSideBar = () => {
         <Link
           href={
             singleShop.loaded
-              ? `/products/${singleShop.selectedShop?.shop.name
+              ? `/products/${singleShop.selectedShop?.shop?.name
                   .split(" ")
                   .join("-")
                   .toLowerCase()}-${singleShop.selectedShop?.shop_id}`
@@ -218,7 +218,7 @@ const VendorSideBar = () => {
         <Link
           href={
             singleShop.loaded
-              ? `/import/${singleShop.selectedShop?.shop.name
+              ? `/import/${singleShop.selectedShop?.shop?.name
                   .split(" ")
                   .join("-")
                   .toLowerCase()}-${singleShop.selectedShop?.shop_id}`
@@ -261,7 +261,7 @@ const VendorSideBar = () => {
         <Link
           href={
             singleShop.loaded
-              ? `/transactions/${singleShop.selectedShop?.shop.name
+              ? `/transactions/${singleShop.selectedShop?.shop?.name
                   .split(" ")
                   .join("-")
                   .toLowerCase()}-${singleShop.selectedShop?.shop_id}`
@@ -349,7 +349,7 @@ const VendorSideBar = () => {
                   <Link
                     href={
                       singleShop.loaded
-                        ? `/customers/${singleShop.selectedShop?.shop.name
+                        ? `/customers/${singleShop.selectedShop?.shop?.name
                             .split(" ")
                             .join("-")
                             .toLowerCase()}-${
@@ -380,7 +380,7 @@ const VendorSideBar = () => {
                   <Link
                     href={
                       singleShop.loaded
-                        ? `/team/${singleShop.selectedShop?.shop.name
+                        ? `/team/${singleShop.selectedShop?.shop?.name
                             .split(" ")
                             .join("-")
                             .toLowerCase()}-${
@@ -471,7 +471,7 @@ const VendorSideBar = () => {
                   <Link
                     href={
                       singleShop.loaded
-                        ? `/settings/${singleShop.selectedShop?.shop.name
+                        ? `/settings/${singleShop.selectedShop?.shop?.name
                             .split(" ")
                             .join("-")
                             .toLowerCase()}-${
@@ -571,7 +571,7 @@ const VendorSideBar = () => {
                         bg="white"
                       >
                         <Image
-                          src={singleShop.selectedShop?.shop.logo}
+                          src={singleShop.selectedShop?.shop?.logo}
                           alt=""
                           width={40}
                           height={40}
@@ -588,14 +588,14 @@ const VendorSideBar = () => {
                           fontWeight="500"
                           fontSize="0.75rem"
                         >
-                          {singleShop.selectedShop?.shop.name}
+                          {singleShop.selectedShop?.shop?.name}
                         </chakra.span>
                         <chakra.span
                           color="rgba(27, 27, 27, 0.54)"
                           fontWeight="500"
                           fontSize="0.75rem"
                         >
-                          {singleShop.selectedShop?.shop.shop_id}
+                          {singleShop.selectedShop?.shop?.shop_id}
                         </chakra.span>
                       </chakra.div>
                     </chakra.div>
