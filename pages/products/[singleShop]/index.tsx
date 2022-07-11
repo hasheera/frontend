@@ -104,9 +104,9 @@ const Product: NextPage = () => {
 
     try {
       setIsSearch(true);
-      if(!e.target.value) {
+      if (!e.target.value) {
         const res = await dispatch<any>(getSingleShop(singleShop.selectedShop.id));
-        if(res.payload) {
+        if (res.payload) {
           return setIsSearch(false)
         }
       }
@@ -549,9 +549,15 @@ const Product: NextPage = () => {
                           bg: "rgba(33, 83, 204, 0.08)",
                           color: "#2153CC",
                         }}
-                        onClick={() => dispatch(setBatchType("promote"))}
+                        onClick={() => {
+                          dispatch(setBatchType("photo"));
+                          router.push({
+                            ...router,
+                            query: { ...router.query, batch: "photo" },
+                          });
+                        }}
                       >
-                        Promote
+                        Add photo(s)
                       </MenuItem>
                       <MenuItem
                         p="10px"
@@ -740,14 +746,14 @@ const Product: NextPage = () => {
                   color="#242533"
                   _hover={{ bg: "rgba(33, 83, 204, 0.08)", color: "#2153CC" }}
                   onClick={() => {
-                    dispatch(setBatchType("promote"));
+                    dispatch(setBatchType("photo"));
                     router.push({
                       ...router,
-                      query: { ...router.query, batch: "promote" },
+                      query: { ...router.query, batch: "photo" },
                     });
                   }}
                 >
-                  Promote
+                  Add photo(s)
                 </MenuItem>
                 {/* <MenuItem
                     p="10px"

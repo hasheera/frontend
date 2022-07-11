@@ -44,7 +44,7 @@ const ProductGridView = ({ shopProducts }) => {
       cartItemModal.onOpen();
     }
 
-    if (type === "promote") {
+    if (type === "photo") {
       createPhotoModal.onOpen();
     }
 
@@ -189,51 +189,22 @@ const ProductGridView = ({ shopProducts }) => {
                       {formatNum(stock_count)} stock left
                     </chakra.p>
                     {batchType === "checkout" && (
-                      <chakra.button
-                        disabled={!stock_count || !sell_price}
-                        _disabled={{ opacity: 0.5, cursor: "not-allowed" }}
-                        cursor="pointer"
-                      >
-                        <CartCircularIcon />
-                      </chakra.button>
+                      <CartCircularIcon />
                     )}
                     {batchType === "transfer" && (
-                      <chakra.button
-                        disabled={stock_count === 0}
-                        _disabled={{ opacity: 0.5, cursor: "not-allowed" }}
-                        cursor="pointer"
-                      >
-                        <TransferCircularIcon />
-                      </chakra.button>
+                      <TransferCircularIcon />
                     )}
-                    {batchType === "promote" && (
-                      <chakra.button
-                      >
-                        <StockInCircularIcon />
-                      </chakra.button>
+                    {batchType === "photo" && (
+                      <StockInCircularIcon />
                     )}
                     {batchType === "stock-out" && (
-                      <chakra.button
-                        disabled={stock_count === 0}
-                        _disabled={{ opacity: 0.5, cursor: "not-allowed" }}
-                        cursor="pointer"
-                      >
-                        <StockOutCircularIcon />
-                      </chakra.button>
+                      <StockOutCircularIcon />
                     )}
                     {batchType === "delete-product" && (
-                      <chakra.button
-
-                      >
-                        <DeleteIcon />
-                      </chakra.button>
+                      <DeleteIcon />
                     )}
                     {batchType === "edit-product" && (
-                      <chakra.button
-                        cursor="pointer"
-                      >
-                        <EditCircularIcon />
-                      </chakra.button>
+                      <EditCircularIcon />
                     )}
                   </chakra.div>
                 </chakra.div>
