@@ -13,7 +13,6 @@ import { useAppDispatch, useAppSelector } from "hooks";
 import { userData } from "store/slices/user";
 import AuthAxios from "@utils/api/authAxios";
 import ModalUI from "..";
-// import { Radio, RadioGroup } from "@chakra-ui/core";
 
 interface ModalProps {
   fetchProduct?: (id) => void;
@@ -111,18 +110,13 @@ const UpdateProduct = (props: ModalProps) => {
     e.preventDefault();
     setRequest(true);
     AuthAxios.put(
-      `/oga/shop/product/update/${singleProduct.id}?shop_id=${
-        singleProduct.shop.id
-      }&shop_product_id=${singleProduct.id}&product_id=${
-        singleProduct.product_id
-      }&category_id=${formValues.category_id}&cost_price=${
-        formValues.cost_price
-      }&sell_price=${formValues.sell_price}&restock_alert=${
-        formValues.restock_alert
-      }${formValues.photo ? `&photo=${formValues.photo}` : ""}${
-        formValues.expired_date
-          ? `&expired_date=${formValues.expired_date}`
-          : ""
+      `/oga/shop/product/update/${singleProduct.id}?shop_id=${singleProduct.shop.id
+      }&shop_product_id=${singleProduct.id}&product_id=${singleProduct.product_id
+      }&category_id=${formValues.category_id}&cost_price=${formValues.cost_price
+      }&sell_price=${formValues.sell_price}&restock_alert=${formValues.restock_alert
+      }${formValues.photo ? `&photo=${formValues.photo}` : ""}${formValues.expired_date
+        ? `&expired_date=${formValues.expired_date}`
+        : ""
       }&attributes=0&product_unit_id=${singleProduct.product_unit.id}`
     )
       .then((res) => {
@@ -342,57 +336,70 @@ const UpdateProduct = (props: ModalProps) => {
                 <chakra.label fontSize="0.75rem" fontWeight="500">
                   Product cost price
                 </chakra.label>
-                <NumberInput defaultValue={singleProduct.cost_price}>
+                {/* <NumberInput defaultValue={singleProduct.cost_price}>
                   <NumberInputField
-                    name="unit-cost-price"
-                    fontSize="14px"
-                    px="16px"
-                    mt="1px"
-                    placeholder="Enter unit cost price"
-                    border="1px solid rgba(154, 161, 174, 0.3)"
-                    borderRadius="12px"
-                    inputMode="numeric"
-                    h="44px"
-                    _focus={{ border: "1px solid #1739E8", outline: "none" }}
-                    onChange={(e) =>
-                      setFormValues({
+                  />
+                </NumberInput> */}
+                <chakra.input
+                  name="unit-cost-price"
+                  fontSize="14px"
+                  px="16px"
+                  mt="1px"
+                  placeholder="Enter unit cost price"
+                  border="1px solid rgba(154, 161, 174, 0.3)"
+                  borderRadius="12px"
+                  inputMode="numeric"
+                  h="44px"
+                  _focus={{ border: "1px solid #1739E8", outline: "none" }}
+                  value={formValues.cost_price}
+                  onChange={(e) => {
+                    if (Number(e.target.value) > singleProduct.sell_price) {
+                      return setFormValues({
                         ...formValues,
-                        cost_price:
-                          Number(e.target.value) < 0
-                            ? 0
-                            : Number(e.target.value),
+                        cost_price: Number(singleProduct.sell_price)
                       })
                     }
-                  />
-                </NumberInput>
+                    return setFormValues({
+                      ...formValues,
+                      cost_price:
+                        Number(e.target.value) < 0
+                          ? 0
+                          : Number(e.target.value),
+                    })
+                  }}
+
+                />
               </chakra.div>
               <chakra.div display="flex" flexDir="column">
                 <chakra.label fontSize="0.75rem" fontWeight="500">
                   Product selling price
                 </chakra.label>
-                <NumberInput defaultValue={singleProduct.sell_price}>
+                {/* <NumberInput defaultValue={singleProduct.sell_price}>
                   <NumberInputField
-                    name="unit-sell-price"
-                    fontSize="14px"
-                    px="16px"
-                    mt="1px"
-                    placeholder="Enter unit selling price"
-                    border="1px solid rgba(154, 161, 174, 0.3)"
-                    borderRadius="12px"
-                    inputMode="numeric"
-                    h="44px"
-                    _focus={{ border: "1px solid #1739E8", outline: "none" }}
-                    onChange={(e) =>
-                      setFormValues({
-                        ...formValues,
-                        sell_price:
-                          Number(e.target.value) < 0
-                            ? 0
-                            : Number(e.target.value),
-                      })
-                    }
                   />
-                </NumberInput>
+                </NumberInput> */}
+                <chakra.input
+                  name="unit-sell-price"
+                  fontSize="14px"
+                  px="16px"
+                  mt="1px"
+                  placeholder="Enter unit selling price"
+                  border="1px solid rgba(154, 161, 174, 0.3)"
+                  borderRadius="12px"
+                  inputMode="numeric"
+                  h="44px"
+                  _focus={{ border: "1px solid #1739E8", outline: "none" }}
+                  value={formValues.sell_price}
+                  onChange={(e) =>
+                    setFormValues({
+                      ...formValues,
+                      sell_price:
+                        Number(e.target.value) < 0
+                          ? 0
+                          : Number(e.target.value),
+                    })
+                  }
+                />
               </chakra.div>
               <chakra.div display="flex" flexDir="column">
                 <chakra.label fontSize="0.75rem" fontWeight="500">
