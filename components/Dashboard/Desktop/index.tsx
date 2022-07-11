@@ -35,7 +35,6 @@ import {
 } from "../../../public/assets";
 import "react-datepicker/dist/react-datepicker.css";
 
-type SelectEvent = React.ChangeEvent<HTMLSelectElement>;
 
 const DesktopView = () => {
   const { singleShop } = useAppSelector(shopsData);
@@ -43,21 +42,6 @@ const DesktopView = () => {
   const dispatch = useAppDispatch()
   const [startDate, setStartDate] = useState<Date>(null);
   const [endDate, setEndDate] = useState<Date>(null);
-  const [dateToShow, setDateToShow] = useState<string>("start");
-  const [directDate, setDirectDate] = useState<string>("");
-
-  // useEffect(() => {
-  //   const dash = {
-  //     id: singleShop.selectedShop.id,
-  //     directDate,
-  //     startDate,
-  //     endDate
-  //   };
-  //   if (dashboard.loaded) {
-  //     dispatch<any>(getDashboardData(dash));
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [directDate, dashboardBatchType, startDate, endDate]);
 
   const applyDate = () => {
     // getTopSellingData(startDate, endDate);
@@ -70,10 +54,6 @@ const DesktopView = () => {
     if(end) {
       dispatch<any>(getDashboardData({ id: singleShop.selectedShop.id, startDate, endDate }))
     } 
-  };
-
-  const directDateHandle = (e: SelectEvent) => {
-    setDirectDate(e.target.value);
   };
 
   const handleChangeBatch = (batch: string) => {
@@ -127,7 +107,7 @@ const DesktopView = () => {
                   letterSpacing="0.4px"
                   ml="5px"
                 >
-                  7,00%
+                  7.00%
                 </chakra.p>
               </chakra.div>
             </chakra.div>
