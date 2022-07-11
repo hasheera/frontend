@@ -32,7 +32,7 @@ const ProductGridView = ({ shopProducts }) => {
   const handleProduct = (product, type: string) => {
     dispatch(setSingleProduct(product));
 
-    if (type === "edit product") {
+    if (type === "edit-product") {
       updateProduct.onOpen();
     }
 
@@ -65,6 +65,17 @@ const ProductGridView = ({ shopProducts }) => {
     }
   }
 
+  const cardCursor = (batch: string, stock: number, sell: number) => {
+    if(["checkout", "transfer", "stock-out"].includes(batch) && !stock) {
+      return "not-allowed"
+    }
+    if(batchType === "checkout" && !sell) {
+      return "not-allowed"
+    }
+    return "pointer"
+  }
+  
+
   return (
     <>
       {shopProducts.data.length > 0 ? (
@@ -92,6 +103,30 @@ const ProductGridView = ({ shopProducts }) => {
               category_id,
             }: any) => (
               <chakra.div
+                onClick={() => {
+                  if(["checkout", "transfer", "stock-out"].includes(batchType) && !stock_count) {
+                    return null
+                  }
+                  if(batchType === "checkout" && !sell_price) {
+                    return null
+                  }
+                  return handleProduct(
+                    {
+                      id,
+                      product_id,
+                      shop,
+                      cost_price,
+                      sell_price,
+                      stock_count,
+                      restock_alert,
+                      expired_date,
+                      product,
+                      product_unit,
+                      category_id,
+                    },
+                    batchType
+                  );
+                }}
                 key={id}
                 w="100%"
                 maxW="240px"
@@ -103,6 +138,7 @@ const ProductGridView = ({ shopProducts }) => {
                 borderRadius="8px"
                 bg="#fff"
                 p="16px"
+                cursor={cardCursor(batchType, stock_count, sell_price)}
               >
                 <chakra.img
                   w="100%"
@@ -151,24 +187,6 @@ const ProductGridView = ({ shopProducts }) => {
                     </chakra.p>
                     {batchType === "checkout" && (
                       <chakra.button
-                        onClick={() => {
-                          handleProduct(
-                            {
-                              id,
-                              product_id,
-                              shop,
-                              cost_price,
-                              sell_price,
-                              stock_count,
-                              restock_alert,
-                              expired_date,
-                              product,
-                              product_unit,
-                              category_id,
-                            },
-                            "checkout"
-                          );
-                        }}
                         disabled={!stock_count || !sell_price}
                         _disabled={{ opacity: 0.5, cursor: "not-allowed" }}
                         cursor="pointer"
@@ -178,24 +196,6 @@ const ProductGridView = ({ shopProducts }) => {
                     )}
                     {batchType === "transfer" && (
                       <chakra.button
-                        onClick={() => {
-                          handleProduct(
-                            {
-                              id,
-                              product_id,
-                              shop,
-                              cost_price,
-                              sell_price,
-                              stock_count,
-                              restock_alert,
-                              expired_date,
-                              product,
-                              product_unit,
-                              category_id,
-                            },
-                            "transfer"
-                          );
-                        }}
                         disabled={stock_count === 0}
                         _disabled={{ opacity: 0.5, cursor: "not-allowed" }}
                         cursor="pointer"
@@ -278,7 +278,7 @@ const ProductGridView = ({ shopProducts }) => {
           )}
         </chakra.div>
       ) : (
-        <chakra.div textAlign="center">No results were returned</chakra.div>
+        <chakra.div textAlign="center" mt="20px">No results were returned</chakra.div>
       )}
       <UpdateProduct isOpen={updateProduct.isOpen} onClose={updateProduct.onClose} fetchProduct={fetchProduct} />
       <CartItem isOpen={cartItemModal.isOpen} onClose={cartItemModal.onClose} />
