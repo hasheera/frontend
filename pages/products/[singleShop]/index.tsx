@@ -12,7 +12,7 @@ import VendorDashBoardLayout from "@components/Layout/VendorDashBoardLayout";
 import {
   ProductGridView,
 } from "@components/VendorProductComponent";
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import { useRouter } from "next/router";
 import {
   DropDownIcon,
@@ -20,7 +20,7 @@ import {
   SortIcon
 } from "public/assets";
 import Cookies from "js-cookie";
-import { getSingleShop, setBatchType, setSingleShop, shopsData } from "store/slices/shops";
+import { getSingleShop, setBatchType, setSearchProducts, setSingleShop, shopsData } from "store/slices/shops";
 import { useAppDispatch, useAppSelector } from "hooks";
 import AuthAxios from "@utils/api/authAxios";
 
@@ -99,17 +99,23 @@ const Product: NextPage = () => {
   //   }
   // };
 
-  const searchShopProducts = async (e) => {
-    const id = Cookies.get("shopId");
+  const searchShopProducts = async (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
 
     try {
       setIsSearch(true);
+      if (!e.target.value) {
+        const res = await dispatch<any>(getSingleShop(singleShop.selectedShop.id));
+        if (res.payload) {
+          return setIsSearch(false)
+        }
+      }
+
       const res = await AuthAxios.post(
-        `/oga/shop/product/search?shop_id=${id}&name=${e.target.value}`
+        `/oga/shop/product/search?shop_id=${singleShop.selectedShop.id}&name=${e.target.value}`
       );
       if (res.status === 200) {
-        dispatch(setSingleShop({
+        dispatch(setSearchProducts({
           ...singleShop,
           shopData: { ...res.data.data }
         }));
@@ -543,9 +549,15 @@ const Product: NextPage = () => {
                           bg: "rgba(33, 83, 204, 0.08)",
                           color: "#2153CC",
                         }}
-                        onClick={() => dispatch(setBatchType("promote"))}
+                        onClick={() => {
+                          dispatch(setBatchType("photo"));
+                          router.push({
+                            ...router,
+                            query: { ...router.query, batch: "photo" },
+                          });
+                        }}
                       >
-                        Promote
+                        Add photo(s)
                       </MenuItem>
                       <MenuItem
                         p="10px"
@@ -734,14 +746,14 @@ const Product: NextPage = () => {
                   color="#242533"
                   _hover={{ bg: "rgba(33, 83, 204, 0.08)", color: "#2153CC" }}
                   onClick={() => {
-                    dispatch(setBatchType("promote"));
+                    dispatch(setBatchType("photo"));
                     router.push({
                       ...router,
-                      query: { ...router.query, batch: "promote" },
+                      query: { ...router.query, batch: "photo" },
                     });
                   }}
                 >
-                  Promote
+                  Add photo(s)
                 </MenuItem>
                 {/* <MenuItem
                     p="10px"

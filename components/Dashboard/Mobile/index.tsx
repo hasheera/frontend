@@ -20,7 +20,7 @@ import TopSellingProducts from "@components/Dashboard/TopSellingProducts";
 import { formatPrice } from "@utils/helpers";
 import { useAppDispatch, useAppSelector } from "hooks";
 import { shopsData } from "store/slices/shops";
-import { changeDashboardBatchType, dashboardData } from "store/slices/dashboard";
+import { changeDashboardBatchType, dashboardData, getDashboardData } from "store/slices/dashboard";
 import { cartsData } from "store/slices/carts";
 import LineChart from "./LineChart";
 
@@ -50,6 +50,11 @@ const MobileView = () => {
         return "gray.500";
     }
   };
+
+  const handleChangeBatch = (batch: string) => {
+    dispatch<any>(changeDashboardBatchType(batch))
+    dispatch<any>(getDashboardData({ id: singleShop.selectedShop.id, directDate: batch }));
+  }
 
   return (
     <Tabs>
@@ -138,9 +143,7 @@ const MobileView = () => {
                             fontWeight="600"
                             textTransform="capitalize"
                           >
-                            {dashboardBatchType
-                              ? dashboardBatchType.split("_").join(" ")
-                              : ""}
+                            {dashboardBatchType.split("_").join(" ") || ""}
                           </chakra.p>
                           <DropDownIcon
                             width={10}
@@ -151,7 +154,7 @@ const MobileView = () => {
                       </MenuButton>
                       <MenuList w="120px">
                         <MenuItem
-                          onClick={() => changeDashboardBatchType("today")}
+                          onClick={() => handleChangeBatch("today")}
                           w="full"
                           h="28.23px"
                           display="flex"
@@ -162,9 +165,7 @@ const MobileView = () => {
                           <chakra.p fontWeight="600">Today</chakra.p>
                         </MenuItem>
                         <MenuItem
-                          onClick={() =>
-                            changeDashboardBatchType("yesterday")
-                          }
+                          onClick={() => handleChangeBatch("yesterday")}
                           w="full"
                           h="28.23px"
                           display="flex"
@@ -175,9 +176,7 @@ const MobileView = () => {
                           <chakra.p fontWeight="600">Yesterday</chakra.p>
                         </MenuItem>
                         <MenuItem
-                          onClick={() =>
-                            changeDashboardBatchType("this_week")
-                          }
+                          onClick={() => handleChangeBatch("this_week")}
                           w="full"
                           h="28.23px"
                           display="flex"
@@ -188,9 +187,7 @@ const MobileView = () => {
                           <chakra.p fontWeight="600">This Week</chakra.p>
                         </MenuItem>
                         <MenuItem
-                          onClick={() =>
-                            changeDashboardBatchType("this_month")
-                          }
+                          onClick={() => handleChangeBatch("this_month")}
                           w="full"
                           h="28.23px"
                           display="flex"
@@ -201,9 +198,7 @@ const MobileView = () => {
                           <chakra.p fontWeight="600">This Month</chakra.p>
                         </MenuItem>
                         <MenuItem
-                          onClick={() =>
-                            changeDashboardBatchType("this_year")
-                          }
+                          onClick={() => handleChangeBatch("this_year")}
                           w="full"
                           h="28.23px"
                           display="flex"

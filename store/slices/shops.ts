@@ -210,6 +210,10 @@ export const shopsSlice = createSlice({
       state.singleShop.loaded = true;
       state.singleShop.selectedShop = action.payload
     },
+    setSearchProducts: (state, action: PayloadAction<shopsState["singleShop"]>) => {
+      state.singleShop.loaded = true;
+      state.singleShop = action.payload
+    },
     setTopSellingData: (state, action: PayloadAction<shopsState["topSellingData"]>) => {
       state.topSellingData.loaded = true;
       state.topSellingData.data = action.payload
@@ -281,7 +285,8 @@ export const {
   setBatchType,
   setSingleProduct,
   setStockMovement,
-  updateHasShopRole
+  updateHasShopRole,
+  setSearchProducts
 } = shopsSlice.actions;
 
 export const shopsData = (state: RootState) => state.shops;
