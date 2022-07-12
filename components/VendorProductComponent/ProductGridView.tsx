@@ -82,6 +82,7 @@ const ProductGridView = ({ shopProducts }) => {
         <chakra.div
           display="grid"
           gridTemplateColumns="repeat(auto-fit, minmax(240px, 1fr))"
+          justifyItems="center"
           gap="24px"
           p={{ base: "10px 0", lg: "22px 0" }}
         // bg="#FAFAFA"

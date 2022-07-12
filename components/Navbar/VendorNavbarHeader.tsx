@@ -37,7 +37,7 @@ const VendorNavbarHeader = () => {
       setOtherShops(filtered);
     }
   }, [vendorShops, singleShop]);
-  
+
 
   const handleShopClick = (id, name) => {
     const path = router.pathname.split("/").slice(0, -1).join("/");
@@ -70,12 +70,12 @@ const VendorNavbarHeader = () => {
       <chakra.div display={{ base: "block", lg: "none" }}>
         <Menu>
           <MenuButton
-          as={Button}
-          bg="transparent"
-          _focus={{ backgroundColor: "transparent" }}
-          pl="0"
-          display="flex"
-          leftIcon={<ShopIcon width={24} height={24} color="#2153CC" />}
+            as={Button}
+            bg="transparent"
+            _focus={{ backgroundColor: "transparent" }}
+            pl="0"
+            display="flex"
+            leftIcon={<ShopIcon width={24} height={24} color="#2153CC" />}
           >
             {/* <ShopIcon width={24} height={24} color="#2153CC" /> */}
             <chakra.p fontSize="20px" fontWeight="600" color="#2153CC">
@@ -152,10 +152,10 @@ const VendorNavbarHeader = () => {
                 onClick={() => goToDashboard()}
                 display="flex"
                 justifyContent="center"
-                // alignItems="center"
+              // alignItems="center"
               >
                 <chakra.button
-                w="100%"
+                  w="100%"
                   maxW="380px"
                   h="54px"
                   color="#fff"
@@ -183,6 +183,44 @@ const VendorNavbarHeader = () => {
       </chakra.div>
 
       <chakra.div display="flex" alignItems="center">
+        <chakra.button
+          onClick={() =>
+            router.push(
+              `/cart/${singleShop.selectedShop?.shop.name
+                .split(" ")
+                .join("-")
+                .toLowerCase()}-${singleShop.selectedShop?.shop_id}`
+            )
+          }
+          display={{ base: "flex", lg: "none" }}
+          alignItems="center"
+          pos="relative"
+        >
+          {carts && carts[0]?.cart_items.length > 0 ? (
+            <chakra.div
+              w="18px"
+              h="18px"
+              bg="#FB7181"
+              pos="absolute"
+              top="-5px"
+              right="-5px"
+              borderRadius="50%"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              border="2px solid #fff"
+            >
+              <chakra.p color="#FFFFFF" fontWeight="700" fontSize="10px">
+                {carts[0].cart_items.length}
+              </chakra.p>
+            </chakra.div>
+          ) : (
+            ""
+          )}
+
+          <CartIcon width={25} height={25} color="#2153CC" />
+        </chakra.button>
+
         <Menu>
           {({ isOpen }) => (
             <>

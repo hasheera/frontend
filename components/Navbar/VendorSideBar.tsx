@@ -29,10 +29,12 @@ import {
   WalletIcon,
 } from "public/assets";
 import { useEffect, useState } from "react";
+import { cartsData } from "store/slices/carts";
 import { shopsData } from "store/slices/shops";
 
 const VendorSideBar = () => {
-  const { vendorShops, singleShop } = useAppSelector(shopsData)
+  const { carts } = useAppSelector(cartsData);
+  const { vendorShops, singleShop } = useAppSelector(shopsData);
   const createShopModal = useDisclosure();
   const [otherShops, setOtherShops] = useState([]);
   const [activeLink, setActiveLink] = useState({
@@ -134,9 +136,9 @@ const VendorSideBar = () => {
           href={
             singleShop.loaded
               ? `/dashboard/${singleShop.selectedShop?.shop?.name
-                  .split(" ")
-                  .join("-")
-                  .toLowerCase()}-${singleShop.selectedShop?.shop_id}`
+                .split(" ")
+                .join("-")
+                .toLowerCase()}-${singleShop.selectedShop?.shop_id}`
               : ""
           }
           passHref
@@ -177,9 +179,9 @@ const VendorSideBar = () => {
           href={
             singleShop.loaded
               ? `/products/${singleShop.selectedShop?.shop?.name
-                  .split(" ")
-                  .join("-")
-                  .toLowerCase()}-${singleShop.selectedShop?.shop_id}`
+                .split(" ")
+                .join("-")
+                .toLowerCase()}-${singleShop.selectedShop?.shop_id}`
               : ""
           }
           passHref
@@ -220,15 +222,16 @@ const VendorSideBar = () => {
           href={
             singleShop.loaded
               ? `/cart/${singleShop.selectedShop?.shop?.name
-                  .split(" ")
-                  .join("-")
-                  .toLowerCase()}-${singleShop.selectedShop?.shop_id}`
+                .split(" ")
+                .join("-")
+                .toLowerCase()}-${singleShop.selectedShop?.shop_id}`
               : ""
           }
           passHref
         >
           <chakra.a
             mt="22px"
+            pos="relative"
             display="flex"
             alignItems="center"
             p="10px"
@@ -252,6 +255,24 @@ const VendorSideBar = () => {
               <CartIcon width={26} height={26} active={activeLink.cart} />
             </chakra.span>
             Cart
+            {carts && carts[0]?.cart_items.length > 0 && (
+              <chakra.div
+                w="18px"
+                h="18px"
+                bg="#FB7181"
+                pos="absolute"
+                top="-5px"
+                right="-5px"
+                borderRadius="50%"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                border="2px solid #fff"
+              >
+                <chakra.p color="#FFFFFF" fontWeight="700" fontSize="10px">
+                  {carts[0].cart_items.length}
+                </chakra.p>
+              </chakra.div>)}
           </chakra.a>
         </Link>
 
@@ -259,9 +280,9 @@ const VendorSideBar = () => {
           href={
             singleShop.loaded
               ? `/transactions/${singleShop.selectedShop?.shop?.name
-                  .split(" ")
-                  .join("-")
-                  .toLowerCase()}-${singleShop.selectedShop?.shop_id}`
+                .split(" ")
+                .join("-")
+                .toLowerCase()}-${singleShop.selectedShop?.shop_id}`
               : ""
           }
           passHref
@@ -347,11 +368,10 @@ const VendorSideBar = () => {
                     href={
                       singleShop.loaded
                         ? `/customers/${singleShop.selectedShop?.shop?.name
-                            .split(" ")
-                            .join("-")
-                            .toLowerCase()}-${
-                            singleShop.selectedShop?.shop_id
-                          }`
+                          .split(" ")
+                          .join("-")
+                          .toLowerCase()}-${singleShop.selectedShop?.shop_id
+                        }`
                         : ""
                     }
                     passHref
@@ -378,11 +398,10 @@ const VendorSideBar = () => {
                     href={
                       singleShop.loaded
                         ? `/team/${singleShop.selectedShop?.shop?.name
-                            .split(" ")
-                            .join("-")
-                            .toLowerCase()}-${
-                            singleShop.selectedShop?.shop_id
-                          }`
+                          .split(" ")
+                          .join("-")
+                          .toLowerCase()}-${singleShop.selectedShop?.shop_id
+                        }`
                         : ""
                     }
                     passHref
@@ -469,11 +488,10 @@ const VendorSideBar = () => {
                     href={
                       singleShop.loaded
                         ? `/settings/${singleShop.selectedShop?.shop?.name
-                            .split(" ")
-                            .join("-")
-                            .toLowerCase()}-${
-                            singleShop.selectedShop?.shop_id
-                          }`
+                          .split(" ")
+                          .join("-")
+                          .toLowerCase()}-${singleShop.selectedShop?.shop_id
+                        }`
                         : ""
                     }
                     passHref
