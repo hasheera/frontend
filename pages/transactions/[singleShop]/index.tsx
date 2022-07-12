@@ -592,26 +592,27 @@ const TransactionsPage: NextPage = () => {
 
           {transaction === "stock movement" && (
             <chakra.div />
-          )}
+            )}
 
           {transaction === "activity" && (
-            <chakra.div>
-              <InputGroup w={{ base: "200px", xl: "411.52px" }}>
-                <Input
-                  placeholder="Search for activity"
-                  type="text"
-                  w={{ base: "200px", xl: "411.52px" }}
-                  h="39.08px"
-                  fontSize="12px"
-                  fontWeight="500, Medium"
-                  lineHeight="15px"
-                  bg="#ffffff"
-                />
-                <InputRightElement>
-                  <SearchIcon width={20} height={20} color="black" />
-                </InputRightElement>
-              </InputGroup>
-            </chakra.div>
+            <chakra.div />
+            // <chakra.div>
+            //   <InputGroup w={{ base: "200px", xl: "411.52px" }}>
+            //     <Input
+            //       placeholder="Search for activity"
+            //       type="text"
+            //       w={{ base: "200px", xl: "411.52px" }}
+            //       h="39.08px"
+            //       fontSize="12px"
+            //       fontWeight="500, Medium"
+            //       lineHeight="15px"
+            //       bg="#ffffff"
+            //     />
+            //     <InputRightElement>
+            //       <SearchIcon width={20} height={20} color="black" />
+            //     </InputRightElement>
+            //   </InputGroup>
+            // </chakra.div>
           )}
 
           <Menu>

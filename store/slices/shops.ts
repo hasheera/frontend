@@ -287,7 +287,7 @@ export const shopsSlice = createSlice({
       })
       .addCase(getStockMovement.fulfilled, (state, { payload }) => {
         state.stockMovements.loaded = true
-        state.stockMovements.data = payload.data
+        state.stockMovements.data = payload.data.data
       })
       .addCase(listShopSettings.fulfilled, (state, { payload }) => {
         state.shopSettings = payload.data.data.data
