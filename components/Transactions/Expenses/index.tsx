@@ -5,10 +5,11 @@ import { AdditionIcon } from "@public/assets";
 import AddNewExpense from "@components/Modals/AddNewExpense";
 import { useAppDispatch, useAppSelector } from "hooks";
 import { shopsData } from "store/slices/shops";
-import { getTransactionsExpenses } from "store/slices/carts";
+import { cartsData, getTransactionsExpenses } from "store/slices/carts";
 
 
-const Sales: FC = () => {
+const Expenses: FC = () => {
+  const { transactionExpenses } = useAppSelector(cartsData);
   const { singleShop } = useAppSelector(shopsData);
   const dispatch = useAppDispatch();
   const addNewExpense = useDisclosure();
@@ -19,6 +20,10 @@ const Sales: FC = () => {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [singleShop]);
+
+  if (!transactionExpenses.loaded) {
+    <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -59,4 +64,4 @@ const Sales: FC = () => {
   );
 };
 
-export default Sales;
+export default Expenses;
