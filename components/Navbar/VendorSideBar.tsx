@@ -14,6 +14,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import {
   CardIcon,
+  CartIcon,
   CautionIcon,
   DashAddProductsIcon,
   DashLedgerIcon,
@@ -37,7 +38,7 @@ const VendorSideBar = () => {
   const [activeLink, setActiveLink] = useState({
     overview: false,
     products: false,
-    add: false,
+    cart: false,
     orders: false,
     more: false,
   });
@@ -71,10 +72,10 @@ const VendorSideBar = () => {
         products: true,
       });
     }
-    if (router.pathname.includes("import")) {
+    if (router.pathname.includes("cart")) {
       return setActiveLink({
         ...activeLink,
-        add: true,
+        cart: true,
       });
     }
     if (router.pathname.includes("transactions")) {
@@ -218,7 +219,7 @@ const VendorSideBar = () => {
         <Link
           href={
             singleShop.loaded
-              ? `/import/${singleShop.selectedShop?.shop?.name
+              ? `/cart/${singleShop.selectedShop?.shop?.name
                   .split(" ")
                   .join("-")
                   .toLowerCase()}-${singleShop.selectedShop?.shop_id}`
@@ -232,29 +233,25 @@ const VendorSideBar = () => {
             alignItems="center"
             p="10px"
             borderRadius="5px"
-            fontWeight={activeLink.add ? "600" : "500"}
-            bg={activeLink.add ? "#2153CC" : "transparent"}
-            color={activeLink.add ? "white" : "#A3AED0"}
+            fontWeight={activeLink.cart ? "600" : "500"}
+            bg={activeLink.cart ? "#2153CC" : "transparent"}
+            color={activeLink.cart ? "white" : "#A3AED0"}
             _hover={{ color: "white", bg: "#2153CC", fontWeight: "600" }}
             onMouseOver={() =>
-              router.pathname.includes("import")
+              router.pathname.includes("cart")
                 ? false
-                : handleHover("add", true)
+                : handleHover("cart", true)
             }
             onMouseOut={() =>
-              router.pathname.includes("import")
+              router.pathname.includes("cart")
                 ? false
-                : handleHover("add", false)
+                : handleHover("cart", false)
             }
           >
             <chakra.span mr="14px">
-              <DashAddProductsIcon
-                width={24}
-                height={24}
-                active={activeLink.add}
-              />
+              <CartIcon width={26} height={26} active={activeLink.cart} />
             </chakra.span>
-            Add Product
+            Cart
           </chakra.a>
         </Link>
 

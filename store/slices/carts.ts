@@ -47,7 +47,6 @@ export const addToCart = createAsyncThunk(
     } = params;
     
     let query: string;
-    console.log(params)
     try {
       if (cartLength) {
         if (itemInCart) {

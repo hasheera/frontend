@@ -183,82 +183,6 @@ const VendorNavbarHeader = () => {
       </chakra.div>
 
       <chakra.div display="flex" alignItems="center">
-        <chakra.div>
-          {/* {batchType === "checkout" && ( */}
-            <chakra.button
-              onClick={() =>
-                router.push(
-                  `/cart/${singleShop.selectedShop?.shop.name
-                    .split(" ")
-                    .join("-")
-                    .toLowerCase()}-${singleShop.selectedShop?.shop_id}`
-                )
-              }
-              display="flex"
-              alignItems="center"
-              pos="relative"
-            >
-              {/* <CartRecIcon width={24} height={24} color="#2153CC" /> */}
-              {carts && carts[0]?.cart_items.length > 0 ? (
-                <chakra.div
-                  w="18px"
-                  h="18px"
-                  bg="#FB7181"
-                  pos="absolute"
-                  top="-5px"
-                  right="-5px"
-                  borderRadius="50%"
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                  border="2px solid #fff"
-                >
-                  <chakra.p color="#FFFFFF" fontWeight="700" fontSize="10px">
-                    {carts[0].cart_items.length}
-                  </chakra.p>
-                </chakra.div>
-              ) : (
-                ""
-              )}
-
-              <CartIcon width={25} height={25} />
-            </chakra.button>
-          {/* )} */}
-
-          {/* {batchType === "transfer" && (
-            <chakra.button
-              onClick={() => false}
-              display="flex"
-              alignItems="center"
-              pos="relative"
-            >
-              {transferItems ? (
-                <chakra.div
-                  w="18px"
-                  h="18px"
-                  bg="#FB7181"
-                  pos="absolute"
-                  top="-5px"
-                  right="-5px"
-                  borderRadius="50%"
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                  border="2px solid #fff"
-                >
-                  <chakra.p color="#FFFFFF" fontWeight="700" fontSize="10px">
-                    {transferItems}
-                  </chakra.p>
-                </chakra.div>
-              ) : (
-                ""
-              )}
-
-              <TransferIcon width={24} height={24} color="#2153CC" />
-            </chakra.button>
-          )} */}
-        </chakra.div>
-
         <Menu>
           {({ isOpen }) => (
             <>
@@ -284,16 +208,8 @@ const VendorNavbarHeader = () => {
                 </chakra.span>
               </MenuButton>
               <MenuList h="100%" maxH="500px" overflowY="scroll">
-                <MenuItem
-                  p="10px"
-                  fontSize="0.75rem"
-                  color="#242533"
-                  _hover={{ bg: "rgba(33, 83, 204, 0.08)", color: "#2153CC" }}
-                >
-                  Notifications
-                </MenuItem>
                 <NextLink href="/" passHref>
-                  <MenuItem color="#2153CC">
+                  <MenuItem color="#2153CC" onClick={() => router.push(process.env.NEXT_PUBLIC_BASE_USER_URL)}>
                     <chakra.p fontWeight="500" fontSize="15px">
                       Back to Home
                     </chakra.p>

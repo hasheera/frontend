@@ -59,10 +59,14 @@ const formatNum = (amt: number) => {
 
 const logout = () => {
   localStorage.clear();
-  Cookies.remove("token");
   Cookies.remove("shopId");
   Cookies.remove("alphaShopId");
   Cookies.remove("hasShopRole");
+  if(window.location.origin.includes("shopurban")) {
+    Cookies.set("token", "", { path: '/', domain: process.env.NEXT_PUBLIC_DOMAIN, secure: true, sameSite: 'none' });
+  } else {
+    Cookies.remove("token");
+  }
 
   if (window.location.pathname !== "/") return window.location.replace(process.env.NEXT_PUBLIC_BASE_USER_URL);
   return window.location.reload();
