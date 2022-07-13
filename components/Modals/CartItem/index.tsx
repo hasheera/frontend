@@ -41,7 +41,7 @@ const CartItem: FC<Props> = ({ isOpen, onClose }) => {
   const addItemToCart = async () => {
     setIsRequest(true);
     try {
-      const item = carts[0].cart_items.find(i => i.shop_product_id === singleProduct.id)
+      const item = carts.length ? carts[0].cart_items.find(i => i.shop_product_id === singleProduct.id) : null;
       const res: { data: any } | any = await dispatch<any>(addToCart(
         {
           quantity: productQuantity,
@@ -49,8 +49,8 @@ const CartItem: FC<Props> = ({ isOpen, onClose }) => {
           shopProductId: singleProduct.id,
           content: productNote,
           shopId: singleShop.selectedShop.id,
-          cartLength: carts[0].cart_items.length || 0,
-          cartId: carts[0].id,
+          cartLength: carts.length ? carts[0].cart_items?.length : 0,
+          cartId: carts[0]?.id,
           itemInCart: !!item,
           itemId: item ? item.id : null
         }
@@ -71,6 +71,7 @@ const CartItem: FC<Props> = ({ isOpen, onClose }) => {
       }
       return res;
     } catch (error) {
+      console.log(error)
       return error
     }
   };

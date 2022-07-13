@@ -22,6 +22,7 @@ import {
 import AddNewExpense from "@components/Modals/AddNewExpense";
 import StockMovement from "@components/Transactions/StockMovement";
 import Sales from "@components/Transactions/Sales";
+import Activity from "@components/Transactions/Activity";
 
 
 const TransactionsPage: NextPage = () => {
@@ -593,6 +594,27 @@ const TransactionsPage: NextPage = () => {
             <chakra.div />
           )}
 
+          {transaction === "activity" && (
+            <chakra.div />
+            // <chakra.div>
+            //   <InputGroup w={{ base: "200px", xl: "411.52px" }}>
+            //     <Input
+            //       placeholder="Search for activity"
+            //       type="text"
+            //       w={{ base: "200px", xl: "411.52px" }}
+            //       h="39.08px"
+            //       fontSize="12px"
+            //       fontWeight="500, Medium"
+            //       lineHeight="15px"
+            //       bg="#ffffff"
+            //     />
+            //     <InputRightElement>
+            //       <SearchIcon width={20} height={20} color="black" />
+            //     </InputRightElement>
+            //   </InputGroup>
+            // </chakra.div>
+          )}
+
           <Menu>
             {({ isOpen }) => (
               <>
@@ -605,6 +627,11 @@ const TransactionsPage: NextPage = () => {
                   color={transaction ? "white" : "#242533"}
                   fontSize="0.875rem"
                   fontWeight="500"
+                  css={{
+                    span: {
+                      color: transaction || isOpen ? "white" : "#A3AED0"
+                    },
+                  }}
                 >
                   <chakra.span display="flex" alignItems="center">
                     <chakra.span mr="14px" textTransform="capitalize">
@@ -667,6 +694,19 @@ const TransactionsPage: NextPage = () => {
                   >
                     Stock movement
                   </MenuItem>
+                  <MenuItem
+                    textTransform="capitalize"
+                    onClick={() => setTransaction("activity")}
+                    p="10px"
+                    fontSize="0.75rem"
+                    color="#242533"
+                    _hover={{
+                      bg: "rgba(33, 83, 204, 0.08)",
+                      color: "#2153CC",
+                    }}
+                  >
+                    Activity
+                  </MenuItem>
                 </MenuList>
               </>
             )}
@@ -676,6 +716,7 @@ const TransactionsPage: NextPage = () => {
         {transaction === "sales" && <Sales />}
         {transaction === "expenses" && <Expenses />}
         {transaction === "stock movement" && <StockMovement />}
+        {transaction === "activity" && <Activity />}
       </chakra.div>
       <AddNewExpense isOpen={addNewExpense.isOpen} onClose={addNewExpense.onClose} />
     </VendorDashBoardLayout>

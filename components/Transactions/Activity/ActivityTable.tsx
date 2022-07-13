@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import {
   chakra,
   Table,
@@ -7,28 +8,30 @@ import {
   Td,
   Thead,
   Th,
+  Box,
   Avatar,
-  Flex,
+  Flex
 } from "@chakra-ui/react";
-import AuthAxios from "@utils/api/authAxios";
 import { formatPrice } from "@utils/helpers";
-import { useAppDispatch, useAppSelector } from "hooks";
-import { cartsData, setTransactionsExpenses } from "store/slices/carts";
+import dayjs from "dayjs";
+import { useAppSelector } from "hooks";
+import { cartsData, setTransactionsSales } from "store/slices/carts";
 import { shopsData } from "store/slices/shops";
+import AuthAxios from "@utils/api/authAxios";
 import { MoreIcon, PagiNext, PagiPrev } from "../../../public/assets";
 
 
-const SalesTable = () => {
-  const { transactionExpenses } = useAppSelector(cartsData);
-  const { singleShop } = useAppSelector(shopsData);
-  const dispatch = useAppDispatch();
+const ActivityTable = () => {
+  const { transactionSales } = useAppSelector(cartsData);
+  const { singleShop, shopActivity } = useAppSelector(shopsData);
+  const router = useRouter();
+
   const tableHeadData: string[] = [
-    "Expense ID",
+    "No",
     "Date",
-    "Staff",
-    "Purpose",
-    "Amount Spent",
-    "Payment Status",
+    "Name",
+    "Type",
+    "Action",
   ];
 
   const orderStatusColor = (paymentStatus: string) => {
@@ -44,14 +47,18 @@ const SalesTable = () => {
     }
   };
 
+  const goToInvoice = (orderNumber) => {
+    router.push(`/invoice/${router.query.singleShop}/${orderNumber}`);
+  };
+
   const nextPage = (url: string) => {
     AuthAxios.get(`${url}&shop_id=${singleShop.selectedShop.id}`)
       .then((res) => {
-        dispatch<any>(setTransactionsExpenses({
-          ...transactionExpenses,
-          data: { ...transactionExpenses.data, ...res.data.data.data },
+        setTransactionsSales({
+          ...transactionSales,
+          data: [...transactionSales.data, ...res.data.data.data],
           loaded: true,
-        }));
+        });
       })
       .catch((e) => e);
   };
@@ -59,11 +66,11 @@ const SalesTable = () => {
   const prevPage = (url) => {
     AuthAxios.get(`${url}&shop_id=${singleShop.selectedShop.id}`)
       .then((res) => {
-        dispatch<any>(setTransactionsExpenses({
-          ...transactionExpenses,
-          data: { ...transactionExpenses.data, ...res.data.data.data },
+        setTransactionsSales({
+          ...transactionSales,
+          data: [...transactionSales.data, ...res.data.data.data],
           loaded: true,
-        }));
+        });
       })
       .catch((e) => e);
   };
@@ -71,7 +78,10 @@ const SalesTable = () => {
   return (
     <>
       <chakra.div display={{ base: "none", xl: "block" }}>
-        <TableContainer bg="#FFFFFF">
+        <TableContainer
+          bg="#FFFFFF"
+        //  w="1042px"
+        >
           <Table>
             {/* <Table> */}
             <Thead>
@@ -79,6 +89,7 @@ const SalesTable = () => {
                 {tableHeadData.map((data: string) => (
                   <Th
                     key={data}
+                    // p="13.89px"
                     color="#1E2134"
                     fontWeight="600"
                     boxShadow="inset 0px -0.868333px 0px #E0E0E0"
@@ -89,10 +100,12 @@ const SalesTable = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {transactionExpenses.loaded &&
-                transactionExpenses.data.data.map((data: any, i: number) => (
-                  <Tr key={data.id}>
-                    {/* // # Order Number */}
+              {shopActivity.loaded &&
+                shopActivity.data?.data.map((data) => (
+                  <Tr
+                    key={data.id}
+                  >
+                    {/* // # Number */}
                     <Td
                       h="62.52px"
                       boxShadow="inset 0px -0.868333px 0px #E0E0E0"
@@ -104,7 +117,7 @@ const SalesTable = () => {
                         lineHeight="19.09px"
                         letterSpacing="0.13025px"
                       >
-                        {i + 1 < 10 ? `0${i + 1}` : i + 1}
+                        {data.id}
                       </chakra.p>
                     </Td>
                     {/* // # Date */}
@@ -116,72 +129,51 @@ const SalesTable = () => {
                         lineHeight="19.09px"
                         letterSpacing="0.13025px"
                       >
-                        {new Date(data.created_at).toDateString()}
+                        {dayjs(data.created_at).format('MMM DD, YYYY; hh:mma')}
                       </chakra.p>
                     </Td>
-                    {/* // # Staff */}
+                    {/* // # name */}
                     <Td h="64px" boxShadow="inset 0px -0.868333px 0px #E0E0E0">
-                      <Flex
-                        w="fit-content"
-                        justifyContent="space-between"
-                        alignItems="center"
-                      >
-                        <Avatar
-                          size="sm"
-                          src={data.user?.image}
-                          name={`${data.user?.surname} ${data.user?.first_name}`}
-                        />
+                      <Flex justifyContent="space-between" alignItems="center">
                         <chakra.p
-                          ml="10px"
                           color="#1E2134"
                           fontSize="12.16px"
                           fontWeight="400"
                           lineHeight="19.09px"
                           letterSpacing="0.13025px"
                         >
-                          {`${data.user?.surname} ${data.user?.first_name}`}
+                          {data.reason}
                         </chakra.p>
                       </Flex>
                     </Td>
-                    {/* // # Purpose */}
+
+                    {/* // # type */}
                     <Td h="64px" boxShadow="inset 0px -0.868333px 0px #E0E0E0">
                       <chakra.p
                         color="#1E2134"
-                        fontSize="12.16px"
+                        fontSize="13.38px"
                         fontWeight="400"
                         lineHeight="19.09px"
                         letterSpacing="0.13025px"
                       >
-                        {data.spent_on}
+                        {data.activityable_type.split("\\")[data.activityable_type.split("\\").length - 1]}
                       </chakra.p>
                     </Td>
-                    {/* // # Amount Spent */}
-                    <Td h="64px" boxShadow="inset 0px -0.868333px 0px #E0E0E0">
-                      <chakra.p
-                        color="#1E2134"
-                        fontSize="13.38px"
-                        fontWeight="600"
-                        lineHeight="19.09px"
-                        letterSpacing="0.13025px"
-                      >
-                        &#8358; {formatPrice(data.amount_paid)}
-                      </chakra.p>
-                    </Td>
-                    {/* // # Payment Status */}
+                    {/* // # View */}
                     <Td>
                       <chakra.button
-                        minW="84.1px"
-                        w="fit-content"
+                        // onClick={() => goToInvoice(data.order_number)}
+                        w="90px"
+                        h="29.56px"
                         borderRadius="4.78px"
-                        bg={orderStatusColor(data.status)}
+                        bg="#2153CC"
                         fontSize="13.38px"
                         fontWeight="500"
                         lineHeight="20.07px"
                         color="#FFFFFF"
-                        p="6px"
                         textTransform="capitalize"
                       >
-                        {data.status}
+                        View
                       </chakra.button>
                     </Td>
                   </Tr>
@@ -189,6 +181,7 @@ const SalesTable = () => {
             </Tbody>
             {/* </Table> */}
           </Table>
+
           <chakra.div
             h="41.68px"
             w="100%"
@@ -212,24 +205,20 @@ const SalesTable = () => {
               {/* 1-5 of 13 */}
             </chakra.p>
             <chakra.button
-              disabled={
-                transactionExpenses.data?.prev_page_url === null
-              }
+              disabled={shopActivity.data?.prev_page_url === null}
               cursor="pointer"
               _disabled={{ cursor: "not-allowed" }}
               px="20px"
-              onClick={() => prevPage(transactionExpenses.data?.prev_page_url)}
+              onClick={() => prevPage(shopActivity.data?.prev_page_url)}
             >
               <PagiPrev />
             </chakra.button>
             <chakra.button
-              disabled={
-                transactionExpenses.data?.next_page_url === null
-              }
+              disabled={shopActivity.data?.next_page_url === null}
               cursor="pointer"
               _disabled={{ cursor: "not-allowed" }}
               px="20px"
-              onClick={() => nextPage(transactionExpenses.data?.next_page_url)}
+              onClick={() => nextPage(shopActivity.data?.next_page_url)}
             >
               <PagiNext />
             </chakra.button>
@@ -241,13 +230,14 @@ const SalesTable = () => {
       <chakra.div
         display={{ base: "flex", xl: "none" }}
         w="100%"
-        flexDirection="column"
         justifyContent="center"
         alignItems="center"
+        flexWrap="wrap"
+        gap="20px"
         pb="100px"
       >
-        {transactionExpenses.loaded &&
-          transactionExpenses.data.data.map((data) => (
+        {shopActivity.loaded &&
+          shopActivity.data?.data.map((data) => (
             <chakra.div
               key={data.id}
               w="100%"
@@ -256,29 +246,15 @@ const SalesTable = () => {
               borderRadius="6px"
               bg="#FFFFFF"
               margin="7px 0px"
+              pl="15px"
             >
               <chakra.div
                 display="flex"
-                p="10px"
-                pl="15px"
-                pt="15"
+                py="15"
                 justifyContent="space-between"
               >
                 <chakra.div display="flex" alignItems="center">
-                  <Avatar
-                    size="sm"
-                    name={`${data.user.surname} ${data.user.first_name}`}
-                  />
-                  <chakra.div ml="7px">
-                    <chakra.p
-                      fontSize="14px"
-                      fontWeight="500"
-                      color="#333333"
-                      lineHeight="21.98px"
-                      margin="3px 0"
-                    >
-                      {`${data.user.surname} ${data.user.first_name}`}
-                    </chakra.p>
+                  <chakra.div>
                     <chakra.p
                       fontSize="12px"
                       fontWeight="500"
@@ -287,35 +263,36 @@ const SalesTable = () => {
                       opacity="50%"
                       margin="3px 0"
                     >
-                      {data.id < 10 ? `0${data.id}` : data.id} |{" "}
-                      {new Date(data.created_at).toDateString()}
+                      {`#${data.id} | ${new Date(
+                        data.created_at
+                      ).toDateString()}`}
                     </chakra.p>
                   </chakra.div>
                 </chakra.div>
-                <chakra.div display="flex">
-                  <chakra.p
-                    fontWeight="700"
-                    fontSize="15.35px"
-                    lineHeight="23.02px"
-                    color="#333333"
-                    opacity="87%"
-                    mt="-4px"
-                  >
-                    &#8358; {formatPrice(data.amount)}
-                  </chakra.p>
-                  <chakra.div cursor="pointer" ml="20px">
-                    <MoreIcon />
-                  </chakra.div>
-                </chakra.div>
               </chakra.div>
-              <chakra.div display="flex" pl="50px">
+
+              <chakra.div display="flex">
+                <chakra.p
+                  fontWeight="700"
+                  fontSize="15.35px"
+                  lineHeight="23.02px"
+                  color="#333333"
+                  opacity="87%"
+                >
+                  {data.activityable_type.split("\\")[data.activityable_type.split("\\").length - 1]}
+                </chakra.p>
+                {/* <chakra.div cursor="pointer" ml="20px">
+                  <MoreIcon />
+                </chakra.div> */}
+              </chakra.div>
+
+              <chakra.div display="flex">
                 <chakra.div
-                  w="92px"
+                  // w="92px"
                   h="27.56px"
-                  bg="#F7F8FA"
+                  // bg="#F7F8FA"
                   borderRadius="12px"
                   display="flex"
-                  justifyContent="center"
                   alignItems="center"
                 >
                   <chakra.p
@@ -324,29 +301,7 @@ const SalesTable = () => {
                     lineHeight="18px"
                     fontSize="12px"
                   >
-                    {data.spent_on}
-                  </chakra.p>
-                </chakra.div>
-
-                <chakra.div
-                  // w="84.1px"
-                  p="5px 30px"
-                  h="27.56px"
-                  bg={orderStatusColor(data.status)}
-                  borderRadius="12px"
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                  ml="8px"
-                >
-                  <chakra.p
-                    color="#ffffff"
-                    fontWeight="500"
-                    fontSize="12px"
-                    lineHeight="18px"
-                    textTransform="capitalize"
-                  >
-                    {data.status}
+                    {data.reason}
                   </chakra.p>
                 </chakra.div>
               </chakra.div>
@@ -357,4 +312,4 @@ const SalesTable = () => {
   );
 };
 
-export default SalesTable;
+export default ActivityTable;

@@ -19,7 +19,6 @@ import {
   SearchIcon,
   SortIcon
 } from "public/assets";
-import Cookies from "js-cookie";
 import { getSingleShop, setBatchType, setSearchProducts, setSingleShop, shopsData } from "store/slices/shops";
 import { useAppDispatch, useAppSelector } from "hooks";
 import AuthAxios from "@utils/api/authAxios";
@@ -34,14 +33,14 @@ const Product: NextPage = () => {
   const [sticky, setSticky] = useState(false);
   const router = useRouter();
 
-  const stickyNav = () => {
-    if (window.scrollY > 72) {
-      setSticky(true);
-    } else setSticky(false);
-  };
+  // const stickyNav = () => {
+  //   if (window.scrollY > 72) {
+  //     setSticky(true);
+  //   } else setSticky(false);
+  // };
 
   useEffect(() => {
-    window.addEventListener("scroll", stickyNav);
+    // window.addEventListener("scroll", stickyNav);
 
     if (router.isReady) {
       const querySplit = (router.query.singleShop as string).split("-");
@@ -65,9 +64,9 @@ const Product: NextPage = () => {
 
     }
 
-    return () => {
-      window.removeEventListener("scroll", stickyNav);
-    };
+    // return () => {
+    //   window.removeEventListener("scroll", stickyNav);
+    // };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router, vendorShops]);
 

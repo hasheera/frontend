@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useAppDispatch, useAppSelector } from "hooks";
+import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { createContext, ReactElement, useEffect, useState } from "react";
 import { getOpenCart, getTransactionSales } from "store/slices/carts";
@@ -21,6 +22,11 @@ const GlobalFunctionsProvider = ({ children }: { children: ReactElement }) => {
   const router = useRouter()
 
   useEffect(() => {
+    if(!Cookies.get("token")) {
+      if(router.isReady && router.pathname !== "/login") {
+        router.replace("/login")
+      }
+    }
     if (!userLoaded) dispatch<any>(getUser())
     if (!vendorShops.loaded) dispatch<any>(getVendorShops())
     // eslint-disable-next-line react-hooks/exhaustive-deps

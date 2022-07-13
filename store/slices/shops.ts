@@ -46,6 +46,7 @@ export type shopsState = {
   }[] | any;
   customers: { loaded: boolean, data: [] };
   vendorTeam: { loaded: boolean; data: [] | null };
+  shopActivity: { loaded: boolean; data: any };
 };
 
 export const getVendorShops = createAsyncThunk(
@@ -153,6 +154,25 @@ export const getTeams = createAsyncThunk(
   },
 );
 
+export const getShopActivity = createAsyncThunk(
+  'getShopActivity',
+  async (arg: any, { rejectWithValue }) => {
+    const { id, directDate, startDate, endDate } = arg;
+    try {
+      const response = await AuthAxios.get(`/oga/activity/shop/product/index?shop_id=${id}${directDate
+      ? `&direct_date=${directDate}`
+      : `${startDate ? `&date_from=${startDate}` : ""}${
+          endDate ? `&date_to=${endDate}` : ""
+        }`
+  }`);
+      return response;
+
+    } catch (ex) {
+      return rejectWithValue(getExceptionPayload(ex));
+    }
+  },
+);
+
 export const initialState: shopsState = {
   vendorShops: {
     loaded: false,
@@ -192,7 +212,8 @@ export const initialState: shopsState = {
   },
   shopSettings: null,
   customers: { loaded: false, data: [] },
-  vendorTeam: { loaded: false, data: [] }
+  vendorTeam: { loaded: false, data: [] },
+  shopActivity: { loaded: false, data: null }
 };
 
 export const shopsSlice = createSlice({
@@ -232,6 +253,10 @@ export const shopsSlice = createSlice({
     },
     updateHasShopRole: (state, action: PayloadAction<shopsState["hasShopRole"]>) => {
       state.hasShopRole = action.payload
+    },
+    setShopActivity: (state, action: PayloadAction<shopsState["shopActivity"]>) => {
+      state.shopActivity.loaded = true
+      state.shopActivity.data = action.payload
     }
   },
   extraReducers: builder => {
@@ -262,7 +287,7 @@ export const shopsSlice = createSlice({
       })
       .addCase(getStockMovement.fulfilled, (state, { payload }) => {
         state.stockMovements.loaded = true
-        state.stockMovements.data = payload.data
+        state.stockMovements.data = payload.data.data
       })
       .addCase(listShopSettings.fulfilled, (state, { payload }) => {
         state.shopSettings = payload.data.data.data
@@ -275,6 +300,10 @@ export const shopsSlice = createSlice({
         state.vendorTeam.loaded = true
         state.vendorTeam.data = payload.data.data.data
       })
+      .addCase(getShopActivity.fulfilled, (state, { payload }) => {
+        state.shopActivity.loaded = true
+        state.shopActivity.data = payload.data.data
+      })
   },
 });
 
@@ -286,7 +315,8 @@ export const {
   setSingleProduct,
   setStockMovement,
   updateHasShopRole,
-  setSearchProducts
+  setSearchProducts,
+  setShopActivity
 } = shopsSlice.actions;
 
 export const shopsData = (state: RootState) => state.shops;
