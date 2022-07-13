@@ -57,3 +57,5 @@ export { default as SendInviteIcon } from "./svg-icons/SendInviteIcon";
 export { default as NigeriaFlag } from "./svg-icons/NigeriaFlag";
 export { default as ErrorIcon } from "./svg-icons/ErrorIcon";
 export { default as RemoveIcon } from "./svg-icons/RemoveIcon";
+export { default as PasswordCloseIcon } from "./svg-icons/PasswordCloseIcon";
+export { default as PasswordOpenIcon } from "./svg-icons/PasswordOpenIcon";
