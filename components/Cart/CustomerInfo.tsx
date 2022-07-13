@@ -113,6 +113,7 @@ const CustomerInfo = ({
     return () => document.removeEventListener("mousedown", clickOutside);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addresses.active]);
+  
 
   return (
     <ModalUI open={isOpen} close={onClose} heading="Customer Info" maxW="302px">

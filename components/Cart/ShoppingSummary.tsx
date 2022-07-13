@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PaymentLogo from "@components/PaymentLogo";
 import { useRouter } from "next/router";
 import { chakra, Button, useDisclosure, useToast, Spinner } from "@chakra-ui/react";
 import { RemoveIcon } from "@public/assets";
-import { useAppSelector } from "hooks";
+import { useAppDispatch, useAppSelector } from "hooks";
 import { userData } from "store/slices/user";
-import { cartsData } from "store/slices/carts";
+import { cartsData, getOpenCart } from "store/slices/carts";
 import AuthAxios from "@utils/api/authAxios";
+import { shopsData } from "store/slices/shops";
 import CustomerInfo from "./CustomerInfo";
 import ShoppingSummaryRecipt from "./ShoppingSummaryRecipt";
 
@@ -15,9 +16,11 @@ import ShoppingSummaryRecipt from "./ShoppingSummaryRecipt";
 const ShoppingSummary: React.FC = () => {
   const { user } = useAppSelector(userData);
   const { carts } = useAppSelector(cartsData);
+  const { singleShop } = useAppSelector(shopsData);
+  const dispatch = useAppDispatch();
   const [showDelivery, setShowDelivery] = useState(0);
   const [customer, setCustomer] = useState("");
-  const [customerDetails, setCustomerDetails] = useState({ name: `${user?.user.first_name} ${user?.user.surname}` || user?.user.username, phone: user?.user.contact_no });
+  const [customerDetails, setCustomerDetails] = useState({ name: "", phone: "" });
   const [searchAddress, setSearchAddress] = useState(null)
   const [isRequest, setIsRequest] = useState(false);
   const customerInfo = useDisclosure();
@@ -59,7 +62,8 @@ const ShoppingSummary: React.FC = () => {
           duration: 1000,
           position: "top",
         });
-        router.replace(`/invoice/${res.data.data.order.order_number}`)
+        dispatch<any>(getOpenCart(singleShop.selectedShop.id))
+        router.replace(`/invoice/${router.query.singleShop}/${res.data.data.order.order_number}`)
       }
       return res;
     } catch (e) {
@@ -73,6 +77,20 @@ const ShoppingSummary: React.FC = () => {
       return e
     }
   };
+
+  useEffect(() => {
+    if(customer === "me") {
+      setCustomerDetails({
+        name: `${user?.user.first_name} ${user?.user.surname}` || user?.user.username,
+        phone: user?.user.contact_no
+      });
+    }
+
+    if(customer === "customer") {
+      setCustomerDetails({ name: "", phone: "" })
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [customer])
 
   return (
     <chakra.div

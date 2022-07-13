@@ -8,8 +8,6 @@ import {
   InputRightElement,
   InputLeftElement,
 } from "@chakra-ui/react";
-import { formatPrice } from "@utils/helpers";
-import { useRouter } from "next/router";
 import { AdditionIcon, PencilIcon, SubtractionIcon } from "public/assets";
 import { shopsData } from "store/slices/shops";
 import { useAppDispatch, useAppSelector } from "hooks";
@@ -28,26 +26,22 @@ const CartItem: FC<Props> = ({ isOpen, onClose }) => {
   const [price, setPrice] = useState<any>(0);
   const [productNote, setProductNote] = useState<string>("");
   const [productQuantity, setProductQuantity] = useState(1);
-  // const [singleProduct, setProduct] = useState<any>({});
   const [isRequest, setIsRequest] = useState(false);
   const toast = useToast();
 
   useEffect(() => {
     if (singleShop.selectedShop.id) {
-      // const singleProduct = singleShop.shopData.find(
-      //   (data: any) => data.id === singlePorductId
-      // );
-      // setProduct(singleProduct);
       setPrice(singleProduct.sell_price);
+      setProductQuantity(1)
     }
-    // setProductQuantity(1);
-  }, [singleShop]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [singleShop, isOpen]);
+  
 
   const addItemToCart = async () => {
     setIsRequest(true);
     try {
-      const item = carts[0].cart_items.find(i => i.shop_product_id === singleProduct.id)
-      // const itemInCart = carts[0].cart_items.some(item => item.shop_product_id === singleProduct.id)
+      const item = carts.length ? carts[0].cart_items.find(i => i.shop_product_id === singleProduct.id) : null;
       const res: { data: any } | any = await dispatch<any>(addToCart(
         {
           quantity: productQuantity,
@@ -55,8 +49,8 @@ const CartItem: FC<Props> = ({ isOpen, onClose }) => {
           shopProductId: singleProduct.id,
           content: productNote,
           shopId: singleShop.selectedShop.id,
-          cartLength: carts[0].cart_items.length || 0,
-          cartId: carts[0].id,
+          cartLength: carts.length ? carts[0].cart_items?.length : 0,
+          cartId: carts[0]?.id,
           itemInCart: !!item,
           itemId: item ? item.id : null
         }
@@ -77,13 +71,10 @@ const CartItem: FC<Props> = ({ isOpen, onClose }) => {
       }
       return res;
     } catch (error) {
+      console.log(error)
       return error
     }
   };
-
-  // const setHeader = () => {
-
-  // }
 
   return (
     <ModalUI
@@ -130,7 +121,13 @@ const CartItem: FC<Props> = ({ isOpen, onClose }) => {
                 </chakra.button>
               )}
 
-              <Input type="number" value={productQuantity} textAlign="center" />
+              <Input type="number" onChange={e => {
+                if(Number(e.target.value) > singleProduct.stock_count) {
+                  return setProductQuantity(singleProduct.stock_count)
+                }
+                return setProductQuantity(Number(e.target.value))
+              }} value={productQuantity} textAlign="center" />
+
               {productQuantity < singleProduct.stock_count && (
                 <chakra.button
                   onClick={() => setProductQuantity((num: number) => num + 1)}
@@ -181,7 +178,7 @@ const CartItem: FC<Props> = ({ isOpen, onClose }) => {
         <chakra.div display="flex" justifyContent="space-between" alignItems="center">
           <chakra.div>
             <chakra.p fontWeight="600" fontSize="12px" color="#2153CC">
-              Total
+              Total: &#x20A6;
             </chakra.p>
           </chakra.div>
           <chakra.div>
@@ -211,12 +208,16 @@ const CartItem: FC<Props> = ({ isOpen, onClose }) => {
             padding="11.47px"
             margin="0 auto"
           >
-            <chakra.p fontSize="16px" fontWeight="600" color="#ffffff">
-              Add to cart
-            </chakra.p>
+            {isRequest ? (
+              <Spinner color="#fff" size="sm" />
+            ) : (
+              <chakra.p fontSize="16px" fontWeight="600" color="#ffffff">
+                Add to cart
+              </chakra.p>
+            )}
           </chakra.button>
         </chakra.div>
-        <chakra.div margin="14px 0">
+        {/* <chakra.div margin="14px 0">
           <chakra.button
             width="100%"
             height="43.13px"
@@ -227,14 +228,14 @@ const CartItem: FC<Props> = ({ isOpen, onClose }) => {
             margin="0 auto"
           >
             {isRequest ? (
-              <Spinner color="#fff" size="sm" />
+              <Spinner color="#2153CC" size="sm" />
             ) : (
               <chakra.p fontSize="16px" fontWeight="600" color="#2153CC">
                 Remove Item
               </chakra.p>
             )}
           </chakra.button>
-        </chakra.div>
+        </chakra.div> */}
       </chakra.div>
     </ModalUI>
   );

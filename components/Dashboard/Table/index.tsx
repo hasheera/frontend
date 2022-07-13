@@ -51,27 +51,8 @@ const DashboardTable = () => {
     }
   };
 
-  const nextPage = (url) => {
-    AuthAxios.get(`${url}&shop_id=${singleShop.selectedShop.id}`)
-      .then((res) => {
-        dispatch<any>(setTransactionsSales(res.data))
-        // setTransactionsSales({
-        //   ...transactionSales,
-        //   data: [...transactionSales.data, ...res.data.data.data],
-        //   next_page_url: res.data.data.next_page_url,
-        //   prev_page_url: res.data.data.prev_page_url,
-        //   loaded: true,
-        // });
-      })
-      .catch((e) => e);
-  };
-
-  const prevPage = (url) => {
-    AuthAxios.get(`${url}&shop_id=${singleShop.selectedShop.id}`)
-      .then((res) => {
-        dispatch<any>(setTransactionsSales(res.data))
-      })
-      .catch((e) => e);
+  const goToInvoice = (orderNumber) => {
+    router.push(`/invoice/${router.query.singleShop}/${orderNumber}`);
   };
 
   return (
@@ -119,7 +100,10 @@ const DashboardTable = () => {
               {transactionSales.loaded && transactionSales.data?.data.length > 0 ? (
                 <>
                   {transactionSales.data?.data.slice(0, 7).map((data) => (
-                    <Tr key={data.id}>
+                    <Tr
+                      key={data.id}
+                      onClick={() => goToInvoice(data.order_number)}
+                    >
                       {/* // # Order Number */}
                       <Td
                         h="63.92px"

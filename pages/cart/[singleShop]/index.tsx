@@ -26,7 +26,7 @@ const CartPage: NextPage = () => {
   return (
     <VendorDashBoardLayout>
       {cartsLoaded && (
-        carts[0].cart_items.length > 0 ? (
+        carts.length && carts[0].cart_items.length > 0 ? (
           <chakra.div
             mt={{ base: "10px", lg: "20px" }}
             pb={{ base: "80px", lg: "0" }}

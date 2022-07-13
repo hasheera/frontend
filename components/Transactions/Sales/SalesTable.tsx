@@ -384,6 +384,7 @@ const SalesTable = () => {
                     fontWeight="500"
                     fontSize="12px"
                     lineHeight="18px"
+                    textTransform="capitalize"
                   >
                     {data.status}
                   </chakra.p>

@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
-import { NextPage } from "next";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import NextLink from "next/link";
 import {
@@ -13,7 +12,6 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import ModernDatepicker from "react-modern-datepicker";
-import VendorDashBoardLayout from "@components/Layout/VendorDashBoardLayout";
 import DashboardTable from "@components/Dashboard/Table";
 import { formatPrice } from "@utils/helpers";
 import DashboardLineChart from "@components/Dashboard/Desktop/LineChart";
@@ -23,6 +21,7 @@ import Cookies from "js-cookie";
 import { changeDashboardBatchType, dashboardData, getDashboardData } from "store/slices/dashboard";
 import { useAppDispatch, useAppSelector } from "hooks";
 import { shopsData } from "store/slices/shops";
+import DatePicker from "react-datepicker";
 import {
   BankIcon,
   CashIcon,
@@ -34,38 +33,33 @@ import {
   ExpensesIcon,
   DropDownIcon,
 } from "../../../public/assets";
+import "react-datepicker/dist/react-datepicker.css";
 
-type SelectEvent = React.ChangeEvent<HTMLSelectElement>;
 
 const DesktopView = () => {
   const { singleShop } = useAppSelector(shopsData);
   const { dashboard, dashboardBatchType } = useAppSelector(dashboardData);
   const dispatch = useAppDispatch()
-  const [startDate, setStartDate] = useState<string>("");
-  const [endDate, setEndDate] = useState<string>("");
-  const [dateToShow, setDateToShow] = useState<string>("start");
-  const [directDate, setDirectDate] = useState<string>("");
-
-  // useEffect(() => {
-  //   const dash = {
-  //     id: singleShop.selectedShop.id,
-  //     directDate,
-  //     startDate,
-  //     endDate
-  //   };
-  //   dispatch<any>(getDashboardData(dash));
-  //   // if (singleShop.loaded) {
-  //   // }
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [singleShop, dashboardBatchType, startDate, endDate]);
+  const [startDate, setStartDate] = useState<Date>(null);
+  const [endDate, setEndDate] = useState<Date>(null);
 
   const applyDate = () => {
     // getTopSellingData(startDate, endDate);
   };
 
-  const directDateHandle = (e: SelectEvent) => {
-    setDirectDate(e.target.value);
+  const dateChange = (dates: [Date, Date]) => {
+    const [start, end] = dates;
+    setStartDate(start);
+    setEndDate(end);
+    if(end) {
+      dispatch<any>(getDashboardData({ id: singleShop.selectedShop.id, startDate, endDate }))
+    } 
   };
+
+  const handleChangeBatch = (batch: string) => {
+    dispatch<any>(changeDashboardBatchType(batch))
+    dispatch<any>(getDashboardData({ id: singleShop.selectedShop.id, directDate: batch }));
+  }
 
   if (!dashboard.loaded) {
     return (
@@ -86,256 +80,15 @@ const DesktopView = () => {
         Overview
       </chakra.p>
 
-      <chakra.div display="flex" justifyContent="space-around">
+      <chakra.div display="flex" justifyContent="space-between" gap={{ xl: "40px", '2xl': "100px" }}>
         <chakra.div
-          w="712px"
+          w="full"
           // h="503px"
           bg="#ffffff"
           borderRadius="4px"
           p="30px"
         >
-          <chakra.div display="flex" m="0px 30px" justifyContent="space-between">
-            <chakra.p
-              color="#333333"
-              fontWeight="700"
-              fontSize="24px"
-              lineHeight="31.68px"
-            >
-              Revenue
-            </chakra.p>
-            <chakra.div display="flex" alignItems="center">
-              <Menu>
-                {({ isOpen }) => (
-                  <>
-                    <MenuButton
-                      w="120px"
-                      h="30px"
-                      mr="8px"
-                      borderRadius="4.23px"
-                      border={
-                        isOpen ? "1px solid #2153CC" : "1px solid #E5E5E5"
-                      }
-                      px="5px"
-                    >
-                      <chakra.span
-                        display="flex"
-                        justifyContent="space-between"
-                        alignItems="center"
-                      >
-                        <chakra.p
-                          fontSize="12px"
-                          color="#0000004D"
-                          fontWeight="600"
-                          textTransform="capitalize"
-                        >
-                          {dashboardBatchType
-                            ? dashboardBatchType.split("_").join(" ")
-                            : ""}
-                        </chakra.p>
-                        <DropDownIcon width={10} height={6} color="#242533" />
-                      </chakra.span>
-                    </MenuButton>
-                    <MenuList w="120px">
-                      <MenuItem
-                        onClick={() => changeDashboardBatchType("today")}
-                        w="full"
-                        h="28.23px"
-                        display="flex"
-                        alignItems="center"
-                        color="#000"
-                        _hover={{ bg: "#2153CC", color: "white" }}
-                      >
-                        <chakra.p fontWeight="600">Today</chakra.p>
-                      </MenuItem>
-                      <MenuItem
-                        onClick={() => changeDashboardBatchType("yesterday")}
-                        w="full"
-                        h="28.23px"
-                        display="flex"
-                        alignItems="center"
-                        color="#000"
-                        _hover={{ bg: "#2153CC", color: "white" }}
-                      >
-                        <chakra.p fontWeight="600">Yesterday</chakra.p>
-                      </MenuItem>
-                      <MenuItem
-                        onClick={() => changeDashboardBatchType("this_week")}
-                        w="full"
-                        h="28.23px"
-                        display="flex"
-                        alignItems="center"
-                        color="#000"
-                        _hover={{ bg: "#2153CC", color: "white" }}
-                      >
-                        <chakra.p fontWeight="600">This Week</chakra.p>
-                      </MenuItem>
-                      <MenuItem
-                        onClick={() => changeDashboardBatchType("this_month")}
-                        w="full"
-                        h="28.23px"
-                        display="flex"
-                        alignItems="center"
-                        color="#000"
-                        _hover={{ bg: "#2153CC", color: "white" }}
-                      >
-                        <chakra.p fontWeight="600">This Month</chakra.p>
-                      </MenuItem>
-                      <MenuItem
-                        onClick={() => changeDashboardBatchType("this_year")}
-                        w="full"
-                        h="28.23px"
-                        display="flex"
-                        alignItems="center"
-                        color="#000"
-                        _hover={{ bg: "#2153CC", color: "white" }}
-                      >
-                        <chakra.p fontWeight="600">This year</chakra.p>
-                      </MenuItem>
-                    </MenuList>
-                  </>
-                )}
-              </Menu>
-              {/* <chakra.div>
-                <Button
-                  onClick={() => setDateToShow("start")}
-                  w="154px"
-                  h="40px"
-                  color={dateToShow === "start" ? "#FFFFFF" : "#19181A"}
-                  bg={dateToShow === "start" ? "#2153CC" : "#F8F7FA"}
-                  borderRadius="4px"
-                  margin="0px 8px"
-                  fontSize="14px"
-                  fontWeight="600"
-                  _hover={{
-                    background: `${
-                      dateToShow === "start" ? "#2153CC" : "#F8F7FA"
-                    }`,
-                  }}
-                  _focus={{ border: "none" }}
-                >
-                  Start Date
-                </Button>
-                <Button
-                  onClick={() => setDateToShow("end")}
-                  w="154px"
-                  h="40px"
-                  color={dateToShow === "end" ? "#FFFFFF" : "#19181A"}
-                  bg={dateToShow === "end" ? "#2153CC" : "#F8F7FA"}
-                  borderRadius="4px"
-                  margin="0px 8px"
-                  fontSize="14px"
-                  fontWeight="600"
-                  _hover={{
-                    background: `${
-                      dateToShow === "end" ? "#2153CC" : "#F8F7FA"
-                    }`,
-                  }}
-                  _focus={{ border: "none" }}
-                >
-                  End Date
-                </Button>
-              </chakra.div> */}
-              <chakra.div>
-                <Menu>
-                  <MenuButton
-                    w="160px"
-                    h="32px"
-                    borderRadius="4px"
-                    border="1px solid #E5E5E5"
-                  >
-                    <chakra.div
-                      // w="160px"
-                      // h="32px"
-                      // borderRadius="4px"
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="space-around"
-                    >
-                      <chakra.p
-                        color="#333333"
-                        fontWeight="400"
-                        fontSize="14px"
-                        letterSpacing="0.25 px"
-                      >
-                        Oct - Nov 2019
-                      </chakra.p>
-                      <CalenderIcon />
-                    </chakra.div>
-                  </MenuButton>
-                  <MenuList
-                    w="344px"
-                    h="504px"
-                    borderRadius="12px"
-                    bg="#FFFFFF"
-                    position="relative"
-                  >
-                    <chakra.div ml="20px">
-                      {dateToShow === "start" ? (
-                        <ModernDatepicker
-                          className="color"
-                          date={startDate}
-                          format="DD-MM-YYYY"
-                          // showBorder
-                          onChange={(date) => setStartDate(date)}
-                          placeholder="Start Date"
-                          primaryColor="#2153CC"
-                          secondaryColor="#ffffff"
-                          primaryTextColor="#19181A"
-                          secondaryTextColor="#FFFFFF"
-                        />
-                      ) : (
-                        <ModernDatepicker
-                          className="color"
-                          date={endDate}
-                          format="DD-MM-YYYY"
-                          showBorder
-                          onChange={(date) => setEndDate(date)}
-                          width="100px"
-                          height="40px"
-                          placeholder="End Date"
-                          primaryColor="#2153CC"
-                          secondaryColor="#ffffff"
-                          primaryTextColor="#19181A"
-                          secondaryTextColor="#FFFFFF"
-                        />
-                      )}
-                    </chakra.div>
-                    <chakra.div
-                      w="100%"
-                      position="absolute"
-                      bottom="10%"
-                      display="flex"
-                      justifyContent="center"
-                    >
-                      <Button
-                        onClick={applyDate}
-                        w="316px"
-                        h="40px"
-                        color="#FFFFFF"
-                        bg="#2153CC"
-                        borderRadius="8px"
-                        margin="0px 8px"
-                        fontSize="18px"
-                        fontWeight="700"
-                        _hover={{
-                          background: "#2153CC",
-                        }}
-                        _focus={{ border: "none" }}
-                      >
-                        Apply
-                      </Button>
-                    </chakra.div>
-                  </MenuList>
-                </Menu>
-              </chakra.div>
-            </chakra.div>
-          </chakra.div>
-          <chakra.div>
-            {/* //# Line Chart */}
-            <DashboardLineChart />
-          </chakra.div>
-
-          <chakra.div display="flex" mt="20px">
+          <chakra.div display="flex">
             <chakra.div>
               <chakra.p color="#9C9C9C" fontSize="12px" fontWeight="400">
                 Total Income
@@ -354,7 +107,7 @@ const DesktopView = () => {
                   letterSpacing="0.4px"
                   ml="5px"
                 >
-                  7,00%
+                  7.00%
                 </chakra.p>
               </chakra.div>
             </chakra.div>
@@ -537,13 +290,146 @@ const DesktopView = () => {
               </chakra.div>
             </chakra.div>
           </chakra.div>
+
+          <chakra.div display="flex" mt="100px" justifyContent="space-between">
+            <chakra.p
+              color="#333333"
+              fontWeight="700"
+              fontSize="24px"
+              lineHeight="31.68px"
+            >
+              Revenue
+            </chakra.p>
+
+            <chakra.div display="flex" alignItems="center">
+              <Menu>
+                {({ isOpen }) => (
+                  <chakra.div display="flex">
+                    <>
+                      <MenuButton
+                        w="120px"
+                        h="30px"
+                        mr="8px"
+                        borderRadius="4.23px"
+                        border={
+                          isOpen ? "1px solid #2153CC" : "1px solid #E5E5E5"
+                        }
+                        px="5px"
+                      >
+                        <chakra.div
+                          display="flex"
+                          justifyContent="space-between"
+                          alignItems="center"
+                        >
+                          <chakra.p
+                            fontSize="12px"
+                            color="#0000004D"
+                            fontWeight="600"
+                            textTransform="capitalize"
+                          >
+                            {dashboardBatchType.split("_").join(" ") || ""}
+                          </chakra.p>
+                          <DropDownIcon width={10} height={6} color="#242533" />
+                        </chakra.div>
+                      </MenuButton>
+                      <MenuList w="120px">
+                        <MenuItem
+                          onClick={() => handleChangeBatch("today")}
+                          w="full"
+                          h="28.23px"
+                          display="flex"
+                          alignItems="center"
+                          color="#000"
+                          _hover={{ bg: "#2153CC", color: "white" }}
+                        >
+                          <chakra.p fontWeight="600">Today</chakra.p>
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => handleChangeBatch("yesterday")}
+                          w="full"
+                          h="28.23px"
+                          display="flex"
+                          alignItems="center"
+                          color="#000"
+                          _hover={{ bg: "#2153CC", color: "white" }}
+                        >
+                          <chakra.p fontWeight="600">Yesterday</chakra.p>
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => handleChangeBatch("this_week")}
+                          w="full"
+                          h="28.23px"
+                          display="flex"
+                          alignItems="center"
+                          color="#000"
+                          _hover={{ bg: "#2153CC", color: "white" }}
+                        >
+                          <chakra.p fontWeight="600">This Week</chakra.p>
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => handleChangeBatch("this_month")}
+                          w="full"
+                          h="28.23px"
+                          display="flex"
+                          alignItems="center"
+                          color="#000"
+                          _hover={{ bg: "#2153CC", color: "white" }}
+                        >
+                          <chakra.p fontWeight="600">This Month</chakra.p>
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => handleChangeBatch("this_year")}
+                          w="full"
+                          h="28.23px"
+                          display="flex"
+                          alignItems="center"
+                          color="#000"
+                          _hover={{ bg: "#2153CC", color: "white" }}
+                        >
+                          <chakra.p fontWeight="600">This year</chakra.p>
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => dispatch<any>(changeDashboardBatchType("custom"))}
+                          w="full"
+                          h="28.23px"
+                          display="flex"
+                          alignItems="center"
+                          color="#000"
+                          _hover={{ bg: "#2153CC", color: "white" }}
+                        >
+                          <chakra.p fontWeight="600">Custom</chakra.p>
+                        </MenuItem>
+                      </MenuList>
+                    </>
+                    {dashboardBatchType === "custom" && <DatePicker
+                      selected={startDate}
+                      onChange={dateChange}
+                      startDate={startDate}
+                      endDate={endDate}
+                      maxDate={new Date()}
+                      className="date-border"
+                      placeholderText="Select date range"
+                      selectsRange
+                      isClearable
+                    />}
+                  </chakra.div>
+                )}
+              </Menu>
+            </chakra.div>
+          </chakra.div>
+
+          {/* //# Line Chart */}
+          <DashboardLineChart />
         </chakra.div>
+
         <chakra.div
           w="306.09px"
           h="496.64px"
           p="10px"
           borderRadius="4px"
           bg="#ffffff"
+          pos="sticky"
+          top="100px"
         >
           <chakra.p color="#2153CC" fontSize="16.22px" fontWeight="500">
             Top selling products

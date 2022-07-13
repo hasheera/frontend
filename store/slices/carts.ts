@@ -5,9 +5,7 @@ import type { RootState } from '../index';
 
 export type cartsState = {
   cartsLoaded: boolean;
-  carts: {
-    cart_items: [];
-  };
+  carts: any;
   transactionSales: {
     loaded: boolean;
     data: any;
@@ -47,7 +45,6 @@ export const addToCart = createAsyncThunk(
     } = params;
     
     let query: string;
-    console.log(params)
     try {
       if (cartLength) {
         if (itemInCart) {

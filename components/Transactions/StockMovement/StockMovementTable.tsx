@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import {
+  Avatar,
   Button,
   chakra,
   Table,
@@ -11,12 +12,13 @@ import {
   Tr,
   useDisclosure,
 } from "@chakra-ui/react";
-import { PagiNext, PagiPrev } from "public/assets";
+import { MoreIcon, PagiNext, PagiPrev } from "public/assets";
 import ConfirmStockMovement from "@components/Modals/ConfirmStockMovement";
 import OutGoingProduct from "@components/Modals/OutGoingProduct";
 import { useAppDispatch, useAppSelector } from "hooks";
 import { getStockMovement, setStockMovement, shopsData } from "store/slices/shops";
 import AuthAxios from "@utils/api/authAxios";
+import { formatPrice } from "@utils/helpers";
 
 
 const StockMovementTable = () => {
@@ -102,7 +104,7 @@ const StockMovementTable = () => {
             </Thead>
             <Tbody>
               {stockMovements.loaded &&
-                stockMovements.data.map((data: any, i: number) => (
+                stockMovements.data?.data.map((data: any, i: number) => (
                   <Tr
                     key={data.id}
                     onClick={
@@ -166,6 +168,7 @@ const StockMovementTable = () => {
                         fontWeight="500"
                         lineHeight="20.07px"
                         color="#FFFFFF"
+                        textTransform="capitalize"
                       >
                         {data.status}
                       </Button>
@@ -194,20 +197,20 @@ const StockMovementTable = () => {
                         fontWeight="500"
                         lineHeight="20.07px"
                         color={`${singleShop.selectedShop.shop_id ===
-                            data.receiver_shop.id
-                            ? "green"
-                            : "red"
+                          data.receiver_shop.id
+                          ? "green"
+                          : "red"
                           }`}
                         border={`0.5px solid ${singleShop.selectedShop.shop_id ===
-                            data.receiver_shop.id
-                            ? "green"
-                            : "red"
+                          data.receiver_shop.id
+                          ? "green"
+                          : "red"
                           }`}
                       >
                         {singleShop.selectedShop.shop_id ===
                           data.receiver_shop.id
                           ? "Incoming"
-                          : "OutGoing"}
+                          : "Outgoing"}
                       </Button>
                     </Td>
                   </Tr>
@@ -239,28 +242,28 @@ const StockMovementTable = () => {
               {/* 1-5 of 13 */}
             </chakra.p>
             <chakra.button
-              disabled={stockMovements.data.prev_page_url === null}
+              disabled={stockMovements.data?.prev_page_url === null}
               cursor="pointer"
               _disabled={{ cursor: "not-allowed" }}
               px="20px"
-              onClick={() => prevPage(stockMovements.data.prev_page_url)}
+              onClick={() => prevPage(stockMovements.data?.prev_page_url)}
             >
               <PagiPrev />
             </chakra.button>
             <chakra.button
-              disabled={stockMovements.data.next_page_url === null}
+              disabled={stockMovements.data?.next_page_url === null}
               cursor="pointer"
               _disabled={{ cursor: "not-allowed" }}
               px="20px"
-              onClick={() => nextPage(stockMovements.data.next_page_url)}
+              onClick={() => nextPage(stockMovements.data?.next_page_url)}
             >
               <PagiNext />
             </chakra.button>
           </chakra.div>
         </TableContainer>
       </chakra.div>
+
       {/* Mobile */}
-      {/*       
       <chakra.div
         display={{ base: "flex", xl: "none" }}
         w="100%"
@@ -269,8 +272,8 @@ const StockMovementTable = () => {
         alignItems="center"
         pb="100px"
       >
-        {stockMovement.loaded &&
-          stockMovement.data.map((data: any) => (
+        {stockMovements.loaded &&
+          stockMovements.data?.data.map((data: any) => (
             <chakra.div
               key={data.id}
               w="393px"
@@ -366,6 +369,7 @@ const StockMovementTable = () => {
                     fontWeight="500"
                     fontSize="12px"
                     lineHeight="18px"
+                    textTransform="capitalize"
                   >
                     {data.status}
                   </chakra.p>
@@ -373,7 +377,7 @@ const StockMovementTable = () => {
               </chakra.div>
             </chakra.div>
           ))}
-      </chakra.div> */}
+      </chakra.div>
       <ConfirmStockMovement
         isOpen={confirmProductModal.isOpen}
         onClose={confirmProductModal.onClose}
