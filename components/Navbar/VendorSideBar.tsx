@@ -8,7 +8,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import CreateShop from "@components/Modals/CreateShop";
-import { useAppSelector } from "hooks";
+import { useAppDispatch, useAppSelector } from "hooks";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -30,11 +30,12 @@ import {
 } from "public/assets";
 import { useEffect, useState } from "react";
 import { cartsData } from "store/slices/carts";
-import { shopsData } from "store/slices/shops";
+import { getSingleShop, setSingleShop, shopsData } from "store/slices/shops";
 
 const VendorSideBar = () => {
   const { carts } = useAppSelector(cartsData);
   const { vendorShops, singleShop } = useAppSelector(shopsData);
+  const dispatch = useAppDispatch();
   const createShopModal = useDisclosure();
   const [otherShops, setOtherShops] = useState([]);
   const [activeLink, setActiveLink] = useState({
@@ -103,8 +104,11 @@ const VendorSideBar = () => {
   };
 
   const handleShopClick = (id, name) => {
+    const selected = vendorShops.shops?.find((shop: { shop_id: number }) => shop.shop_id === Number(id));
     const path = router.pathname.split("/").slice(0, -1).join("/");
     router.push(`${path}/${name.split(" ").join("-").toLowerCase()}-${id}`);
+    dispatch<any>(getSingleShop(id));
+    dispatch<any>(setSingleShop(selected));
   };
 
   return (
@@ -329,6 +333,7 @@ const VendorSideBar = () => {
                   span: {
                     display: "flex",
                     alignItems: "center",
+                    color: activeLink.more || isOpen ? "white" : "#A3AED0"
                   },
                 }}
                 p="10px"

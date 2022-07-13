@@ -1,7 +1,5 @@
 /* eslint-disable camelcase */
 import { chakra, Avatar, Menu, MenuButton, MenuItem, MenuList, Button } from "@chakra-ui/react";
-// import { ShopContext } from "@providers/shopProvider";
-import Cookies from "js-cookie";
 import Image from "next/image";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
@@ -15,17 +13,16 @@ import {
 import { useEffect, useState } from "react";
 import { logout } from "@utils/helpers";
 import { userData } from "store/slices/user";
-import { cartsData, getOpenCart, setOpenCart } from "store/slices/carts";
-import { shopsData } from "store/slices/shops";
-import { useAppSelector } from "hooks";
+import { cartsData } from "store/slices/carts";
+import { getSingleShop, setSingleShop, shopsData } from "store/slices/shops";
+import { useAppDispatch, useAppSelector } from "hooks";
 
 const VendorNavbarHeader = () => {
-  const [otherShops, setOtherShops] = useState([]);
-  // const { allVendorShops, singleShop, batchType, transferItems } =
-  //   useContext(ShopContext);
   const { user } = useAppSelector(userData)
   const { carts } = useAppSelector(cartsData)
   const { singleShop, vendorShops } = useAppSelector(shopsData)
+  const dispatch = useAppDispatch();
+  const [otherShops, setOtherShops] = useState([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -40,8 +37,11 @@ const VendorNavbarHeader = () => {
 
 
   const handleShopClick = (id, name) => {
+    const selected = vendorShops.shops?.find((shop: { shop_id: number }) => shop.shop_id === Number(id));
     const path = router.pathname.split("/").slice(0, -1).join("/");
     router.push(`${path}/${name.split(" ").join("-").toLowerCase()}-${id}`);
+    dispatch<any>(getSingleShop(id));
+    dispatch<any>(setSingleShop(selected));
   };
 
   const goToDashboard = () => {

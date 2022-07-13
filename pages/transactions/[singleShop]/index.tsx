@@ -592,7 +592,7 @@ const TransactionsPage: NextPage = () => {
 
           {transaction === "stock movement" && (
             <chakra.div />
-            )}
+          )}
 
           {transaction === "activity" && (
             <chakra.div />
@@ -627,6 +627,11 @@ const TransactionsPage: NextPage = () => {
                   color={transaction ? "white" : "#242533"}
                   fontSize="0.875rem"
                   fontWeight="500"
+                  css={{
+                    span: {
+                      color: transaction || isOpen ? "white" : "#A3AED0"
+                    },
+                  }}
                 >
                   <chakra.span display="flex" alignItems="center">
                     <chakra.span mr="14px" textTransform="capitalize">
