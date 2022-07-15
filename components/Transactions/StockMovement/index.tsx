@@ -11,7 +11,9 @@ const StockMovement = () => {
 
   useEffect(() => {
     if (singleShop.loaded) {
-      dispatch<any>(getStockMovement(singleShop.selectedShop.shop_id));
+      if(!stockMovements.loaded) {
+        dispatch<any>(getStockMovement(singleShop.selectedShop.shop_id));
+      }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [singleShop]);

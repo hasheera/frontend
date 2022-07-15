@@ -11,7 +11,6 @@ import {
   Button,
   Spinner,
 } from "@chakra-ui/react";
-import ModernDatepicker from "react-modern-datepicker";
 import DashboardTable from "@components/Dashboard/Table";
 import { formatPrice } from "@utils/helpers";
 import DashboardLineChart from "@components/Dashboard/Desktop/LineChart";

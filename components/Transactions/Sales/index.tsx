@@ -13,7 +13,9 @@ const Sales: FC = () => {
 
   useEffect(() => {
     if (singleShop.loaded) {
-      dispatch<any>(getTransactionSales(singleShop.selectedShop.shop_id));
+      if(!transactionSales.loaded) {
+        dispatch<any>(getTransactionSales(singleShop.selectedShop.shop_id));
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [singleShop]);

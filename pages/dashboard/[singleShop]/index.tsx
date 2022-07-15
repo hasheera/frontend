@@ -34,7 +34,7 @@ const VendorDashboard: NextPage = () => {
   useEffect(() => {
     if (singleShop.loaded && singleShop.selectedShop) {
       const a = { id: singleShop.selectedShop.shop_id }
-      if (!dashboard.loaded) dispatch<any>(getDashboardData(a))
+      if (!dashboard.loaded) dispatch<any>(getDashboardData(a));
       if (!topSellingData.loaded) dispatch<any>(getTopSellingData(singleShop.selectedShop.shop_id));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
