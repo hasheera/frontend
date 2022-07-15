@@ -10,7 +10,7 @@ export default function middleware(req: NextRequest) {
     if(req.nextUrl.pathname === '/login') {
       return NextResponse.next();
     }
-  // return NextResponse.redirect(new URL(process.env.NEXT_PUBLIC_BASE_USER_URL, req.url))
+  return NextResponse.redirect(new URL("/login", req.url))
   }
 
   if (req.nextUrl.pathname === '/login') {
