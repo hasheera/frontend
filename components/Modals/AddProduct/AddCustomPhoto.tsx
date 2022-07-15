@@ -40,7 +40,7 @@ const AddCustomPhotos: FC<Props> = ({
   const createShopPhotoImage = async () => {
     const formData: any = new FormData();
 
-    formData.append("shop_id", singleShop.selectedShop.id);
+    formData.append("shop_id", singleShop.selectedShop.shop_id);
     formData.append("shop_product_id", productData.id);
     for (let i = 0; i < photosForm.photos.length; i += 1) {
       formData.append(`photo[${i}]`, photosForm.photos[i].photo);
@@ -49,7 +49,7 @@ const AddCustomPhotos: FC<Props> = ({
     try {
       setIsRequest(true);
       const res = await AuthAxios.post(
-        `oga/shop-product-image/create?shop_id=${singleShop.selectedShop.id}&shop_product_id=${productData.id}`,
+        `oga/shop-product-image/create?shop_id=${singleShop.selectedShop.shop_id}&shop_product_id=${productData.id}`,
         formData
       );
 

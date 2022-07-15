@@ -55,8 +55,8 @@ const GlobalFunctionsProvider = ({ children }: { children: ReactElement }) => {
 
   useEffect(() => {
     if (singleShop.loaded && singleShop.selectedShop) {
-      dispatch<any>(getOpenCart(singleShop.selectedShop.id))
-      dispatch<any>(getTransactionSales(singleShop.selectedShop.id))
+      dispatch<any>(getOpenCart(singleShop.selectedShop.shop_id))
+      dispatch<any>(getTransactionSales(singleShop.selectedShop.shop_id))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [singleShop.loaded])
@@ -64,7 +64,7 @@ const GlobalFunctionsProvider = ({ children }: { children: ReactElement }) => {
   useEffect(() => {
     if (userLoaded && singleShop.selectedShop) {
       if (hasShop && hasShopRole === null) {
-        const role = user.user.user_shop.some(s => s.shop_id === singleShop.selectedShop.id)
+        const role = user.user.user_shop.some(s => s.shop_id === singleShop.selectedShop.shop_id)
         dispatch<any>(updateHasShopRole(role))
       }
     }

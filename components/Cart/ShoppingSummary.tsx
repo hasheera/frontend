@@ -62,7 +62,7 @@ const ShoppingSummary: React.FC = () => {
           duration: 1000,
           position: "top",
         });
-        dispatch<any>(getOpenCart(singleShop.selectedShop.id))
+        dispatch<any>(getOpenCart(singleShop.selectedShop.shop_id))
         router.replace(`/invoice/${router.query.singleShop}/${res.data.data.order.order_number}`)
       }
       return res;

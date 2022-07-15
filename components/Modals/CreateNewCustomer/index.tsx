@@ -53,14 +53,14 @@ const CreateCustomerModal: React.FC<Props> = ({ isOpen, onClose }) => {
       setIsRequest(true);
       const { phone, name } = addNewCustomerForm;
       const res = await AuthAxios.post(`/oga/shop/customer/create`, {
-        shop_id: singleShop.selectedShop.id,
+        shop_id: singleShop.selectedShop.shop_id,
         phone:
           phone.charAt(0) === "0" ? `+234${phone.slice(1)}` : `+234${phone}`,
         name,
       });
       if (res.status === 200) {
         setIsRequest(false);
-        dispatch<any>(getCustomers(singleShop.selectedShop.id));
+        dispatch<any>(getCustomers(singleShop.selectedShop.shop_id));
         onClose();
         return toast({
           position: "top",

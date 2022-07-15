@@ -53,7 +53,7 @@ const CustomerInfo = ({
 
   const allShopCustomers = (cus: string) => {
     AuthAxios.post(
-      `/oga/shop/customer/search?shop_id=${singleShop.selectedShop.id}&search=${cus}`,
+      `/oga/shop/customer/search?shop_id=${singleShop.selectedShop.shop_id}&search=${cus}`,
     )
       .then((res) => {
         const {

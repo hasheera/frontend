@@ -48,7 +48,7 @@ const InviteTeamModal = ({ isOpen, onClose, roles }: Props): ReactElement => {
       const phone = formValues.user_phone_number;
       const res = await AuthAxios.post("/oga/user/shop/assign/role", {
         ...formValues,
-        shop_id: singleShop.selectedShop.id,
+        shop_id: singleShop.selectedShop.shop_id,
         user_phone_number:
           phone.charAt(0) === "0" ? `+234${phone.slice(1)}` : `+234${phone}`,
       });

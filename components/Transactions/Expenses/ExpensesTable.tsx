@@ -45,7 +45,7 @@ const SalesTable = () => {
   };
 
   const nextPage = (url: string) => {
-    AuthAxios.get(`${url}&shop_id=${singleShop.selectedShop.id}`)
+    AuthAxios.get(`${url}&shop_id=${singleShop.selectedShop.shop_id}`)
       .then((res) => {
         dispatch<any>(setTransactionsExpenses({
           ...transactionExpenses,
@@ -57,7 +57,7 @@ const SalesTable = () => {
   };
 
   const prevPage = (url) => {
-    AuthAxios.get(`${url}&shop_id=${singleShop.selectedShop.id}`)
+    AuthAxios.get(`${url}&shop_id=${singleShop.selectedShop.shop_id}`)
       .then((res) => {
         dispatch<any>(setTransactionsExpenses({
           ...transactionExpenses,

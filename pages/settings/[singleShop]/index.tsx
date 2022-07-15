@@ -38,12 +38,12 @@ const Settings: NextPage = () => {
 
   const createOrUpdateSettings = async (key: string, value: string) => {
     const res = await AuthAxios.post(`/oga/shop/setting/create`, {
-      shop_id: singleShop.selectedShop.id,
+      shop_id: singleShop.selectedShop.shop_id,
       key,
       value,
     });
     if (res.status === 200) {
-      listShopSettings(singleShop.selectedShop.id);
+      listShopSettings(singleShop.selectedShop.shop_id);
       toast({
         description: `${res.data.message}`,
         position: "top-right",
@@ -82,7 +82,7 @@ const Settings: NextPage = () => {
 
   useEffect(() => {
     if (singleShop.loaded) {
-      dispatch<any>(listShopSettings(singleShop.selectedShop.id));
+      dispatch<any>(listShopSettings(singleShop.selectedShop.shop_id));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [singleShop]);

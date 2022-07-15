@@ -29,8 +29,9 @@ import {
   WalletIcon,
 } from "public/assets";
 import { useEffect, useState } from "react";
-import { cartsData } from "store/slices/carts";
-import { getSingleShop, setSingleShop, shopsData } from "store/slices/shops";
+import { cartsData, getOpenCart, getTransactionSales, getTransactionsExpenses } from "store/slices/carts";
+import { getDashboardData } from "store/slices/dashboard";
+import { getSingleShop, getTopSellingData, setSingleShop, shopsData } from "store/slices/shops";
 
 const VendorSideBar = () => {
   const { carts } = useAppSelector(cartsData);
@@ -96,6 +97,17 @@ const VendorSideBar = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
+  useEffect(() => {
+    dispatch<any>(getDashboardData({ id: singleShop.selectedShop.shop_id }));
+    dispatch<any>(getOpenCart(singleShop.selectedShop.shop_id));
+    dispatch<any>(getTopSellingData(singleShop.selectedShop.shop_id));
+    dispatch<any>(getTransactionSales(singleShop.selectedShop.shop_id));
+    dispatch<any>(getTransactionsExpenses(singleShop.selectedShop.shop_id));
+    // if(singleShop.selectedShop.shop_id !== ) {
+    // }
+  }, [singleShop.selectedShop])
+  
+  
   const handleHover = (link: string, state: boolean) => {
     setActiveLink({
       ...activeLink,
