@@ -21,11 +21,11 @@ const RemoveShopOwner: FC<Props> = ({ isOpen, onClose, shopOwnerToRemove }) => {
     try {
       setIsRequest(true);
       const res = await AuthAxios.post(`oga/user/shop/remove/role`, {
-        shop_id: singleShop.selectedShop.id,
+        shop_id: singleShop.selectedShop.shop_id,
         user_phone_number: shopOwnerToRemove.contact_no,
       });
       if (res.status === 200) {
-        dispatch<any>(getTeams(singleShop.selectedShop.id));
+        dispatch<any>(getTeams(singleShop.selectedShop.shop_id));
         setIsRequest(false);
         onClose();
         toast({

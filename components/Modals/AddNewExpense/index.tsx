@@ -45,11 +45,11 @@ const AddNewExpense = ({ isOpen, onClose }: Props) => {
       const { amount, purpose, description } = form;
 
       const res = await AuthAxios.post(
-        `oga/shop/expense/create?shop_id=${singleShop.selectedShop.id}&amount=${amount}&amount_paid=${amount}&spent_on=${purpose}&description=${description}`
+        `oga/shop/expense/create?shop_id=${singleShop.selectedShop.shop_id}&amount=${amount}&amount_paid=${amount}&spent_on=${purpose}&description=${description}`
       );
 
       if (res.status === 200) {
-        dispatch<any>(getTransactionsExpenses(singleShop.selectedShop.id));
+        dispatch<any>(getTransactionsExpenses(singleShop.selectedShop.shop_id));
         setIsRequest(false);
         onClose();
         setForm({

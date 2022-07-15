@@ -2,9 +2,10 @@
 import { FC } from "react";
 import { Button, chakra, useDisclosure, useToast } from "@chakra-ui/react";
 import { ShopIcon } from "public/assets";
-import Cookies from "js-cookie";
 import AddProduct from "@components/Modals/AddProduct";
 import AuthAxios from "@utils/api/authAxios";
+import { useAppSelector } from "hooks";
+import { shopsData } from "store/slices/shops";
 
 interface Props {
   product_unit: any;
@@ -12,15 +13,14 @@ interface Props {
 }
 
 const Variant: FC<Props> = ({ product_unit, product }) => {
-  const toast = useToast();
+  const { singleShop } = useAppSelector(shopsData);
   const addProductModal = useDisclosure();
+  const toast = useToast();
 
   const addShopProduct = async (id: any, prodId: any) => {
-    const shopId = Cookies.get("shopId");
-
     try {
       const res = await AuthAxios.post("/oga/shop/product/create", {
-        shop_id: Number(shopId),
+        shop_id: Number(singleShop.selectedShop.shop_id),
         product_id: prodId,
         product_unit_id: id,
         sell_price: 0,

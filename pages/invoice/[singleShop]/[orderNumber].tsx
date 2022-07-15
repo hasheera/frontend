@@ -64,7 +64,7 @@ const Invoice: NextPage = () => {
 
   const completePayment = async () => {
     try {
-      const res = await AuthAxios.put(`/oga/order/update/amount/${invoiceData.data.order_number}?amount_to_pay=${pay}&shop_id=${singleShop.selectedShop.id}`)
+      const res = await AuthAxios.put(`/oga/order/update/amount/${invoiceData.data.order_number}?amount_to_pay=${pay}&shop_id=${singleShop.selectedShop.shop_id}`)
       if (res.status === 200) {
         getSingleOrder(invoiceData.data.shop.id)
         setRequest(false)
@@ -124,11 +124,11 @@ const Invoice: NextPage = () => {
 
   useEffect(() => {
     if (router.query.orderNumber && singleShop.selectedShop) {
-      getSingleOrder(singleShop.selectedShop.id);
+      getSingleOrder(singleShop.selectedShop.shop_id);
     }
 
     if (!shopSettings && singleShop.selectedShop) {
-      dispatch<any>(listShopSettings(singleShop.selectedShop.id));
+      dispatch<any>(listShopSettings(singleShop.selectedShop.shop_id));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.query.orderNumber, singleShop]);

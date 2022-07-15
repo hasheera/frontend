@@ -21,7 +21,7 @@ const ConfirmStockMovement: FC<Props> = ({
   const confirm = async () => {
     try {
       const res = await AuthAxios.post(
-        `/oga/shop/product/stock/transfer/confirm?shop_id=${singleShop.selectedShop.id}&shop_product_stock_transfer_id=${productDetails.id}'`,
+        `/oga/shop/product/stock/transfer/confirm?shop_id=${singleShop.selectedShop.shop_id}&shop_product_stock_transfer_id=${productDetails.id}'`,
       );
       if (res.status === 200) {
         toast({

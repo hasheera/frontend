@@ -11,7 +11,7 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     if(singleShop.loaded && singleShop.selectedShop) {
-      router.replace(`/dashboard/${singleShop.selectedShop.shop.name.split(" ").join("-").toLowerCase()}-${singleShop.selectedShop.id}`)
+      router.replace(`/dashboard/${singleShop.selectedShop.shop.name.split(" ").join("-").toLowerCase()}-${singleShop.selectedShop.shop_id}`)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [singleShop])

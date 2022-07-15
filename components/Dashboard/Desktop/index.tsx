@@ -52,13 +52,13 @@ const DesktopView = () => {
     setStartDate(start);
     setEndDate(end);
     if(end) {
-      dispatch<any>(getDashboardData({ id: singleShop.selectedShop.id, startDate, endDate }))
+      dispatch<any>(getDashboardData({ id: singleShop.selectedShop.shop_id, startDate, endDate }))
     } 
   };
 
   const handleChangeBatch = (batch: string) => {
     dispatch<any>(changeDashboardBatchType(batch))
-    dispatch<any>(getDashboardData({ id: singleShop.selectedShop.id, directDate: batch }));
+    dispatch<any>(getDashboardData({ id: singleShop.selectedShop.shop_id, directDate: batch }));
   }
 
   if (!dashboard.loaded) {

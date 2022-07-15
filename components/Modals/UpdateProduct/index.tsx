@@ -95,7 +95,7 @@ const UpdateProduct = (props: ModalProps) => {
             duration: 3000,
             position: "top",
           });
-          dispatch<any>(getSingleShop(singleShop.selectedShop.id));
+          dispatch<any>(getSingleShop(singleShop.selectedShop.shop_id));
           return fetchProduct(singleProduct.id);
         }
         return res
@@ -141,7 +141,7 @@ const UpdateProduct = (props: ModalProps) => {
             });
             onClose();
           }, 1000);
-          dispatch<any>(getSingleShop(singleShop.selectedShop.id));
+          dispatch<any>(getSingleShop(singleShop.selectedShop.shop_id));
         }
       })
       .catch((err) => {

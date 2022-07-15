@@ -20,7 +20,7 @@ type Props = {
 };
 
 const Transfer = ({ isOpen, onClose }: Props) => {
-  const { singleProduct } = useAppSelector(shopsData);
+  const { singleProduct, singleShop } = useAppSelector(shopsData);
   const toast = useToast();
   const [formValues, setFormValues] = useState<{
     receiverShopId: any;
@@ -30,11 +30,10 @@ const Transfer = ({ isOpen, onClose }: Props) => {
   const [qty, setQty] = useState(0);
 
   const createTransfer = async () => {
-    const shopId = Cookies.get("shopId");
     const { receiverShopId } = formValues;
 
     const res = await AuthAxios.post(
-      `/oga/shop/product/stock/transfer/create?shop_id=${shopId}&receiver_shop_id=${receiverShopId}&shop_product_id=${singleProduct.id}&quantity=${qty}`
+      `/oga/shop/product/stock/transfer/create?shop_id=${singleShop.selectedShop.shop_id}&receiver_shop_id=${receiverShopId}&shop_product_id=${singleProduct.id}&quantity=${qty}`
     );
 
     if (res.status === 200) {

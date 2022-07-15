@@ -22,7 +22,7 @@ const DeleteProductDialog: FC<Props> = ({
 
   const deleteShopProduct = async () => {
     setIsRequest(true);
-    const res: any = await dispatch<any>(deleteProduct({ id: deleteShopProductId, shopId: singleShop.selectedShop.id }));
+    const res: any = await dispatch<any>(deleteProduct({ id: deleteShopProductId, shopId: singleShop.selectedShop.shop_id }));
     if (res.payload) {
       dispatch<any>(getSingleShop(deleteShopProductId))
       setIsRequest(false);

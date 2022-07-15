@@ -32,7 +32,7 @@ const StockIn: FC<Props> = ({ setModalStage, productData }) => {
     }
     setIsRequest(true);
     AuthAxios.post(
-      `/oga/shop/product/stock/action/create?shop_id=${singleShop.selectedShop.id}&shop_product_id=${
+      `/oga/shop/product/stock/action/create?shop_id=${singleShop.selectedShop.shop_id}&shop_product_id=${
         productData.id
       }&action_type=${action_type}&quantity=${quantity}&action_reason=${null}&user_id=${
         user?.user.id
