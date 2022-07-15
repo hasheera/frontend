@@ -30,7 +30,7 @@ const CartItem: FC<Props> = ({ isOpen, onClose }) => {
   const toast = useToast();
 
   useEffect(() => {
-    if (singleShop.selectedShop.id) {
+    if (singleShop.selectedShop.shop_id) {
       setPrice(singleProduct.sell_price);
       setProductQuantity(1)
     }
@@ -48,7 +48,7 @@ const CartItem: FC<Props> = ({ isOpen, onClose }) => {
           amount: singleProduct.sell_price * productQuantity,
           shopProductId: singleProduct.id,
           content: productNote,
-          shopId: singleShop.selectedShop.id,
+          shopId: singleShop.selectedShop.shop_id,
           cartLength: carts.length ? carts[0].cart_items?.length : 0,
           cartId: carts[0]?.id,
           itemInCart: !!item,
@@ -56,7 +56,7 @@ const CartItem: FC<Props> = ({ isOpen, onClose }) => {
         }
       ));
       if(res.payload) {
-        dispatch<any>(getOpenCart(singleShop.selectedShop.id))
+        dispatch<any>(getOpenCart(singleShop.selectedShop.shop_id))
         toast({
           description: res.payload.message || "Item added to Cart",
             // res.payload.message.includes("already exist")

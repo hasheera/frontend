@@ -72,7 +72,7 @@ const Product: NextPage = () => {
 
   const goToProductTransferPage = () => {
     router.push({
-      pathname: `/product/transfer_product/${singleShop.selectedShop.id}`,
+      pathname: `/product/transfer_product/${singleShop.selectedShop.shop_id}`,
     });
   };
 
@@ -104,14 +104,14 @@ const Product: NextPage = () => {
     try {
       setIsSearch(true);
       if (!e.target.value) {
-        const res = await dispatch<any>(getSingleShop(singleShop.selectedShop.id));
+        const res = await dispatch<any>(getSingleShop(singleShop.selectedShop.shop_id));
         if (res.payload) {
           return setIsSearch(false)
         }
       }
 
       const res = await AuthAxios.post(
-        `/oga/shop/product/search?shop_id=${singleShop.selectedShop.id}&name=${e.target.value}`
+        `/oga/shop/product/search?shop_id=${singleShop.selectedShop.shop_id}&name=${e.target.value}`
       );
       if (res.status === 200) {
         dispatch(setSearchProducts({

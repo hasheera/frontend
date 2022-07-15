@@ -30,7 +30,7 @@ const Customers: NextPage = () => {
 
   useEffect(() => {
     if (singleShop.loaded) {
-      dispatch<any>(getCustomers(singleShop.selectedShop.id));
+      dispatch<any>(getCustomers(singleShop.selectedShop.shop_id));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [singleShop]);

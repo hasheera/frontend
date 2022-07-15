@@ -1,8 +1,9 @@
 /* eslint-disable camelcase */
 import React, { FC, useState } from "react";
 import { chakra, Input, Spinner, useToast } from "@chakra-ui/react";
-import Cookies from "js-cookie";
 import AuthAxios from "@utils/api/authAxios";
+import { shopsData } from "store/slices/shops";
+import { useAppSelector } from "hooks";
 import ModalUI from "..";
 import StockIn from "./StockIn";
 import AddCustomPhotos from "./AddCustomPhoto";
@@ -15,6 +16,7 @@ interface Props {
 }
 
 const AddProduct: FC<Props> = ({ isOpen, onClose, product, product_unit }) => {
+  const { singleShop } = useAppSelector(shopsData);
   const toast = useToast();
   const [modalStage, setModalStage] = useState<string>("add_product");
   const [productData, setProductData] = useState<any>({});
@@ -37,11 +39,10 @@ const AddProduct: FC<Props> = ({ isOpen, onClose, product, product_unit }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const shopId = Cookies.get("shopId");
 
     try {
       const res = await AuthAxios.post("/oga/shop/product/create", {
-        shop_id: Number(shopId),
+        shop_id: Number(singleShop.selectedShop.shop_id),
         ...form,
       });
 

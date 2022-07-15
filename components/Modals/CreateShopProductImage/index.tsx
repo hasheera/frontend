@@ -47,7 +47,7 @@ const CreateShopProductImage: FC<Props> = ({ isOpen, onClose }) => {
   const createShopPhotoImage = async () => {
     const formData: any = new FormData();
 
-    formData.append("shop_id", singleShop.selectedShop.id);
+    formData.append("shop_id", singleShop.selectedShop.shop_id);
     formData.append("shop_product_id", singleProduct.id);
     for (let i = 0; i < photosForm.photos.length; i+1) {
       formData.append(`photo[${i}]`, photosForm.photos[i].photo);
@@ -56,7 +56,7 @@ const CreateShopProductImage: FC<Props> = ({ isOpen, onClose }) => {
     try {
       setIsRequest(true);
       const res = await AuthAxios.post(
-        `oga/shop-product-image/create?shop_id=${singleShop.selectedShop.id}&shop_product_id=${singleProduct.id}`,
+        `oga/shop-product-image/create?shop_id=${singleShop.selectedShop.shop_id}&shop_product_id=${singleProduct.id}`,
         formData
       );
       console.log(res);

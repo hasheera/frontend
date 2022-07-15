@@ -11,7 +11,9 @@ const Activity: FC = () => {
 
   useEffect(() => {
     if (singleShop.loaded) {
-      dispatch<any>(getShopActivity({ id: singleShop.selectedShop.id }));
+      if(!shopActivity.loaded) {
+        dispatch<any>(getShopActivity({ id: singleShop.selectedShop.shop_id }));
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [singleShop]);

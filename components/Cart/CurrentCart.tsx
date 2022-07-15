@@ -74,7 +74,7 @@ const CurrentCart = () => {
             position: "top",
           });
         }
-        dispatch<any>(getOpenCart(singleShop.selectedShop.id));
+        dispatch<any>(getOpenCart(singleShop.selectedShop.shop_id));
         // setOpenCart({
         //   id: null,
         //   is_shop_owner: null,
@@ -266,7 +266,7 @@ export const CartItem = ({
         duration: 1000,
         position: "top",
       });
-      return dispatch<any>(getOpenCart(singleShop.selectedShop.id));
+      return dispatch<any>(getOpenCart(singleShop.selectedShop.shop_id));
     } catch (e) {
       return e
     }
@@ -281,7 +281,7 @@ export const CartItem = ({
         duration: 1000,
         position: "top",
       });
-      return dispatch<any>(getOpenCart(singleShop.selectedShop.id));
+      return dispatch<any>(getOpenCart(singleShop.selectedShop.shop_id));
     } catch (e) {
       return e;
     }
@@ -297,11 +297,11 @@ export const CartItem = ({
   ) => {
     try {
       setIsRequest(true);
-      const res: any = await dispatch<any>(addToCart({
+      const res = await dispatch<any>(addToCart({
         quantity,
         amount: subAmount,
         shopProductId: productId,
-        shopId: singleShop.selectedShop.id,
+        shopId: singleShop.selectedShop.shop_id,
         cartLength: carts[0].cart_items.length,
         cartId: carts[0].id,
         itemInCart: true,
@@ -309,7 +309,7 @@ export const CartItem = ({
         itemId
       }));
       if (res.payload.success) {
-        dispatch<any>(getOpenCart(singleShop.selectedShop.id))
+        dispatch<any>(getOpenCart(singleShop.selectedShop.shop_id))
         setIsRequest(false);
         toast({
           description: res.payload.message,

@@ -30,7 +30,7 @@ const Product: FC<Props> = ({ shop_product }) => {
   const addShopProduct = async (id: string | number, prodId: string | number) => {
     try {
       const res = await AuthAxios.post("/oga/shop/product/create", {
-        shop_id: Number(singleShop.selectedShop.id),
+        shop_id: Number(singleShop.selectedShop.shop_id),
         product_id: prodId,
         product_unit_id: id,
         sell_price: 0,

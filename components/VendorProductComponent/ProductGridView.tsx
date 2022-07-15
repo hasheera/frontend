@@ -55,7 +55,7 @@ const ProductGridView = ({ shopProducts }) => {
 
   const fetchProduct = async (id) => {
     try {
-      const res = await AuthAxios.get(`oga/shop/product/show/${id}?shop_id=${singleShop.selectedShop.id}`)
+      const res = await AuthAxios.get(`oga/shop/product/show/${id}?shop_id=${singleShop.selectedShop.shop_id}`)
       if (res.status === 200) {
         dispatch(setSingleProduct(res.data.data));
       }

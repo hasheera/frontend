@@ -55,7 +55,7 @@ const Team: NextPage = () => {
 
   useEffect(() => {
     if (singleShop.loaded) {
-      dispatch<any>(getTeams(singleShop.selectedShop.id));
+      dispatch<any>(getTeams(singleShop.selectedShop.shop_id));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [singleShop]);
@@ -118,7 +118,7 @@ const Team: NextPage = () => {
                   first_name={data.first_name}
                   surname={data.surname}
                   user_shop={data.user_shop}
-                  role_name={data.user_shop.find((user: { shop_id: number; }) => user.shop_id === singleShop.selectedShop.id).role_name || ""}
+                  role_name={data.user_shop.find((user: { shop_id: number; }) => user.shop_id === singleShop.selectedShop.shop_id).role_name || ""}
                   num={i + 1}
                   />
                 ))}

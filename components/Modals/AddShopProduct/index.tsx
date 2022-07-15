@@ -94,7 +94,7 @@ const AddShopProduct = (props: ModalProps) => {
   const addShopProduct = async (id: any, prodId: any) => {
     try {
       const res = await AuthAxios.post("/oga/shop/product/create", {
-        shop_id: Number(singleShop.selectedShop.id),
+        shop_id: Number(singleShop.selectedShop.shop_id),
         product_id: prodId,
         product_unit_id: id,
         sell_price: 0,
@@ -113,7 +113,7 @@ const AddShopProduct = (props: ModalProps) => {
             duration: 3000,
             position: "top",
           });
-          dispatch<any>(getSingleShop(singleShop.selectedShop.id));
+          dispatch<any>(getSingleShop(singleShop.selectedShop.shop_id));
         } else {
           toast({
             description: "Product added to shop successfully",
@@ -121,7 +121,7 @@ const AddShopProduct = (props: ModalProps) => {
             duration: 3000,
             position: "top",
           });
-          dispatch<any>(getSingleShop(singleShop.selectedShop.id));
+          dispatch<any>(getSingleShop(singleShop.selectedShop.shop_id));
         }
       }
       return res;
@@ -158,9 +158,9 @@ const AddShopProduct = (props: ModalProps) => {
       productForm.append(`units[${i}][name]`, formValues.units[i].name);
       productForm.append(`units[${i}][photo]`, formValues.units[i].photo);
       productForm.append(`units[${i}][barcode]`, formValues.units[i].barcode);
-      productForm.append(`units[${i}][shop_id]`, singleShop.selectedShop.id);
+      productForm.append(`units[${i}][shop_id]`, singleShop.selectedShop.shop_id);
     }
-    productForm.append(`shop_id`, singleShop.selectedShop.id);
+    productForm.append(`shop_id`, singleShop.selectedShop.shop_id);
 
     // productForm.delete("units");
 
@@ -186,7 +186,7 @@ const AddShopProduct = (props: ModalProps) => {
         });
         // setAddForm(false);
         setUnitProductCount(0);
-        dispatch<any>(getSingleShop(singleShop.selectedShop.id));
+        dispatch<any>(getSingleShop(singleShop.selectedShop.shop_id));
       }
       return res;
     } catch (err) {

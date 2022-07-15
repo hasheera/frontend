@@ -54,7 +54,7 @@ export const dashboardSlice = createSlice({
   extraReducers: builder => {
     builder
       .addCase(getDashboardData.pending, state => {
-        state.dashboard.loaded = false;
+        // state.dashboard.loaded = false;
       })
       .addCase(getDashboardData.fulfilled, (state, { payload }) => {
         state.dashboard.loaded = true;

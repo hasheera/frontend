@@ -53,7 +53,7 @@ const MobileView = () => {
 
   const handleChangeBatch = (batch: string) => {
     dispatch<any>(changeDashboardBatchType(batch))
-    dispatch<any>(getDashboardData({ id: singleShop.selectedShop.id, directDate: batch }));
+    dispatch<any>(getDashboardData({ id: singleShop.selectedShop.shop_id, directDate: batch }));
   }
 
   return (
