@@ -13,7 +13,6 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     if(singleShop.loaded && singleShop.selectedShop) {
-      // dispatch<any>(getDashboardData({ id: singleShop.selectedShop.shop_id }))
       router.replace(`/dashboard/${singleShop.selectedShop.shop.name.split(" ").join("-").toLowerCase()}-${singleShop.selectedShop.shop_id}`)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
