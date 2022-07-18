@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { chakra, Spinner } from '@chakra-ui/react'
 import { useAppDispatch, useAppSelector } from "hooks";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
-import { createContext, ReactElement, useEffect, useState } from "react";
+import { createContext, ReactElement, useCallback, useEffect, useState } from "react";
 import { getOpenCart, getTransactionSales } from "store/slices/carts";
 import { getSingleShop, getVendorShops, setSingleShop, shopsData, updateHasShopRole } from "store/slices/shops";
 import { getUser, userData } from "store/slices/user";
@@ -23,14 +24,20 @@ const GlobalFunctionsProvider = ({ children }: { children: ReactElement }) => {
 
   useEffect(() => {
     if(!Cookies.get("token")) {
-      if(router.isReady && router.pathname !== "/login") {
-        router.replace("/login")
+      if(router.pathname !== "/login") {
+        window.location.replace("/login");
       }
+    };
+    if(Cookies.get("token")) {
+      if(router.pathname === "/login") {
+        window.location.replace("/dashboard")
+      }
+      if (!userLoaded) dispatch<any>(getUser());
+      if (!vendorShops.loaded) dispatch<any>(getVendorShops());
     }
-    if (!userLoaded) dispatch<any>(getUser())
-    if (!vendorShops.loaded) dispatch<any>(getVendorShops())
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+  
 
   useEffect(() => {
     if (vendorShops.shops && vendorShops.shops.length) {
@@ -70,6 +77,19 @@ const GlobalFunctionsProvider = ({ children }: { children: ReactElement }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userLoaded, singleShop, hasShop])
+
+  if(!userLoaded && router.pathname !== "/login") {
+    return (
+      <chakra.div
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        h="100vh"
+      >
+        <Spinner color="#2153cc" />
+      </chakra.div>
+    )
+  }
 
 
   return (
