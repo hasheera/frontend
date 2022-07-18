@@ -50,7 +50,6 @@ const Login = () => {
 
   const loginResponse = (res: AxiosResponse<any, any>) => {
     const { user, token } = res.data.data;
-    // localStorage.setItem("token", token);
     if (window.location.origin.includes("shopurban")) {
       Cookies.set("token", token, { path: '/', domain: process.env.NEXT_PUBLIC_DOMAIN, secure: true, sameSite: 'none' });
     } else {
@@ -254,7 +253,7 @@ const Login = () => {
                   rightElementText="+234"
                   disabled={confirmAuth}
                 />
-                <Input
+                {confirmAuth && <Input
                   id="password"
                   label="Password"
                   containerMargin="24px 0 0"
@@ -267,8 +266,7 @@ const Login = () => {
                   placeholder="Atleast 8 characters"
                   passwordIcon={<PasswordCloseIcon width={21} height={20} color={!loginDetails.contact_no ? "#52689D" : "#0F1010"} />}
                   passwordClick={() => setPasswordShow(!passwordShow)}
-                  disabled={!confirmAuth}
-                />
+                />}
                 {/* <Link href="/password/forgot" passHref>
                       <chakra.a
                         color="#2153CC"
