@@ -45,6 +45,7 @@ const Input = ({
       htmlFor={id}
     >
       {label}
+
     </chakra.label>
 
     <chakra.div
@@ -82,6 +83,7 @@ const Input = ({
         disabled={disabled}
         placeholder={placeholder}
         maxLength={maxLength}
+        autoComplete={["text", "tel"].includes(type) ? "on" : "off"}
         _hover={{ borderColor: "#2153CC" }}
         _focus={{ borderColor: "#2153CC", outline: "3px solid rgba(33, 83, 204, 0.2)" }}
         _placeholder={{ color: "#ACAEB3" }}
