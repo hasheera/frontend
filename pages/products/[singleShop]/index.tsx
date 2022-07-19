@@ -284,8 +284,9 @@ const Product: NextPage = () => {
                     >
                       <MenuItem
                         onClick={() => {
+                          if(!productCategories) return null;
                           setProductCategories("");
-                          getProductByCategory()
+                          return getProductByCategory();
                         }}
                         p="10px"
                         fontSize="0.75rem"
