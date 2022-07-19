@@ -124,7 +124,7 @@ const InviteTeamModal = ({ isOpen, onClose, roles }: Props): ReactElement => {
             >
               <option>Select role</option>
               {roles.length > 0 &&
-                roles.map((role) => (
+                roles.filter(r => r.name !== "shopOwner").map((role) => (
                     <option key={role.id} value={role.name}>
                       {role.name.charAt(0).toUpperCase() + role.name.slice(1)}
                     </option>
