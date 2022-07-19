@@ -23,9 +23,14 @@ import AddNewExpense from "@components/Modals/AddNewExpense";
 import StockMovement from "@components/Transactions/StockMovement";
 import Sales from "@components/Transactions/Sales";
 import Activity from "@components/Transactions/Activity";
+import { useAppDispatch, useAppSelector } from "hooks";
+import { getTransactionSales } from "store/slices/carts";
+import { shopsData } from "store/slices/shops";
 
 
 const TransactionsPage: NextPage = () => {
+  const { singleShop } = useAppSelector(shopsData);
+  const dispatch = useAppDispatch();
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const addNewExpense = useDisclosure();
   const [sales, setSales] = useState(false);
@@ -48,6 +53,7 @@ const TransactionsPage: NextPage = () => {
             <chakra.div>
               <InputGroup w={{ base: "200px", xl: "411.52px" }}>
                 <Input
+                  onChange={e => dispatch<any>(getTransactionSales({ id: singleShop.selectedShop.shop_id, search: e.target.value }))}
                   placeholder="Search for products"
                   type="text"
                   w={{ base: "200px", xl: "411.52px" }}

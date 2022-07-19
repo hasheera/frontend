@@ -1,6 +1,6 @@
 interface Props {
-  width: string;
-  height: string;
+  width: string | number;
+  height: string | number;
 }
 
 const CashIcon = ({ width, height }: Props) => (

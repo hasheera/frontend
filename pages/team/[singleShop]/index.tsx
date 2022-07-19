@@ -57,7 +57,7 @@ const Team: NextPage = () => {
     if (singleShop.loaded) {
       dispatch<any>(getTeams(singleShop.selectedShop.shop_id));
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [singleShop]);
 
   useEffect(() => {
@@ -113,13 +113,13 @@ const Team: NextPage = () => {
               {vendorTeam.loaded &&
                 vendorTeam.data.map((data: VendorTeamProps, i: number) => (
                   <TeamBody
-                  key={data.id}
-                  contact_no={data.contact_no}
-                  first_name={data.first_name}
-                  surname={data.surname}
-                  user_shop={data.user_shop}
-                  role_name={data.user_shop.find((user: { shop_id: number; }) => user.shop_id === singleShop.selectedShop.shop_id).role_name || ""}
-                  num={i + 1}
+                    key={data.id}
+                    contact_no={data.contact_no}
+                    first_name={data.first_name}
+                    surname={data.surname}
+                    user_shop={data.user_shop}
+                    role_name={data.user_shop.find((user: { shop_id: number; }) => user.shop_id === singleShop.selectedShop.shop_id).role_name || ""}
+                    num={i + 1}
                   />
                 ))}
             </Tbody>
@@ -137,7 +137,7 @@ const Team: NextPage = () => {
         alignItems="center"
       >
         {vendorTeam.loaded &&
-          vendorTeam.data.map((data: any, i) => (
+          vendorTeam.data.map((data: any) => (
             <chakra.div
               key={data.id}
               w="393px"
@@ -180,7 +180,7 @@ const Team: NextPage = () => {
                     </chakra.p>
                   </chakra.div>
                 </chakra.div>
-                <chakra.button
+                {data.user_shop.find((user: { shop_id: number; }) => user.shop_id === singleShop.selectedShop.shop_id).role_name !== "shopOwner" && <chakra.button
                   onClick={() => {
                     removeShopOwnerModal.onOpen();
                     setShopOwnerToRemove({
@@ -200,7 +200,7 @@ const Team: NextPage = () => {
                   >
                     Remove
                   </chakra.p>
-                </chakra.button>
+                </chakra.button>}
               </chakra.div>
               <chakra.div pl="40px">
                 {data.user_shop.map(
