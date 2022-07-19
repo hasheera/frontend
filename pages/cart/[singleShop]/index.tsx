@@ -65,8 +65,7 @@ const CartPage: NextPage = () => {
                     shop_product,
                     price,
                     quantity,
-                    shop_product_id,
-                    is_shop_owner
+                    shop_product_id
                   }) => (
                     <CartItem
                       key={id}
@@ -79,7 +78,7 @@ const CartPage: NextPage = () => {
                       stock_count={shop_product?.stock_count}
                       sell={shop_product?.sell_price}
                       itemId={id}
-                      shopOwner={is_shop_owner}
+                      shopOwner={carts[0].is_shop_owner}
                     />
                   ))}
                 </Accordion>

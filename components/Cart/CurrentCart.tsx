@@ -31,6 +31,7 @@ interface CartItem {
   };
   quantity: number;
   price: number;
+  is_shop_owner: number;
 }
 
 const CurrentCart = () => {
@@ -139,7 +140,7 @@ const CurrentCart = () => {
                     qty={item.quantity}
                     subTotal={item.price}
                     stock_count={item.shop_product?.stock_count}
-                    shopOwner={carts[0].is_shop_owner}
+                    shopOwner={item.is_shop_owner}
                   />
                 ))}
             </Accordion>
