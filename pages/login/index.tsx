@@ -10,14 +10,11 @@ import { useState } from "react";
 
 
 const Login = () => {
-  const [phoneNumber, setPhoneNumber] = useState("");
   const [passwordShow, setPasswordShow] = useState(false);
-  const [password, setPassword] = useState("");
   const [request, setRequest] = useState(false);
   const [numErr, setNumErr] = useState({ error: false, message: "" });
   const [confirmAuth, setConfirmAuth] = useState(false);
   const [isVerified, setIsVerified] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
   const [loginDetails, setLoginDetails] = useState({
     contact_no: "",
     verification_code: "",
@@ -234,40 +231,63 @@ const Login = () => {
             </>
           )}
 
-          <chakra.form
+          {/* <chakra.form
             mt="62px"
-          >
-            {isVerified ? (
-              <>
-                <Input
-                  label="Phone number"
-                  type="tel"
-                  onChange={(e) =>
+          > */}
+          {isVerified ? (
+            <chakra.form
+              mt="62px"
+              onSubmit={confirmAuth ? (e) => confirmLogin(e) : (e) => checkPhoneNum(e)}
+            >
+              <Input
+                label="Phone number"
+                type="tel"
+                onChange={(e) =>
+                  setLoginDetails({
+                    ...loginDetails,
+                    contact_no: e.target.value
+                  })
+                }
+                value={loginDetails.contact_no}
+                placeholder="08012345678"
+                rightElementText="+234"
+                disabled={confirmAuth}
+              />
+              {confirmAuth &&
+                <chakra.span
+                  onClick={() => {
+                    setConfirmAuth(false)
                     setLoginDetails({
                       ...loginDetails,
-                      contact_no: e.target.value,
+                      contact_no: ""
                     })
-                  }
-                  value={loginDetails.contact_no}
-                  placeholder="08012345678"
-                  rightElementText="+234"
-                  disabled={confirmAuth}
-                />
-                {confirmAuth && <Input
-                  id="password"
-                  label="Password"
-                  containerMargin="24px 0 0"
-                  type={passwordShow ? "text" : "password"}
-                  onChange={(e) =>
-                    setLoginDetails({
-                      ...loginDetails,
-                      password: e.target.value,
-                    })}
-                  placeholder="Atleast 8 characters"
-                  passwordIcon={<PasswordCloseIcon width={21} height={20} color={!loginDetails.contact_no ? "#52689D" : "#0F1010"} />}
-                  passwordClick={() => setPasswordShow(!passwordShow)}
-                />}
-                {/* <Link href="/password/forgot" passHref>
+                  }}
+                  color="#2153CC"
+                  fontSize="0.75rem"
+                  fontWeight="600"
+                  lineHeight="16px"
+                  mt="8px"
+                  display="inline-block"
+                  cursor="pointer"
+                  float="right"
+                >
+                  Change number
+                </chakra.span>}
+              {confirmAuth && <Input
+                id="password"
+                label="Password"
+                containerMargin="24px 0 0"
+                type={passwordShow ? "text" : "password"}
+                onChange={(e) =>
+                  setLoginDetails({
+                    ...loginDetails,
+                    password: e.target.value,
+                  })}
+                placeholder="Atleast 8 characters"
+                passwordIcon={<PasswordCloseIcon width={21} height={20} color={!loginDetails.contact_no ? "#52689D" : "#0F1010"} />}
+                passwordClick={() => setPasswordShow(!passwordShow)}
+              />}
+              {/* <Link href="/password/forgot" passHref>
                       <chakra.a
                         color="#2153CC"
                         fontSize="0.75rem"
@@ -280,82 +300,105 @@ const Login = () => {
                         Forgot password?
                       </chakra.a>
                     </Link> */}
-                <Button
-                  type="button"
-                  btnStyle="primary"
-                  value="Continue"
-                  m="48px 0 0"
-                  disabled={request}
-                  loading={request}
-                  onClick={confirmAuth ? (e) => confirmLogin(e) : (e) => checkPhoneNum(e)}
-                />
-              </>
-            ) : (
-              <>
-                <Input
-                  label="Input the OTP number sent to you"
-                  value={loginDetails.verification_code}
-                  containerMargin="24px 0 0"
-                  type={passwordShow ? "text" : "password"}
-                  maxLength={4}
-                  onChange={(e) =>
-                    setLoginDetails({
-                      ...loginDetails,
-                      verification_code: e.target.value,
-                    })}
-                  placeholder="****"
-                  passwordIcon={<PasswordCloseIcon width={21} height={20} color="#0F1010" />}
-                  passwordClick={() => setPasswordShow(!passwordShow)}
-                />
-                <Input
-                  label="Surname"
-                  type="text"
-                  containerMargin="24px 0 0"
-                  onChange={(e) =>
-                    setLoginDetails({
-                      ...loginDetails,
-                      surname: e.target.value,
-                    })}
-                  value={loginDetails.surname}
-                  placeholder="Please enter your surname"
-                />
-                <Input
-                  label="First name"
-                  type="text"
-                  containerMargin="24px 0 0"
-                  onChange={(e) =>
-                    setLoginDetails({
-                      ...loginDetails,
-                      first_name: e.target.value,
-                    })}
-                  value={loginDetails.first_name}
-                  placeholder="Please enter your first name"
-                />
-                <Input
-                  label="Password"
-                  containerMargin="24px 0 0"
-                  type={passwordShow ? "text" : "password"}
-                  onChange={(e) =>
-                    setLoginDetails({
-                      ...loginDetails,
-                      password: e.target.value,
-                    })}
-                  placeholder="Atleast 8 characters"
-                  passwordIcon={<PasswordCloseIcon width={21} height={20} color="#0F1010" />}
-                  passwordClick={() => setPasswordShow(!passwordShow)}
-                />
-                <Button
-                  type="button"
-                  btnStyle="primary"
-                  value="Complete registration"
-                  m="48px 0 0"
-                  disabled={request}
-                  loading={request}
-                  onClick={(e) => completeRegistration(e)}
-                />
-              </>
-            )}
-          </chakra.form>
+              <Button
+                type="submit"
+                btnStyle="primary"
+                value="Continue"
+                m="48px 0 0"
+                disabled={request}
+                loading={request}
+                onClick={confirmAuth ? (e) => confirmLogin(e) : (e) => checkPhoneNum(e)}
+              />
+            </chakra.form>
+          ) : (
+            <chakra.form
+              mt="62px"
+              onSubmit={(e) => completeRegistration(e)}
+            >
+              <chakra.span
+                onClick={() => {
+                  setIsVerified(true)
+                  setConfirmAuth(false)
+                  setLoginDetails({
+                    ...loginDetails,
+                    contact_no: ""
+                  })
+                }}
+                color="#2153CC"
+                fontSize="0.75rem"
+                fontWeight="600"
+                lineHeight="16px"
+                mt="8px"
+                display="inline-block"
+                cursor="pointer"
+                float="right"
+              >
+                Change number
+              </chakra.span>
+              <Input
+                label="Input the OTP number sent to you"
+                value={loginDetails.verification_code}
+                containerMargin="24px 0 0"
+                type={passwordShow ? "text" : "password"}
+                maxLength={4}
+                onChange={(e) =>
+                  setLoginDetails({
+                    ...loginDetails,
+                    verification_code: e.target.value,
+                  })}
+                placeholder="****"
+                passwordIcon={<PasswordCloseIcon width={21} height={20} color="#0F1010" />}
+                passwordClick={() => setPasswordShow(!passwordShow)}
+              />
+              <Input
+                label="Surname"
+                type="text"
+                containerMargin="24px 0 0"
+                onChange={(e) =>
+                  setLoginDetails({
+                    ...loginDetails,
+                    surname: e.target.value,
+                  })}
+                value={loginDetails.surname}
+                placeholder="Please enter your surname"
+              />
+              <Input
+                label="First name"
+                type="text"
+                containerMargin="24px 0 0"
+                onChange={(e) =>
+                  setLoginDetails({
+                    ...loginDetails,
+                    first_name: e.target.value,
+                  })}
+                value={loginDetails.first_name}
+                placeholder="Please enter your first name"
+              />
+              <Input
+                label="Password"
+                containerMargin="24px 0 0"
+                type={passwordShow ? "text" : "password"}
+                onChange={(e) =>
+                  setLoginDetails({
+                    ...loginDetails,
+                    password: e.target.value,
+                  })}
+                placeholder="Atleast 8 characters"
+                passwordIcon={<PasswordCloseIcon width={21} height={20} color="#0F1010" />}
+                passwordClick={() => setPasswordShow(!passwordShow)}
+              />
+              <Button
+                type="button"
+                btnStyle="primary"
+                value="Complete registration"
+                m="48px 0 0"
+                disabled={request}
+                loading={request}
+                onClick={(e) => completeRegistration(e)}
+              />
+            </chakra.form>
+          )}
+          {/* </chakra.form> */}
         </chakra.div>
       </chakra.div>
     </chakra.div>
