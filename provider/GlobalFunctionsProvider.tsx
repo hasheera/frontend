@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { createContext, ReactElement, useCallback, useEffect, useState } from "react";
 import { getOpenCart, getTransactionSales } from "store/slices/carts";
-import { getSingleShop, getVendorShops, setSingleShop, shopsData, updateHasShopRole } from "store/slices/shops";
+import { getCategories, getSingleShop, getVendorShops, setSingleShop, shopsData, updateHasShopRole } from "store/slices/shops";
 import { getUser, userData } from "store/slices/user";
 
 interface GlobalFunctionsProps {
@@ -64,9 +64,10 @@ const GlobalFunctionsProvider = ({ children }: { children: ReactElement }) => {
     if (singleShop.loaded && singleShop.selectedShop) {
       dispatch<any>(getOpenCart(singleShop.selectedShop.shop_id))
       dispatch<any>(getTransactionSales({ id: singleShop.selectedShop.shop_id }))
+      dispatch<any>(getCategories(singleShop.selectedShop.shop_id))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [singleShop.loaded])
+  }, [singleShop])
 
   useEffect(() => {
     if (userLoaded && singleShop.selectedShop) {

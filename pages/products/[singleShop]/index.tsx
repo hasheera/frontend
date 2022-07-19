@@ -27,7 +27,6 @@ const Product: NextPage = () => {
   const { batchType, singleShop, categories, vendorShops } = useAppSelector(shopsData);
   const dispatch = useAppDispatch();
   const [productCategories, setProductCategories] = useState(null);
-  const [productCategoriesId, setProductCategoriesId] = useState(null);
   const [productSort, setProductSort] = useState(null);
   const [isSearch, setIsSearch] = useState(false);
   const [sticky, setSticky] = useState(false);
@@ -76,27 +75,32 @@ const Product: NextPage = () => {
     });
   };
 
-  // const getProductByCategory = async (categoryId: number) => {
-  //   const shopId = Cookies.get("shopId");
-  //   try {
-  //     setIsSearch(true);
-  //     const res = await AuthAxios.get(
-  //       `/oga/shop/product/index-by-product-category?shop_id=${shopId}&product_category_id=${categoryId}`,
-  //     );
-  //     if (res.status === 200) {
-  //       setSingleShop({
-  //         ...singleShop,
-  //         data: res.data.data.data,
-  //         next_page_url: res.data.data.next_page_url,
-  //         prev_page_url: res.data.data.prev_page_url,
-  //       });
-  //       setIsSearch(false);
-  //     }
-  //   } catch (error) {
-  //     setIsSearch(false);
-  //     return error;
-  //   }
-  // };
+  const getProductByCategory = async (categoryId?: number) => {
+    try {
+      setIsSearch(true);
+      if (!categoryId) {
+        const res = await dispatch<any>(getSingleShop(singleShop.selectedShop.shop_id));
+        if (res.payload) {
+          return setIsSearch(false)
+        }
+      }
+
+      const res = await AuthAxios.get(
+        `/oga/shop/product/index-by-product-category?shop_id=${singleShop.selectedShop.shop_id}&product_category_id=${categoryId}`,
+      );
+      if (res.status === 200) {
+        dispatch(setSearchProducts({
+          ...singleShop,
+          shopData: { ...res.data.data }
+        }));
+        setIsSearch(false);
+      }
+      return res;
+    } catch (error) {
+      setIsSearch(false);
+      return error;
+    }
+  };
 
   const searchShopProducts = async (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -281,6 +285,7 @@ const Product: NextPage = () => {
                       <MenuItem
                         onClick={() => {
                           setProductCategories("");
+                          getProductByCategory()
                         }}
                         p="10px"
                         fontSize="0.75rem"
@@ -297,7 +302,7 @@ const Product: NextPage = () => {
                           key={id}
                           onClick={() => {
                             setProductCategories(name);
-                            setProductCategoriesId(id);
+                            getProductByCategory(id);
                           }}
                           p="10px"
                           fontSize="0.75rem"
