@@ -63,7 +63,7 @@ const GlobalFunctionsProvider = ({ children }: { children: ReactElement }) => {
   useEffect(() => {
     if (singleShop.loaded && singleShop.selectedShop) {
       dispatch<any>(getOpenCart(singleShop.selectedShop.shop_id))
-      dispatch<any>(getTransactionSales(singleShop.selectedShop.shop_id))
+      dispatch<any>(getTransactionSales({ id: singleShop.selectedShop.shop_id }))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [singleShop.loaded])

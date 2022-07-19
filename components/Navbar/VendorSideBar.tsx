@@ -101,7 +101,7 @@ const VendorSideBar = () => {
     dispatch<any>(getDashboardData({ id: singleShop.selectedShop?.shop_id }));
     dispatch<any>(getOpenCart(singleShop.selectedShop?.shop_id));
     dispatch<any>(getTopSellingData(singleShop.selectedShop?.shop_id));
-    dispatch<any>(getTransactionSales(singleShop.selectedShop?.shop_id));
+    dispatch<any>(getTransactionSales({ id: singleShop.selectedShop?.shop_id }));
     dispatch<any>(getTransactionsExpenses(singleShop.selectedShop?.shop_id));
     // if(singleShop.selectedShop.shop_id !== ) {
     // }

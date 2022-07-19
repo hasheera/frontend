@@ -217,7 +217,7 @@ const SalesTable = () => {
             {/* </Table> */}
           </Table>
 
-          <chakra.div
+          {transactionSales.data?.next_page_url && <chakra.div
             h="41.68px"
             w="100%"
             display="flex"
@@ -257,7 +257,7 @@ const SalesTable = () => {
             >
               <PagiNext />
             </chakra.button>
-          </chakra.div>
+          </chakra.div>}
         </TableContainer>
       </chakra.div>
 
