@@ -474,6 +474,7 @@ const Invoice: NextPage = () => {
                 status={invoiceData.data.status}
                 pay={makePayment}
                 refund={refundPaid}
+                payments={invoiceData.data?.payments}
                 request={request}
                 disabled={!paymentMethod || request}
               />

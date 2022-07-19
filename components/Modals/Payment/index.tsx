@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import PaymentLogoComponent from "@components/PaymentLogo";
 import { chakra, Button, Menu, MenuButton, MenuItem, MenuList, Spinner } from "@chakra-ui/react";
 import { formatPrice } from "@utils/helpers";
@@ -21,9 +22,10 @@ interface Props {
   status: string;
   request: boolean;
   disabled: boolean;
+  payments: [];
 }
 
-const PaymentModal = ({ paymentMethod, setPaymentMethod, amount, setAmount, pay, refund, request, disabled, status }: Props) => (
+const PaymentModal = ({ paymentMethod, setPaymentMethod, amount, setAmount, pay, refund, request, disabled, status, payments }: Props) => (
   <chakra.div
     maxW="359px"
     background="#FFFFFF"
@@ -41,7 +43,7 @@ const PaymentModal = ({ paymentMethod, setPaymentMethod, amount, setAmount, pay,
       color="#22262A"
     // textAlign={{ base: "left", xl: "right" }}
     >
-      &#8358;{formatPrice(amount)}
+      &#8358;{formatPrice(amount).slice(1)}
     </chakra.p>
 
     {["pending", "incomplete payment"].includes(status) &&
@@ -258,9 +260,17 @@ const PaymentModal = ({ paymentMethod, setPaymentMethod, amount, setAmount, pay,
         fontWeight="600"
       >Payment History</chakra.h2>
 
-      <PaymentHistory />
-      <PaymentHistory />
-      <PaymentHistory />
+      {payments.map(({ id, payment_type, created_at, amount_paid }) => (
+        <chakra.div key={id} py="10px" borderBottom="1px solid #EEE">
+          <PaymentHistory
+            payment_type={payment_type}
+            created_at={created_at}
+            amount_paid={amount_paid}
+          />
+          </chakra.div>
+      ))}
+      {/* <PaymentHistory />
+      <PaymentHistory /> */}
 
       {["pending", "incomplete payment"].includes(status) && <chakra.button
         m="20px auto"
