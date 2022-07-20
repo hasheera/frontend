@@ -182,7 +182,7 @@ const ProductGridView = ({ shopProducts }) => {
                   />
 
                   <chakra.div mt="4.48px">
-                    <chakra.p
+                    {/* <chakra.p
                       fontSize="0.75rem"
                       fontWeight="500"
                       textDecoration="underline"
@@ -191,11 +191,11 @@ const ProductGridView = ({ shopProducts }) => {
                       }}
                     >
                       {product_unit.name}
-                    </chakra.p>
+                    </chakra.p> */}
                     <chakra.p fontSize="0.75rem">
                       {product.name.length > 54
-                        ? `${product.name.slice(0, 50)}...`
-                        : product.name}
+                        ? `${product.name.slice(0, 50)}... - ${product_unit.name}`
+                        : `${product.name} - ${product_unit.name}`}
                     </chakra.p>
                   </chakra.div>
 
