@@ -19,6 +19,7 @@ import { useAppDispatch, useAppSelector } from "hooks";
 import { addToCart, cartsData, getOpenCart } from "store/slices/carts";
 import AuthAxios from "@utils/api/authAxios";
 import { shopsData } from "store/slices/shops";
+import { DeleteIcon } from "@public/assets";
 
 interface CartItem {
   id: number;
@@ -288,14 +289,7 @@ export const CartItem = ({
     }
   };
 
-  const updateCart = async (
-    // cartsId: any,
-    // productId: any,
-    // quantity: any,
-    // subAmount: any,
-    // itemId: any,
-    // shopOwner: number
-  ) => {
+  const updateCart = async () => {
     try {
       setIsRequest(true);
       const res = await dispatch<any>(addToCart({
@@ -387,7 +381,7 @@ export const CartItem = ({
           ml="auto"
           cursor="pointer"
         >
-          {/* <FontAwesomeIcon icon={faTimes} color="#F03D3E" /> */}
+          <DeleteIcon color="#F03D3E" />
         </chakra.div>
         <chakra.div borderBottom="1px solid #EEE" pb="12px">
           <chakra.p fontSize="0.75rem" color="#777">

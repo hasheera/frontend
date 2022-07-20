@@ -154,6 +154,19 @@ export const getTeams = createAsyncThunk(
   },
 );
 
+export const getCategories = createAsyncThunk(
+  'getCategories',
+  async (id: string | number, { rejectWithValue }) => {
+    try {
+      const response = await AuthAxios.get(`/oga/product/category/index?shop_id=${id}`);
+      return response;
+
+    } catch (ex) {
+      return rejectWithValue(getExceptionPayload(ex));
+    }
+  },
+);
+
 export const getShopActivity = createAsyncThunk(
   'getShopActivity',
   async (arg: any, { rejectWithValue }) => {
@@ -303,6 +316,10 @@ export const shopsSlice = createSlice({
       .addCase(getShopActivity.fulfilled, (state, { payload }) => {
         state.shopActivity.loaded = true
         state.shopActivity.data = payload.data.data
+      })
+      .addCase(getCategories.fulfilled, (state, { payload }) => {
+        state.categories.loaded = true
+        state.categories.data = payload.data.data.data
       })
   },
 });

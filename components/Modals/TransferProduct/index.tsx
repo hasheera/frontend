@@ -8,8 +8,8 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import Cookies from "js-cookie";
-import { shopsData } from "store/slices/shops";
-import { useAppSelector } from "hooks";
+import { getSingleShop, shopsData } from "store/slices/shops";
+import { useAppDispatch, useAppSelector } from "hooks";
 import AuthAxios from "@utils/api/authAxios";
 import { AdditionIcon, SubtractionIcon } from "../../../public/assets";
 import ModalUI from "..";
@@ -21,6 +21,7 @@ type Props = {
 
 const Transfer = ({ isOpen, onClose }: Props) => {
   const { singleProduct, singleShop } = useAppSelector(shopsData);
+  const dispatch = useAppDispatch();
   const toast = useToast();
   const [formValues, setFormValues] = useState<{
     receiverShopId: any;
@@ -37,6 +38,7 @@ const Transfer = ({ isOpen, onClose }: Props) => {
     );
 
     if (res.status === 200) {
+      dispatch<any>(getSingleShop(singleShop.selectedShop.shop_id))
       toast({
         description: `${res.data.message}`,
         position: "top",

@@ -217,7 +217,7 @@ const SalesTable = () => {
             {/* </Table> */}
           </Table>
 
-          {transactionSales.data?.next_page_url && <chakra.div
+          {(transactionSales.data?.next_page_url || transactionSales.data?.prev_page_url) && <chakra.div
             h="41.68px"
             w="100%"
             display="flex"

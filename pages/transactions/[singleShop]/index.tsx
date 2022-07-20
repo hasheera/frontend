@@ -582,6 +582,7 @@ const TransactionsPage: NextPage = () => {
                 h="38.42px"
                 borderRadius="5.72px"
                 padding="8px 10px"
+                ml="20px"
                 bg="#FFFFFF"
                 display={{ base: "none", xl: "flex" }}
                 justifyContent="space-around"

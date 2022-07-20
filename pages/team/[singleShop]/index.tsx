@@ -202,6 +202,7 @@ const Team: NextPage = () => {
                   </chakra.p>
                 </chakra.button>}
               </chakra.div>
+              
               <chakra.div pl="40px">
                 {data.user_shop.map(
                   (role: { role_name: string; shop_id: number }) => (
