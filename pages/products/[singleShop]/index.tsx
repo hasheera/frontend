@@ -29,6 +29,7 @@ const Product: NextPage = () => {
   const [productCategories, setProductCategories] = useState(null);
   const [productSort, setProductSort] = useState(null);
   const [isSearch, setIsSearch] = useState(false);
+  const [search, setSearch] = useState("");
   const [sticky, setSticky] = useState(false);
   const router = useRouter();
 
@@ -102,20 +103,21 @@ const Product: NextPage = () => {
     }
   };
 
-  const searchShopProducts = async (e: ChangeEvent<HTMLInputElement>) => {
+  const searchShopProducts = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
+    
+    if (!search) {
+      return null;
+      // const res = await dispatch<any>(getSingleShop(singleShop.selectedShop.shop_id));
+      // if (res.payload) {
+      // }
+    }
 
     try {
       setIsSearch(true);
-      if (!e.target.value) {
-        const res = await dispatch<any>(getSingleShop(singleShop.selectedShop.shop_id));
-        if (res.payload) {
-          return setIsSearch(false)
-        }
-      }
 
       const res = await AuthAxios.post(
-        `/oga/shop/product/search?shop_id=${singleShop.selectedShop.shop_id}&name=${e.target.value}`
+        `/oga/shop/product/search?shop_id=${singleShop.selectedShop.shop_id}&name=${search}`
       );
       if (res.status === 200) {
         dispatch(setSearchProducts({
@@ -177,7 +179,8 @@ const Product: NextPage = () => {
             boxShadow={sticky ? "0px 10px 13px rgba(0, 0, 0, 0.02)" : "none"}
             zIndex="1"
           >
-            <chakra.div
+            <chakra.form
+              onSubmit={searchShopProducts}
               display="flex"
               alignItems="center"
               bg="white"
@@ -186,7 +189,10 @@ const Product: NextPage = () => {
               w={{ base: "100%", xl: "400px" }}
             >
               <chakra.input
-                onChange={(e) => searchShopProducts(e)}
+                onChange={(e) => {
+                  setSearch(e.target.value)
+                  if (!e.target.value) dispatch<any>(getSingleShop(singleShop.selectedShop.shop_id))
+                }}
                 bg="transparent"
                 w="100%"
                 h="40px"
@@ -200,6 +206,22 @@ const Product: NextPage = () => {
                 _hover={{ border: "1px solid #2153CC" }}
                 _focus={{ border: "1px solid #2153CC", outline: "none" }}
               />
+              <chakra.button
+                type="submit"
+                // onClick={searchShopProducts}
+                w="120px"
+                disabled={isSearch}
+                bg="#2153CC"
+                color="white"
+                borderRadius="5px"
+                h="40px"
+                ml="20px"
+                _focus={{ outline: "4px solid #9CAAF5" }}
+                fontSize="14px"
+                fontWeight="600"
+              >
+                Search
+              </chakra.button>
               <chakra.span
                 pos="absolute"
                 top="1px"
@@ -213,7 +235,7 @@ const Product: NextPage = () => {
               >
                 <SearchIcon width={24} height={24} color="black" />
               </chakra.span>
-            </chakra.div>
+            </chakra.form>
 
             <chakra.div
               display="flex"
@@ -284,7 +306,7 @@ const Product: NextPage = () => {
                     >
                       <MenuItem
                         onClick={() => {
-                          if(!productCategories) return null;
+                          if (!productCategories) return null;
                           setProductCategories("");
                           return getProductByCategory();
                         }}
