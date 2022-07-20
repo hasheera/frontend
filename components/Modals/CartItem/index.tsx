@@ -36,6 +36,12 @@ const CartItem: FC<Props> = ({ isOpen, onClose }) => {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [singleShop, isOpen]);
+
+  useEffect(() => {
+    setPrice(singleProduct.sell_price * productQuantity)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [productQuantity])
+  
   
 
   const addItemToCart = async () => {
@@ -45,7 +51,7 @@ const CartItem: FC<Props> = ({ isOpen, onClose }) => {
       const res: { data: any } | any = await dispatch<any>(addToCart(
         {
           quantity: productQuantity,
-          amount: singleProduct.sell_price * productQuantity,
+          amount: price,
           shopProductId: singleProduct.id,
           content: productNote,
           shopId: singleShop.selectedShop.shop_id,
@@ -183,7 +189,7 @@ const CartItem: FC<Props> = ({ isOpen, onClose }) => {
           </chakra.div>
           <chakra.div>
             <chakra.input
-              value={price * productQuantity}
+              value={price}
               type="number"
               onChange={(e) => setPrice(e.target.value)}
               width="83px"
