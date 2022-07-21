@@ -59,7 +59,7 @@ const AddNewExpense = ({ isOpen, onClose }: Props) => {
         });
         return toast({
           duration: 3000,
-          position: "top",
+          position: "top-right",
           description: `${res.data.message}`,
           status: "success",
         });

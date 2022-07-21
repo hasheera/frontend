@@ -41,7 +41,7 @@ const Transfer = ({ isOpen, onClose }: Props) => {
       dispatch<any>(getSingleShop(singleShop.selectedShop.shop_id))
       toast({
         description: `${res.data.message}`,
-        position: "top",
+        position: "top-right",
         status: "success",
         duration: 3000,
       });

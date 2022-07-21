@@ -40,7 +40,7 @@ const InviteTeamModal = ({ isOpen, onClose, roles }: Props): ReactElement => {
         description: "Please assign a role to user",
         status: "info",
         duration: 3000,
-        position: "top",
+        position: "top-right",
       });
     }
     try {
@@ -59,7 +59,7 @@ const InviteTeamModal = ({ isOpen, onClose, roles }: Props): ReactElement => {
           description: "Invite has been sent to user",
           status: "success",
           duration: 3000,
-          position: "top",
+          position: "top-right",
         });
       }
       return res;

@@ -219,7 +219,7 @@ const StockMovementTable = () => {
             {/* </Table> */}
           </Table>
 
-          <chakra.div
+          {(stockMovements.data?.next_page_url || stockMovements.data?.prev_page_url) && <chakra.div
             h="41.68px"
             w="100%"
             display="flex"
@@ -259,7 +259,7 @@ const StockMovementTable = () => {
             >
               <PagiNext />
             </chakra.button>
-          </chakra.div>
+          </chakra.div>}
         </TableContainer>
       </chakra.div>
 

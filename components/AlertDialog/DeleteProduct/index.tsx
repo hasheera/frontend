@@ -29,7 +29,7 @@ const DeleteProductDialog: FC<Props> = ({
       toast({
         description: `${res.data.data.message}`,
         status: "success",
-        position: "top",
+        position: "top-right",
         duration: 3000,
       });
       onClose();

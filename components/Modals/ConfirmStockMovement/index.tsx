@@ -28,7 +28,7 @@ const ConfirmStockMovement: FC<Props> = ({
           description: `${res.data.message}`,
           status: "success",
           duration: 3000,
-          position: "top",
+          position: "top-right",
         });
         onClose();
         window.location.reload();

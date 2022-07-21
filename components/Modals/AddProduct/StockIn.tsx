@@ -27,7 +27,7 @@ const StockIn: FC<Props> = ({ setModalStage, productData }) => {
         description: "Cannot remove more than available stock",
         status: "error",
         duration: 2000,
-        position: "top",
+        position: "top-right",
       });
     }
     setIsRequest(true);
@@ -46,7 +46,7 @@ const StockIn: FC<Props> = ({ setModalStage, productData }) => {
             description: "Stock in successful",
             status: "success",
             duration: 3000,
-            position: "top",
+            position: "top-right",
           });
         }
       })
