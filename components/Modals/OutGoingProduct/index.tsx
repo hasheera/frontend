@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { chakra, useToast } from "@chakra-ui/react";
+import { chakra } from "@chakra-ui/react";
 import ModalUI from "..";
 
 type Props = {
@@ -8,14 +8,17 @@ type Props = {
   productDetails: any;
 };
 
-const OutGoingProduct: FC<Props> = ({ isOpen, onClose, productDetails }) => {
-  const toast = useToast();
-
-  return (
+const OutGoingProduct: FC<Props> = ({ isOpen, onClose, productDetails }) => (
     <ModalUI open={isOpen} close={onClose} heading="OutGoing">
       Product Transfered to {productDetails.receiver_shop?.name}
-      <chakra.p fontSize="18px" fontWeight="500" my="20px">
-        {productDetails.product_unit?.name}
+      <chakra.p fontSize="1rem" fontWeight="500" my="20px">
+        Product unit: {productDetails.product_unit?.name}
+      </chakra.p>
+      <chakra.p fontSize="0.875rem" fontWeight="500" my="20px">
+        To: {productDetails.receiver_shop?.name}
+      </chakra.p>
+      <chakra.p fontSize="0.875rem" fontWeight="500" my="20px">
+        Quantity: {productDetails.quantity}
       </chakra.p>
       <chakra.img
         w="100px"
@@ -33,6 +36,5 @@ const OutGoingProduct: FC<Props> = ({ isOpen, onClose, productDetails }) => {
        />
     </ModalUI>
   );
-};
 
 export default OutGoingProduct;
