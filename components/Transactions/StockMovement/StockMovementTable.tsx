@@ -12,13 +12,13 @@ import {
   Tr,
   useDisclosure,
 } from "@chakra-ui/react";
-import { MoreIcon, PagiNext, PagiPrev } from "public/assets";
+import { PagiNext, PagiPrev } from "public/assets";
 import ConfirmStockMovement from "@components/Modals/ConfirmStockMovement";
 import OutGoingProduct from "@components/Modals/OutGoingProduct";
 import { useAppDispatch, useAppSelector } from "hooks";
 import { getStockMovement, setStockMovement, shopsData } from "store/slices/shops";
 import AuthAxios from "@utils/api/authAxios";
-import { formatPrice } from "@utils/helpers";
+import { formatNum } from "@utils/helpers";
 
 
 const StockMovementTable = () => {
@@ -219,7 +219,7 @@ const StockMovementTable = () => {
             {/* </Table> */}
           </Table>
 
-          <chakra.div
+          {(stockMovements.data?.next_page_url || stockMovements.data?.prev_page_url) && <chakra.div
             h="41.68px"
             w="100%"
             display="flex"
@@ -259,15 +259,16 @@ const StockMovementTable = () => {
             >
               <PagiNext />
             </chakra.button>
-          </chakra.div>
+          </chakra.div>}
         </TableContainer>
       </chakra.div>
 
       {/* Mobile */}
       <chakra.div
         display={{ base: "flex", xl: "none" }}
+        flexWrap="wrap"
+        gap="20px"
         w="100%"
-        flexDirection="column"
         justifyContent="center"
         alignItems="center"
         pb="100px"
@@ -276,17 +277,29 @@ const StockMovementTable = () => {
           stockMovements.data?.data.map((data: any) => (
             <chakra.div
               key={data.id}
-              w="393px"
+              w="340px"
               h="118.65px"
               borderRadius="6px"
               bg="#FFFFFF"
               margin="7px 0px"
+              onClick={
+                singleShop.selectedShop.shop_id ===
+                  data.receiver_shop.id
+                  ? () => {
+                    confirmProductModal.onOpen();
+                    setProductDetails(data);
+                  }
+                  : () => {
+                    outGoingProduct.onOpen();
+                    setProductDetails(data);
+                  }
+              }
             >
               <chakra.div
                 display="flex"
                 p="10px"
                 pl="15px"
-                pt="15"
+                pt="15px"
                 justifyContent="space-between"
               >
                 <chakra.div display="flex" alignItems="center">
@@ -312,7 +325,7 @@ const StockMovementTable = () => {
                       opacity="50%"
                       margin="3px 0"
                     >
-                      {data.id < 10 ? `0${data.id}` : data.id} |{" "}
+                      {/* {data.id < 10 ? `0${data.id}` : data.id} |{" "} */}
                       {new Date(data.created_at).toDateString()}
                     </chakra.p>
                   </chakra.div>
@@ -326,30 +339,42 @@ const StockMovementTable = () => {
                     opacity="87%"
                     mt="-4px"
                   >
-                    &#8358; {formatPrice(data.amount)}
+                    {formatNum(data.quantity)}
                   </chakra.p>
-                  <chakra.div cursor="pointer" ml="20px">
+                  {/* <chakra.div cursor="pointer" ml="20px">
                     <MoreIcon />
-                  </chakra.div>
+                  </chakra.div> */}
                 </chakra.div>
               </chakra.div>
-              <chakra.div display="flex" pl="50px">
+              <chakra.div display="flex" px="15px">
                 <chakra.div
                   w="92px"
                   h="27.56px"
-                  bg="#F7F8FA"
+                  bg="#FFF"
                   borderRadius="12px"
                   display="flex"
                   justifyContent="center"
                   alignItems="center"
-                >
+                  border={`0.5px solid ${singleShop.selectedShop.shop_id ===
+                    data.receiver_shop.id
+                    ? "green"
+                    : "red"
+                  }`}
+                  >
                   <chakra.p
-                    color="#757575"
+                  color={`${singleShop.selectedShop.shop_id ===
+                    data.receiver_shop.id
+                    ? "green"
+                    : "red"
+                    }`}
                     fontWeight="500"
                     lineHeight="18px"
                     fontSize="12px"
                   >
-                    {data.spent_on}
+                    {singleShop.selectedShop.shop_id ===
+                          data.receiver_shop.id
+                          ? "Incoming"
+                          : "Outgoing"}
                   </chakra.p>
                 </chakra.div>
 

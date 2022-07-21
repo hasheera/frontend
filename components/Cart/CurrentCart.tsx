@@ -63,7 +63,7 @@ const CurrentCart = () => {
               res.data.message.slice(1),
             status: "error",
             duration: 1000,
-            position: "top",
+            position: "top-right",
           });
         }
         if (res.data.status === 401) {
@@ -73,7 +73,7 @@ const CurrentCart = () => {
               res.data.message.slice(1),
             status: "error",
             duration: 1500,
-            position: "top",
+            position: "top-right",
           });
         }
         dispatch<any>(getOpenCart(singleShop.selectedShop.shop_id));
@@ -88,7 +88,7 @@ const CurrentCart = () => {
           description: "Checkout successful",
           status: "success",
           duration: 1000,
-          position: "top",
+          position: "top-right",
         });
       }
       return res;
@@ -266,7 +266,7 @@ export const CartItem = ({
         description: res.data.data,
         status: "info",
         duration: 1000,
-        position: "top",
+        position: "top-right",
       });
       return dispatch<any>(getOpenCart(singleShop.selectedShop.shop_id));
     } catch (e) {
@@ -281,7 +281,7 @@ export const CartItem = ({
         description: res.data.data.message,
         status: "info",
         duration: 1000,
-        position: "top",
+        position: "top-right",
       });
       return dispatch<any>(getOpenCart(singleShop.selectedShop.shop_id));
     } catch (e) {
@@ -310,7 +310,7 @@ export const CartItem = ({
           description: res.payload.message,
           status: "success",
           duration: 1000,
-          position: "top",
+          position: "top-right",
         });
       }
       return res;

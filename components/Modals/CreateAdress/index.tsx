@@ -160,7 +160,7 @@ const CreateAdress: FC<Props> = ({
     ) {
       return toast({
         description: "Fill in the required input field",
-        position: "top",
+        position: "top-right",
         status: "error",
         duration: 3000,
       });
@@ -175,7 +175,7 @@ const CreateAdress: FC<Props> = ({
           setIsRequest(false);
           toast({
             description: "Adress Created Successfully",
-            position: "top",
+            position: "top-right",
             status: "success",
             duration: 3000,
           });

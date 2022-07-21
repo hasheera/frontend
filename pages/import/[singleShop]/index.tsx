@@ -10,6 +10,7 @@ import {
   MenuItem,
   MenuList,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import VendorDashBoardLayout from "@components/Layout/VendorDashBoardLayout";
 import PopularCategories from "@components/ImportProducts/PopularCategories";
@@ -59,6 +60,7 @@ const ImportProduct: NextPage = () => {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [product, setProduct] = useState([]);
   const modal = useDisclosure();
+  const toast = useToast();
 
   const collections: string[] = [
     "Beverages",
@@ -132,6 +134,43 @@ const ImportProduct: NextPage = () => {
     setProduct([]);
     if (searchInputRef.current.value !== null) {
       searchInputRef.current.value = "";
+    }
+  };
+
+  const addShopProduct = async (id: string | number, prodId: string | number) => {
+    try {
+      const res = await AuthAxios.post("/oga/shop/product/create", {
+        shop_id: Number(singleShop.selectedShop.shop_id),
+        product_id: prodId,
+        product_unit_id: id,
+        sell_price: 0,
+        cost_price: 0,
+        restock_alert: 1,
+        category_id: 1,
+        expired_date: null,
+        other_details: "",
+        attributes: 0,
+      });
+      if (res.status === 200) {
+        if (res.data.data.status === "error") {
+          toast({
+            description: res.data.data.message,
+            status: "info",
+            duration: 3000,
+            position: "top-right",
+          });
+        } else {
+          toast({
+            description: "Product added to shop successfully",
+            status: "success",
+            duration: 3000,
+            position: "top-right",
+          });
+        }
+      }
+      return res
+    } catch (e) {
+      return e;
     }
   };
 
@@ -375,16 +414,29 @@ const ImportProduct: NextPage = () => {
           display={{ base: "none", xl: "flex" }}
           alignItems="center"
         >
-          <chakra.p fontSize="14px" fontWeight="600" color="#000">
+          <chakra.p fontSize="14px" fontWeight="600" color="#000" mr="12px">
             Popular searches:
           </chakra.p>
-          <chakra.div display="flex">
+          <chakra.div display="flex" gap="12px">
             {suggestedProducts.data.slice(0, 8).map((data, i) => (
-              <chakra.button p="5px" key={data.shop_product?.product?.id}>
-                {`${data.shop_product?.product?.name.split(" ")[0]} ${data.shop_product?.product?.name.split(" ")[1]}`}
-                {i !== suggestedProducts.data.slice(0, 10).length - 1
+              <chakra.button
+              key={data.shop_product?.product?.id}
+              p="5px"
+              bg="white"
+              border="1px solid #2153CC"
+              fontSize="0.875rem"
+              borderRadius="8px"
+              onClick={() =>
+                addShopProduct(
+                  data.shop_product?.product_unit?.id,
+                  data.shop_product?.product?.id
+                )
+              }
+              >
+                {`${data.shop_product?.product?.name} - ${data.shop_product?.product_unit?.name}`}
+                {/* {i !== suggestedProducts.data.slice(0, 10).length - 1
                   ? " - "
-                  : ""}
+                  : ""} */}
               </chakra.button>
             ))}
           </chakra.div>

@@ -39,7 +39,7 @@ const MobileFooterNav = () => {
         overview: true
       })
     }
-    if (router.pathname.includes("products")) {
+    if (router.pathname.includes("products") || router.pathname.includes("import")) {
       return setActiveLink({
         ...activeLink,
         products: true

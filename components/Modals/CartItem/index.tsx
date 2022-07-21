@@ -70,7 +70,7 @@ const CartItem: FC<Props> = ({ isOpen, onClose }) => {
             //   : "Item added to Cart",
           status: "success",
           duration: 1000,
-          position: "top",
+          position: "top-right",
         });
         setIsRequest(false);
         return onClose();

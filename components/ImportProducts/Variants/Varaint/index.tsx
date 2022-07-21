@@ -37,14 +37,14 @@ const Variant: FC<Props> = ({ product_unit, product }) => {
             description: res.data.data.message,
             status: "info",
             duration: 3000,
-            position: "top",
+            position: "top-right",
           });
         } else {
           toast({
             description: "Product added to shop successfully",
             status: "success",
             duration: 3000,
-            position: "top",
+            position: "top-right",
           });
         }
       }

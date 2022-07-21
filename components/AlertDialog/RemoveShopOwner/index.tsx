@@ -29,7 +29,7 @@ const RemoveShopOwner: FC<Props> = ({ isOpen, onClose, shopOwnerToRemove }) => {
         setIsRequest(false);
         onClose();
         toast({
-          position: "top",
+          position: "top-right",
           description: "Shop owner removed",
           status: "success",
           duration: 2000,

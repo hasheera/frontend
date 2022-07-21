@@ -70,7 +70,7 @@ const VendorSideBar = () => {
         overview: true,
       });
     }
-    if (router.pathname.includes("products")) {
+    if (router.pathname.includes("products") || router.pathname.includes("import")) {
       return setActiveLink({
         ...activeLink,
         products: true,
@@ -213,12 +213,12 @@ const VendorSideBar = () => {
             color={activeLink.products ? "white" : "#A3AED0"}
             _hover={{ color: "white", bg: "#2153CC", fontWeight: "600" }}
             onMouseOver={() =>
-              router.pathname.includes("products")
+              (router.pathname.includes("products") || router.pathname.includes("import"))
                 ? false
                 : handleHover("products", true)
             }
             onMouseOut={() =>
-              router.pathname.includes("products")
+              (router.pathname.includes("products") || router.pathname.includes("import"))
                 ? false
                 : handleHover("products", false)
             }

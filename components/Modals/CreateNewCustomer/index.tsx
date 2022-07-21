@@ -42,7 +42,7 @@ const CreateCustomerModal: React.FC<Props> = ({ isOpen, onClose }) => {
     e.preventDefault();
     if (addNewCustomerForm.name === "" || addNewCustomerForm.phone === "") {
       return toast({
-        position: "top",
+        position: "top-right",
         duration: 3000,
         status: "info",
         description: "please all input field are required",
@@ -63,7 +63,7 @@ const CreateCustomerModal: React.FC<Props> = ({ isOpen, onClose }) => {
         dispatch<any>(getCustomers(singleShop.selectedShop.shop_id));
         onClose();
         return toast({
-          position: "top",
+          position: "top-right",
           status: "success",
           duration: 3000,
           description: "Successfull",

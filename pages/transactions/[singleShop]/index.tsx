@@ -46,17 +46,19 @@ const TransactionsPage: NextPage = () => {
         <chakra.div
           // display={{ base: "none", xl: "flex" }}
           display="flex"
+          flexDir={{ base: "column", sm: "row" }}
           justifyContent="space-between"
+          gap="20px"
           m="20px 0"
         >
           {transaction === "sales" && (
             <chakra.div>
-              <InputGroup w={{ base: "200px", xl: "411.52px" }}>
+              <InputGroup w={{ base: "full", sm: "200px", xl: "411.52px" }}>
                 <Input
                   onChange={e => dispatch<any>(getTransactionSales({ id: singleShop.selectedShop.shop_id, search: e.target.value }))}
                   placeholder="Search for products"
                   type="text"
-                  w={{ base: "200px", xl: "411.52px" }}
+                  w={{ base: "full", sm: "200px", xl: "411.52px" }}
                   h="39.08px"
                   fontSize="12px"
                   fontWeight="500, Medium"
@@ -71,11 +73,11 @@ const TransactionsPage: NextPage = () => {
           )}
           {transaction === "expenses" && (
             <chakra.div display="flex" alignItems="center">
-              <InputGroup w={{ base: "200px", xl: "411.52px" }}>
+              <InputGroup w={{ base: "full", sm: "200px", xl: "411.52px" }}>
                 <Input
                   placeholder="Search for products"
                   type="text"
-                  w={{ base: "200px", xl: "411.52px" }}
+                  w={{ base: "full", sm: "200px", xl: "411.52px" }}
                   h="39.08px"
                   fontSize="12px"
                   fontWeight="500, Medium"
@@ -640,7 +642,7 @@ const TransactionsPage: NextPage = () => {
                     },
                   }}
                 >
-                  <chakra.span display="flex" alignItems="center">
+                  <chakra.span display="flex" alignItems="center" justifyContent="space-between">
                     <chakra.span mr="14px" textTransform="capitalize">
                       {transaction || "All Products"}
                     </chakra.span>

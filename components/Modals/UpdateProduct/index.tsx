@@ -79,7 +79,7 @@ const UpdateProduct = (props: ModalProps) => {
         description: "Cannot remove more than available stock",
         status: "error",
         duration: 2000,
-        position: "top",
+        position: "top-right",
       });
     }
     setRequest(true);
@@ -93,7 +93,7 @@ const UpdateProduct = (props: ModalProps) => {
             description: "Product stock updated",
             status: "success",
             duration: 3000,
-            position: "top",
+            position: "top-right",
           });
           dispatch<any>(getSingleShop(singleShop.selectedShop.shop_id));
           return fetchProduct(singleProduct.id);
@@ -127,7 +127,7 @@ const UpdateProduct = (props: ModalProps) => {
             description: "Product updated successfully",
             status: "success",
             duration: 3000,
-            position: "top",
+            position: "top-right",
           });
           setTimeout(() => {
             setFormValues({

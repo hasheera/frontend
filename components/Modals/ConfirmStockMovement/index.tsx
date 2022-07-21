@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { chakra, useToast } from "@chakra-ui/react";
-import { useAppSelector } from "hooks";
-import { shopsData } from "store/slices/shops";
+import { useAppDispatch, useAppSelector } from "hooks";
+import { getStockMovement, shopsData } from "store/slices/shops";
 import AuthAxios from "@utils/api/authAxios";
 import ModalUI from "..";
 
@@ -17,7 +17,9 @@ const ConfirmStockMovement: FC<Props> = ({
   productDetails,
 }) => {
   const { singleShop } = useAppSelector(shopsData);
+  const dispatch = useAppDispatch();
   const toast = useToast();
+
   const confirm = async () => {
     try {
       const res = await AuthAxios.post(
@@ -28,10 +30,10 @@ const ConfirmStockMovement: FC<Props> = ({
           description: `${res.data.message}`,
           status: "success",
           duration: 3000,
-          position: "top",
+          position: "top-right",
         });
         onClose();
-        window.location.reload();
+        dispatch<any>(getStockMovement(singleShop.selectedShop.shop_id));
       };
       return res;
     } catch (error) {
@@ -42,8 +44,14 @@ const ConfirmStockMovement: FC<Props> = ({
   return (
     <ModalUI open={isOpen} close={onClose} heading="Confirm Product">
       Are you sure you want to confirm
-      <chakra.p fontSize="18px" fontWeight="500" my="20px">
-        {productDetails.product_unit?.name}
+      <chakra.p fontSize="1rem" fontWeight="500" my="20px">
+        Product Unit: {productDetails.product_unit?.name}
+      </chakra.p>
+      <chakra.p fontSize="0.875rem" fontWeight="500" my="20px">
+        From: {productDetails.sender_shop?.name}
+      </chakra.p>
+      <chakra.p fontSize="0.875rem" fontWeight="500" my="20px">
+        Quantity: {productDetails.quantity}
       </chakra.p>
       <chakra.img
         w="100px"
@@ -61,8 +69,9 @@ const ConfirmStockMovement: FC<Props> = ({
             bg="green"
             color="#fff"
             borderRadius="10px"
+            fontWeight="500"
           >
-            confirmed
+            Confirmed
           </chakra.button>
         ) : (
           <chakra.button
@@ -72,8 +81,9 @@ const ConfirmStockMovement: FC<Props> = ({
             bg="#2153CC"
             color="#fff"
             borderRadius="10px"
+            fontWeight="500"
           >
-            confirm
+            Confirm
           </chakra.button>
         )}
       </chakra.div>

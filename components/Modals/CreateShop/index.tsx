@@ -286,7 +286,7 @@ const CreateShop: FC<Props> = ({ isOpen, onClose }) => {
           description: "Shop created successfully",
           status: "success",
           duration: 2000,
-          position: "top",
+          position: "top-right",
         });
         onClose();
       }
@@ -294,7 +294,7 @@ const CreateShop: FC<Props> = ({ isOpen, onClose }) => {
     } catch (error) {
       setIsRequest(false);
       return toast({
-        position: "top",
+        position: "top-right",
         description: "Unsuccessful Please Try Again",
         status: "error",
         duration: 3000,
@@ -321,7 +321,7 @@ const CreateShop: FC<Props> = ({ isOpen, onClose }) => {
         description: "Please enter a valid phone number",
         status: "info",
         duration: 3000,
-        position: "top",
+        position: "top-right",
       });
     }
 
@@ -350,7 +350,7 @@ const CreateShop: FC<Props> = ({ isOpen, onClose }) => {
     ) {
       return toast({
         description: "Fill in the required input field",
-        position: "top",
+        position: "top-right",
         status: "error",
         duration: 3000,
       });
@@ -365,7 +365,7 @@ const CreateShop: FC<Props> = ({ isOpen, onClose }) => {
           setCreateNewShop(true);
           toast({
             description: "Adress Created Successfully",
-            position: "top",
+            position: "top-right",
             status: "success",
             duration: 3000,
           });
@@ -814,7 +814,7 @@ const CreateShop: FC<Props> = ({ isOpen, onClose }) => {
                   onClick={() => {
                     if (!streetName) {
                       toast({
-                        position: "top",
+                        position: "top-right",
                         description: "Please provide shop adress",
                         status: "error",
                         duration: 3000,
