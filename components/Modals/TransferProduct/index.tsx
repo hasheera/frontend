@@ -108,7 +108,12 @@ const Transfer = ({ isOpen, onClose }: Props) => {
         <Input
           placeholder="Enter Quantity"
           value={qty}
-          onChange={(e: any) => setQty(e.target.value)}
+          onChange={(e: any) => {
+            if(Number(e.target.value) > singleProduct.stock_count) {
+              return setQty(singleProduct.stock_count)
+            };
+            return setQty(e.target.value);
+          }}
         />
         <InputRightElement>
           <chakra.button px="30px" onClick={() => setQty((num) => num + 1)}>
