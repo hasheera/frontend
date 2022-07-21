@@ -41,9 +41,27 @@ const AddNewExpense = ({ isOpen, onClose }: Props) => {
     e.preventDefault();
 
     try {
-      setIsRequest(true);
       const { amount, purpose, description } = form;
-
+      
+      if(!amount) {
+        return toast({
+          duration: 2000,
+          position: "top-right",
+          description: "Please add amount",
+          status: "info",
+        });
+      };
+      
+      if(!purpose) {
+        return toast({
+          duration: 2500,
+          position: "top-right",
+          description: "Please add purpose of expense",
+          status: "info",
+        });
+      };
+      
+      setIsRequest(true);
       const res = await AuthAxios.post(
         `oga/shop/expense/create?shop_id=${singleShop.selectedShop.shop_id}&amount=${amount}&amount_paid=${amount}&spent_on=${purpose}&description=${description}`
       );
