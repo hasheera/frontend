@@ -269,6 +269,7 @@ const SalesTable = () => {
         w="100%"
         justifyContent="center"
         alignItems="center"
+        pb="100px"
       >
         {transactionSales.loaded &&
           transactionSales.data?.data.map((data) => (

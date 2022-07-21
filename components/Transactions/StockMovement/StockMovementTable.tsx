@@ -266,17 +266,18 @@ const StockMovementTable = () => {
       {/* Mobile */}
       <chakra.div
         display={{ base: "flex", xl: "none" }}
+        flexWrap="wrap"
+        gap="20px"
         w="100%"
-        flexDirection="column"
         justifyContent="center"
         alignItems="center"
-        gap="40px"
+        pb="100px"
       >
         {stockMovements.loaded &&
           stockMovements.data?.data.map((data: any) => (
             <chakra.div
               key={data.id}
-              w="full"
+              w="340px"
               h="118.65px"
               borderRadius="6px"
               bg="#FFFFFF"

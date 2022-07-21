@@ -240,35 +240,51 @@ const SalesTable = () => {
       {/* Mobile */}
       <chakra.div
         display={{ base: "flex", xl: "none" }}
+        flexWrap="wrap"
+        gap="20px"
         w="100%"
-        flexDirection="column"
         justifyContent="center"
         alignItems="center"
         pb="100px"
       >
         {transactionExpenses.loaded &&
           transactionExpenses.data.data.map((data) => (
-            <chakra.div
-              key={data.id}
-              w="100%"
-              maxW="393px"
-              h="118.65px"
-              borderRadius="6px"
-              bg="#FFFFFF"
-              margin="7px 0px"
-            >
               <chakra.div
-                display="flex"
-                p="10px"
-                pl="15px"
-                pt="15"
-                justifyContent="space-between"
+                key={data.id}
+                w="100%"
+                maxW="340px"
+                borderRadius="6px"
+                bg="#FFFFFF"
+                m="7px 0px"
+                p="16px"
               >
-                <chakra.div display="flex" alignItems="center">
+                <chakra.div
+                  display="flex"
+                  justifyContent="space-between"
+                >
+                  <chakra.div display="flex" justifyContent="space-between">
+                    <chakra.p
+                      fontWeight="700"
+                      fontSize="15.35px"
+                      lineHeight="23.02px"
+                      color="#333333"
+                      opacity="87%"
+                      mt="-4px"
+                    >
+                      &#8358; {formatPrice(data.amount)}
+                    </chakra.p>
+                    <chakra.div cursor="pointer" ml="20px">
+                      <MoreIcon />
+                    </chakra.div>
+                  </chakra.div>
+                </chakra.div>
+
+                <chakra.div display="flex" alignItems="center" py="16px">
                   <Avatar
                     size="sm"
                     name={`${data.user.surname} ${data.user.first_name}`}
                   />
+
                   <chakra.div ml="7px">
                     <chakra.p
                       fontSize="14px"
@@ -292,65 +308,50 @@ const SalesTable = () => {
                     </chakra.p>
                   </chakra.div>
                 </chakra.div>
+
                 <chakra.div display="flex">
-                  <chakra.p
-                    fontWeight="700"
-                    fontSize="15.35px"
-                    lineHeight="23.02px"
-                    color="#333333"
-                    opacity="87%"
-                    mt="-4px"
+                  <chakra.div
+                    w="92px"
+                    h="27.56px"
+                    bg="#F7F8FA"
+                    borderRadius="12px"
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
                   >
-                    &#8358; {formatPrice(data.amount)}
-                  </chakra.p>
-                  <chakra.div cursor="pointer" ml="20px">
-                    <MoreIcon />
+                    <chakra.p
+                      color="#757575"
+                      fontWeight="500"
+                      lineHeight="18px"
+                      fontSize="12px"
+                    >
+                      {data.spent_on}
+                    </chakra.p>
+                  </chakra.div>
+
+                  <chakra.div
+                    // w="84.1px"
+                    p="5px 30px"
+                    h="27.56px"
+                    bg={orderStatusColor(data.status)}
+                    borderRadius="12px"
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    ml="8px"
+                  >
+                    <chakra.p
+                      color="#ffffff"
+                      fontWeight="500"
+                      fontSize="12px"
+                      lineHeight="18px"
+                      textTransform="capitalize"
+                    >
+                      {data.status}
+                    </chakra.p>
                   </chakra.div>
                 </chakra.div>
               </chakra.div>
-              <chakra.div display="flex" pl="50px">
-                <chakra.div
-                  w="92px"
-                  h="27.56px"
-                  bg="#F7F8FA"
-                  borderRadius="12px"
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  <chakra.p
-                    color="#757575"
-                    fontWeight="500"
-                    lineHeight="18px"
-                    fontSize="12px"
-                  >
-                    {data.spent_on}
-                  </chakra.p>
-                </chakra.div>
-
-                <chakra.div
-                  // w="84.1px"
-                  p="5px 30px"
-                  h="27.56px"
-                  bg={orderStatusColor(data.status)}
-                  borderRadius="12px"
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                  ml="8px"
-                >
-                  <chakra.p
-                    color="#ffffff"
-                    fontWeight="500"
-                    fontSize="12px"
-                    lineHeight="18px"
-                    textTransform="capitalize"
-                  >
-                    {data.status}
-                  </chakra.p>
-                </chakra.div>
-              </chakra.div>
-            </chakra.div>
           ))}
       </chakra.div>
     </>
