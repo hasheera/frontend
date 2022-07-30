@@ -168,7 +168,7 @@ const Invoice: NextPage = () => {
   useEffect(() => {
     if (shopSettings) {
       const a = shopSettings?.find(n => n.key === "receipt_note")
-      setReceiptNote({ status: true, value: a.value })
+      setReceiptNote({ status: true, value: a.value || "" })
     }
   }, [shopSettings]);
 
@@ -366,7 +366,7 @@ const Invoice: NextPage = () => {
                     {receiptNote.status &&
                       <>
                         <chakra.p fontSize="0.75rem" fontWeight="500" mt="20px">Notes:</chakra.p>
-                        <chakra.p color="#9DA1AA" fontSize="0.75rem">
+                        <chakra.p fontSize="0.75rem">
                           {receiptNote.value}
                         </chakra.p>
                       </>
@@ -457,7 +457,7 @@ const Invoice: NextPage = () => {
                     {receiptNote.status &&
                       <>
                         <chakra.p fontSize="0.75rem" fontWeight="500" mt="40px">Notes:</chakra.p>
-                        <chakra.p color="#9DA1AA">
+                        <chakra.p>
                           {receiptNote.value}
                         </chakra.p>
                       </>
