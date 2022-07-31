@@ -15,17 +15,28 @@ import PaymentHistory from "./PaymentHistory";
 interface Props {
   paymentMethod: string;
   setPaymentMethod: (p) => void;
-  amount: number;
+  orderAmount: number;
   pay: () => void;
   refund: () => void;
-  setAmount: (e) => void;
+  setOrderAmount: (e) => void;
   status: string;
   request: boolean;
   disabled: boolean;
   payments: [];
 }
 
-const PaymentModal = ({ paymentMethod, setPaymentMethod, amount, setAmount, pay, refund, request, disabled, status, payments }: Props) => (
+const PaymentModal = ({
+  paymentMethod,
+  setPaymentMethod,
+  orderAmount,
+  setOrderAmount,
+  pay,
+  refund,
+  request,
+  disabled,
+  status,
+  payments
+}: Props) => (
   <chakra.div
     maxW="359px"
     background="#FFFFFF"
@@ -43,7 +54,7 @@ const PaymentModal = ({ paymentMethod, setPaymentMethod, amount, setAmount, pay,
       color="#22262A"
     // textAlign={{ base: "left", xl: "right" }}
     >
-      &#8358;{formatPrice(amount).slice(1)}
+      &#8358;{formatPrice(orderAmount).slice(1)}
     </chakra.p>
 
     {["pending", "incomplete payment"].includes(status) &&
@@ -144,8 +155,8 @@ const PaymentModal = ({ paymentMethod, setPaymentMethod, amount, setAmount, pay,
                 border="1px solid rgba(0, 0, 0, 0.1)"
                 ml="4px"
                 pl="40px"
-                defaultValue={amount}
-                onChange={setAmount}
+                defaultValue={orderAmount}
+                onChange={setOrderAmount}
               />
             </chakra.div>
           )}
@@ -192,8 +203,8 @@ const PaymentModal = ({ paymentMethod, setPaymentMethod, amount, setAmount, pay,
                   border="1px solid rgba(0, 0, 0, 0.1)"
                   ml="4px"
                   pl="40px"
-                  defaultValue={amount}
-                  onChange={setAmount}
+                  defaultValue={orderAmount}
+                  onChange={setOrderAmount}
                 />
               </chakra.div>
             </chakra.div>
@@ -238,8 +249,8 @@ const PaymentModal = ({ paymentMethod, setPaymentMethod, amount, setAmount, pay,
                   border="1px solid rgba(0, 0, 0, 0.1)"
                   ml="4px"
                   pl="40px"
-                  defaultValue={amount}
-                  onChange={setAmount}
+                  defaultValue={orderAmount}
+                  onChange={setOrderAmount}
                 />
               </chakra.div>
             </chakra.div>
@@ -260,12 +271,12 @@ const PaymentModal = ({ paymentMethod, setPaymentMethod, amount, setAmount, pay,
         fontWeight="600"
       >Payment History</chakra.h2>
 
-      {payments.map(({ id, payment_type, created_at, amount_paid }) => (
+      {payments.map(({ id, payment_type, created_at, amount }) => (
         <chakra.div key={id} py="10px" borderBottom="1px solid #EEE">
           <PaymentHistory
             payment_type={payment_type}
             created_at={created_at}
-            amount_paid={amount_paid}
+            amount_paid={amount}
           />
           </chakra.div>
       ))}
@@ -289,7 +300,7 @@ const PaymentModal = ({ paymentMethod, setPaymentMethod, amount, setAmount, pay,
         {request ? <Spinner /> : "Pay now"}
       </chakra.button>}
 
-      {["paid"].includes(status) && <chakra.button
+      {["paid", "incomplete payment"].includes(status) && <chakra.button
         m="20px auto"
         display="block"
         color="#ffffff"

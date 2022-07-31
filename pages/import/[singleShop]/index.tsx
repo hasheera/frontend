@@ -31,6 +31,9 @@ import { shopsData } from "store/slices/shops";
 
 interface SuggestedProducts {
   data: {
+    id: number;
+    name: string;
+    product_units: any[];
     shop_product: {
       product_unit: {
         id: any;
@@ -53,10 +56,11 @@ const ImportProduct: NextPage = () => {
     { data: [], loaded: false }
   );
   const [activeCategory, setActiveCategory] = useState("");
-  const [popularCategories, setPopularCategories] = useState<PopularCategories>(
+  const [categories, setCategories] = useState<PopularCategories>(
     { data: [], loaded: false }
   );
-  const [search, setSearch] = useState<boolean>(false);
+  const [search, setSearch] = useState<string>("");
+  const [showSearch, setShowSearch] = useState<boolean>(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [product, setProduct] = useState([]);
   const modal = useDisclosure();
@@ -82,16 +86,20 @@ const ImportProduct: NextPage = () => {
   };
 
   const handleSearch = async (e: any) => {
-    if (e.target.value === "") {
-      setProduct([]);
-      return;
-    }
-    AuthAxios.post("oga/product/search", { name: e.target.value })
+    e.preventDefault();
+
+    // if (e.target.value === "") {
+    //   setProduct([]);
+    //   return;
+    // }
+    AuthAxios.post("oga/product/search", { name: search })
       .then((res) => {
-        if (res.data.data.data.length) {
-          // const result = res.data.data.data.slice(0, 2);
-          setProduct(res.data.data.data);
-        }
+        setShowSearch(true)
+        setSuggestedProducts({ data: res.data.data.data, loaded: true });
+        //   if (res.data.data.data.length) {
+        //   // const result = res.data.data.data.slice(0, 2);
+        //   setProduct(res.data.data.data);
+        // }
       })
       .catch((err: any) => err);
   };
@@ -106,11 +114,11 @@ const ImportProduct: NextPage = () => {
     });
   };
 
-  const getPopularCategories = () => {
+  const getCategories = () => {
     AuthAxios.get("oga/product/category/index")
       .then((res) => {
         if (res.status === 200) {
-          setPopularCategories({
+          setCategories({
             data: res.data.data.data,
             loaded: true,
           });
@@ -130,7 +138,7 @@ const ImportProduct: NextPage = () => {
   };
 
   const closeSearch = () => {
-    setSearch(false);
+    // setSearch(false);
     setProduct([]);
     if (searchInputRef.current.value !== null) {
       searchInputRef.current.value = "";
@@ -176,8 +184,14 @@ const ImportProduct: NextPage = () => {
 
   useEffect(() => {
     getSuggestedProducts();
-    getPopularCategories();
+    getCategories();
   }, []);
+
+  useEffect(() => {
+    if (!search) {
+      setShowSearch(false);
+    }
+  }, [search]);
 
   return (
     <VendorDashBoardLayout>
@@ -195,18 +209,76 @@ const ImportProduct: NextPage = () => {
           fontSize={{ base: "18px", lg: "20px" }}
           fontWeight="500"
           color="#000000"
-          mt="40px"
+          mt="10px"
         >
           Import Products
         </chakra.p>
 
         <chakra.div
           display="flex"
+          flexDir={{ base: "column", xl: "row" }}
           alignItems="start"
           justifyContent={{ base: "none", xl: "space-between" }}
-          mt="20px"
+          mt="10px"
         >
-          <chakra.div w={{ base: "383px", lg: "411.52px" }} pos="relative">
+          <chakra.form
+            onSubmit={handleSearch}
+            display="flex"
+            alignItems="center"
+            bg="white"
+            pos="relative"
+            borderRadius="8px"
+            w={{ base: "100%", xl: "400px" }}
+          >
+            <chakra.input
+              onChange={(e) => {
+                setSearch(e.target.value);
+                if (!e.target.value) getSuggestedProducts();
+              }}
+              bg="transparent"
+              w="100%"
+              h="40px"
+              borderRadius="8px"
+              placeholder="Search for products"
+              fontSize="0.75rem"
+              fontWeight="500"
+              color="#333"
+              p="0 16px 0 44px"
+              border="1px solid #E0E0E0"
+              _hover={{ border: "1px solid #2153CC" }}
+              _focus={{ border: "1px solid #2153CC", outline: "none" }}
+            />
+            <chakra.button
+              type="submit"
+              w="120px"
+              // disabled={isSearch}
+              bg="#2153CC"
+              color="white"
+              borderRadius="5px"
+              h="40px"
+              ml="20px"
+              _focus={{ outline: "4px solid #9CAAF5" }}
+              fontSize="14px"
+              fontWeight="600"
+            >
+              Search
+            </chakra.button>
+            <chakra.span
+              pos="absolute"
+              top="1px"
+              left="0"
+              bottom="1px"
+              w="48px"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              borderRadius="0 8px 8px 0"
+            >
+              <SearchIcon width={24} height={24} color="black" />
+            </chakra.span>
+          </chakra.form>
+
+          {/* <chakra.div w={{ base: "383px", lg: "411.52px" }} pos="relative">
             <InputGroup
               w={{ base: "383px", lg: "411.52px" }}
               h={{ base: "39px", lg: "39.08px" }}
@@ -303,8 +375,9 @@ const ImportProduct: NextPage = () => {
             ) : (
               ""
             )}
-          </chakra.div>
-          <chakra.div display={{ base: "none", xl: "flex" }}>
+          </chakra.div> */}
+
+          <chakra.div display="flex" mt={{ base: "20px", xl: "0" }}>
             <Menu>
               {({ isOpen }) => (
                 <>
@@ -325,14 +398,17 @@ const ImportProduct: NextPage = () => {
                       <chakra.p
                         fontSize="15px"
                         fontWeight="500"
-                        textTransform="uppercase"
                         color={activeCategory ? "white" : "#333333"}
                         mr="10px"
                       >
-                        {activeCategory || "ALL CATEGORIES"}
+                        {activeCategory || "All Categories"}
                       </chakra.p>
 
-                      <chakra.span
+                      {activeCategory ? (
+                        <chakra.button>
+                          <CancelIcon />
+                        </chakra.button>
+                      ) : <chakra.span
                         transform={isOpen ? "rotate(180deg)" : "rotate(0deg)"}
                       >
                         <DropDownIcon
@@ -340,7 +416,7 @@ const ImportProduct: NextPage = () => {
                           height={6}
                           color={activeCategory ? "white" : "#242533"}
                         />
-                      </chakra.span>
+                      </chakra.span>}
                     </chakra.span>
                   </MenuButton>
                   <MenuList
@@ -355,15 +431,15 @@ const ImportProduct: NextPage = () => {
                         setActiveCategory("");
                       }}
                     >
-                      All Brands
+                      All Cateories
                     </MenuItem>
-                    {popularCategories.data.map((data: any) => (
+                    {categories.data.map((data: any) => (
                       <MenuItem
                         key={data.id}
                         onClick={() => {
                           // setActiveCategory(Number(data.split("-")[1]));
                           setActiveCategory(data.name);
-                          goToCategories(data.name, data.id);
+                          // goToCategories(data.name, data.id);
                         }}
                       >
                         {data.name}
@@ -381,6 +457,7 @@ const ImportProduct: NextPage = () => {
               bg="#2153CC"
               color="#fff"
               fontWeight="500"
+              display={{ base: "none", xl: "inline" }}
             >
               <chakra.p fontSize="16px" fontWeight="600" color="#FFFFFF">
                 Create Product
@@ -409,62 +486,35 @@ const ImportProduct: NextPage = () => {
             </chakra.button>
           </chakra.div>
         </chakra.div>
-        <chakra.div
-          mt="30px"
-          display={{ base: "none", xl: "flex" }}
-          alignItems="center"
-        >
-          <chakra.p fontSize="14px" fontWeight="600" color="#000" mr="12px">
-            Popular searches:
-          </chakra.p>
-          <chakra.div display="flex" gap="12px">
-            {suggestedProducts.data.slice(0, 8).map((data, i) => (
-              <chakra.button
-              key={data.shop_product?.product?.id}
-              p="5px"
-              bg="white"
-              border="1px solid #2153CC"
-              fontSize="0.875rem"
-              borderRadius="8px"
-              onClick={() =>
-                addShopProduct(
-                  data.shop_product?.product_unit?.id,
-                  data.shop_product?.product?.id
-                )
-              }
-              >
-                {`${data.shop_product?.product?.name} - ${data.shop_product?.product_unit?.name}`}
-                {/* {i !== suggestedProducts.data.slice(0, 10).length - 1
-                  ? " - "
-                  : ""} */}
-              </chakra.button>
-            ))}
-          </chakra.div>
-        </chakra.div>
+
+
         <chakra.div display={{ base: "none", lg: "block" }} w="100%" my="30px">
           <Ads />
         </chakra.div>
+
         <chakra.div
           // w={{ base: "375px", lg: "1060.28px" }}
           w="100%"
           py="20px"
           borderRadius="8px"
           bg="#ffffff"
+          mt={{ base: "40px", lg: "none" }}
         >
           <chakra.p
             color="#2153CC"
             ml="25px"
-            display={{ base: "none", lg: "block" }}
+            display={{ lg: "block" }}
             fontSize="20px"
             fontWeight="500"
           >
             Suggested Products
           </chakra.p>
-          <chakra.div>
-            <Products data={suggestedProducts.data} loaded={suggestedProducts.loaded} />
-          </chakra.div>
+          {/* <chakra.div> */}
+          <Products data={suggestedProducts.data} loaded={suggestedProducts.loaded} search={showSearch} />
+          {/* </chakra.div> */}
         </chakra.div>
       </chakra.div>
+
       <AddShopProduct isOpen={modal.isOpen} onClose={modal.onClose} />
     </VendorDashBoardLayout>
   );

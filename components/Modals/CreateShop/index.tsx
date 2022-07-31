@@ -444,7 +444,7 @@ const CreateShop: FC<Props> = ({ isOpen, onClose }) => {
                     })
                   }
                   fontSize="0.875rem"
-                  maxLength={20}
+                  // maxLength={20}
                   required
                 />
               </FormControl>

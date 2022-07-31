@@ -103,7 +103,7 @@ const Brands: FC<Props> = ({ loaded, data }) => {
     <>
       {data.map((product: any, i) => (
         <chakra.div
-          key={product.shop_product.product.id}
+          key={i}
           h="377px"
           bg="#FFFFFF"
           borderRadius="4.11px"
