@@ -12,9 +12,9 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import AuthAxios from "@utils/api/authAxios";
-import { useAppSelector } from "hooks";
+import { useAppDispatch, useAppSelector } from "hooks";
 import { ReactElement, useState } from "react";
-import { shopsData } from "store/slices/shops";
+import { getTeams, shopsData } from "store/slices/shops";
 import ModalUI from "..";
 
 interface Props {
@@ -25,6 +25,7 @@ interface Props {
 
 const InviteTeamModal = ({ isOpen, onClose, roles }: Props): ReactElement => {
   const { singleShop } = useAppSelector(shopsData);
+  const dispatch = useAppDispatch();
   const [isRequest, setIsRequest] = useState(false);
   const [formValues, setFormValues] = useState({
     user_phone_number: "",
@@ -55,6 +56,7 @@ const InviteTeamModal = ({ isOpen, onClose, roles }: Props): ReactElement => {
       if (res.status === 200) {
         setIsRequest(false);
         onClose();
+        dispatch<any>(getTeams(singleShop.selectedShop.shop_id));
         return toast({
           description: "Invite has been sent to user",
           status: "success",
