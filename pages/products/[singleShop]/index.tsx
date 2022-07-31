@@ -161,7 +161,6 @@ const Product: NextPage = () => {
             Products
           </chakra.h3>
           <chakra.div
-            // mt={{ lg: "24px" }}
             display="flex"
             flexDir={{ base: "column", xl: "row" }}
             alignItems="center"

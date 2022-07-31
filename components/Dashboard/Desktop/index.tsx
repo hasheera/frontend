@@ -16,11 +16,11 @@ import { formatPrice } from "@utils/helpers";
 import DashboardLineChart from "@components/Dashboard/Desktop/LineChart";
 import PerfomanceCard from "@components/Dashboard/PerfomanceCard";
 import TopSellingProducts from "@components/Dashboard/TopSellingProducts";
-import Cookies from "js-cookie";
 import { changeDashboardBatchType, dashboardData, getDashboardData } from "store/slices/dashboard";
 import { useAppDispatch, useAppSelector } from "hooks";
 import { shopsData } from "store/slices/shops";
 import DatePicker from "react-datepicker";
+import dayjs from "dayjs";
 import {
   BankIcon,
   CashIcon,
@@ -48,17 +48,26 @@ const DesktopView = () => {
 
   const dateChange = (dates: [Date, Date]) => {
     const [start, end] = dates;
+    const from = dayjs(start).format("YYYY-MM-DD");
+    const to = dayjs(end).format("YYYY-MM-DD");
+    console.log(from, to)
     setStartDate(start);
     setEndDate(end);
-    if(end) {
-      dispatch<any>(getDashboardData({ id: singleShop.selectedShop.shop_id, startDate, endDate }))
-    } 
+
+    if (!start && !end) {
+      dispatch<any>(getDashboardData({ id: singleShop.selectedShop.shop_id, directDate: "today" }));
+    }
+
+    if (end) {
+      dispatch<any>(getDashboardData({ id: singleShop.selectedShop.shop_id, startDate: from, endDate: to }));
+    }
   };
 
   const handleChangeBatch = (batch: string) => {
     dispatch<any>(changeDashboardBatchType(batch))
     dispatch<any>(getDashboardData({ id: singleShop.selectedShop.shop_id, directDate: batch }));
   }
+
 
   if (!dashboard.loaded) {
     return (
@@ -203,6 +212,7 @@ const DesktopView = () => {
                       onChange={dateChange}
                       startDate={startDate}
                       endDate={endDate}
+                      closeOnScroll
                       maxDate={new Date()}
                       className="date-border"
                       placeholderText="Select date range"

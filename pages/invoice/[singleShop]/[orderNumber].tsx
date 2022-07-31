@@ -167,8 +167,8 @@ const Invoice: NextPage = () => {
 
   useEffect(() => {
     if (shopSettings) {
-      const a = shopSettings?.find(n => n.key === "receipt_note")
-      setReceiptNote({ status: true, value: a.value || "" })
+      const a = shopSettings?.find((n: { key: string; }) => n.key === "receipt_note")
+      setReceiptNote({ status: true, value: a.value ? a.value : "" })
     }
   }, [shopSettings]);
 
@@ -469,8 +469,8 @@ const Invoice: NextPage = () => {
               <PaymentModal
                 paymentMethod={paymentMethod}
                 setPaymentMethod={setPaymentMethod}
-                amount={invoiceData.data?.remaining_amount || 0}
-                setAmount={e => setPay(e.target.value)}
+                orderAmount={invoiceData.data?.remaining_amount || 0}
+                setOrderAmount={e => setPay(e.target.value)}
                 status={invoiceData.data.status}
                 pay={makePayment}
                 refund={refundPaid}
