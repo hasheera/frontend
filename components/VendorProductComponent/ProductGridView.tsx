@@ -192,7 +192,7 @@ const ProductGridView = ({ shopProducts }) => {
                     >
                       {product_unit.name}
                     </chakra.p> */}
-                    <chakra.p fontSize="0.75rem">
+                    <chakra.p fontSize="0.75rem" textTransform="capitalize">
                       {product.name.length > 54
                         ? `${product.name.slice(0, 50)}... - ${product_unit.name}`
                         : `${product.name} - ${product_unit.name}`}

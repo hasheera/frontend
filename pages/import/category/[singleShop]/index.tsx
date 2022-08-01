@@ -83,8 +83,15 @@ const Category: NextPage = () => {
     AuthAxios.get(`oga/brand/index?product_category_id=${router.query.id}`)
       .then((res) => {
         if (res.status === 200) {
-          // setBrandList({ data: res.data.data.data.data, loaded: true });
-          sortArray(res.data.data.data.data);
+          const { data } = res.data.data.data
+          const reducer = data.reduce((array, value) => {
+            if (!array.includes(`${value.name}-${value.id}`)) {
+              array.push(`${value.name}-${value.id}`);
+            }
+            return array;
+          }, []);
+      
+          setBrandList({ data: reducer, loaded: true });
         }
       })
       .catch((e) => e);
