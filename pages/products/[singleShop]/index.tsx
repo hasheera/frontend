@@ -64,6 +64,10 @@ const Product: NextPage = () => {
 
     }
 
+    if(!search && singleShop.shopData) {
+      dispatch<any>(getSingleShop(singleShop.selectedShop.id));
+    } 
+
     // return () => {
     //   window.removeEventListener("scroll", stickyNav);
     // };

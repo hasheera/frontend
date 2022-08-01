@@ -21,10 +21,9 @@ interface Props {
     };
   } | any;
   productName?: string;
-  search: boolean;
 }
 
-const Product: FC<Props> = ({ shop_product, productName, search }) => {
+const Product: FC<Props> = ({ shop_product }) => {
   const { singleShop } = useAppSelector(shopsData)
   const toast = useToast();
   const addProductModal = useDisclosure();
@@ -83,7 +82,7 @@ const Product: FC<Props> = ({ shop_product, productName, search }) => {
         >
           <chakra.div w="100%" h="151.45px">
             <chakra.img
-              src={search ? shop_product?.photo : shop_product?.product_unit?.photo}
+              src={shop_product?.product_unit?.photo}
               alt="image"
               w="100%"
               h="100%"
@@ -97,7 +96,7 @@ const Product: FC<Props> = ({ shop_product, productName, search }) => {
               fontWeight="500"
               color="#19191D"
             >
-              {search ? `${productName} - ${shop_product?.name}` : `${shop_product?.product?.name} - ${shop_product?.product_unit?.name}`}
+              {`${shop_product?.product?.name} - ${shop_product?.product_unit?.name}`}
             </chakra.p>
           </chakra.div>
         </chakra.div>
