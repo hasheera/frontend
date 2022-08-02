@@ -3,6 +3,7 @@ import { chakra, useToast } from "@chakra-ui/react";
 import { useAppDispatch, useAppSelector } from "hooks";
 import { getStockMovement, shopsData } from "store/slices/shops";
 import AuthAxios from "@utils/api/authAxios";
+import { useRouter } from "next/router";
 import ModalUI from "..";
 
 type Props = {
@@ -19,6 +20,7 @@ const ConfirmStockMovement: FC<Props> = ({
   const { singleShop } = useAppSelector(shopsData);
   const dispatch = useAppDispatch();
   const toast = useToast();
+  const router = useRouter();
 
   const confirm = async () => {
     try {
@@ -33,7 +35,7 @@ const ConfirmStockMovement: FC<Props> = ({
           position: "top-right",
         });
         onClose();
-        dispatch<any>(getStockMovement(singleShop.selectedShop.shop_id));
+        dispatch<any>(getStockMovement({ id: singleShop.selectedShop.shop_id, page: router.query.page }));
       };
       return res;
     } catch (error) {

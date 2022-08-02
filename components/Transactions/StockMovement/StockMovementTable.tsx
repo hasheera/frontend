@@ -19,6 +19,7 @@ import { useAppDispatch, useAppSelector } from "hooks";
 import { getStockMovement, setStockMovement, shopsData } from "store/slices/shops";
 import AuthAxios from "@utils/api/authAxios";
 import { formatNum } from "@utils/helpers";
+import { useRouter } from "next/router";
 
 
 const StockMovementTable = () => {
@@ -27,9 +28,10 @@ const StockMovementTable = () => {
   const [productDetails, setProductDetails] = useState<any>({});
   const confirmProductModal = useDisclosure();
   const outGoingProduct = useDisclosure();
+  const router = useRouter();
 
   const tableHeadData: string[] = [
-    "ID",
+    // "ID",
     "Date",
     "Sender",
     "Reciver",
@@ -53,7 +55,7 @@ const StockMovementTable = () => {
 
   useEffect(() => {
     if (singleShop.loaded) {
-      dispatch<any>(getStockMovement(singleShop.selectedShop.shop_id));
+      // dispatch<any>(getStockMovement(singleShop.selectedShop.shop_id));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [singleShop]);
@@ -81,6 +83,22 @@ const StockMovementTable = () => {
       })
       .catch((e) => e);
   };
+
+  useEffect(() => {
+    if (!router.query.page) {
+      router.replace({
+        ...router,
+        query: {
+          ...router.query,
+          page: 1
+        }
+      })
+    }
+
+    if (router.query.page && Number(router.query.page) !== stockMovements.data?.current_page) {
+      dispatch<any>(getStockMovement({ id: singleShop.selectedShop.id, page: router.query.page as string }));
+    }
+  }, [router]);
 
   return (
     <chakra.div>
@@ -121,7 +139,7 @@ const StockMovementTable = () => {
                     }
                   >
                     {/* // # Order Number */}
-                    <Td
+                    {/* <Td
                       h="62.52px"
                       boxShadow="inset 0px -0.868333px 0px #E0E0E0"
                     >
@@ -134,7 +152,7 @@ const StockMovementTable = () => {
                       >
                         {i + 1 < 10 ? `0${i + 1}` : i + 1}
                       </chakra.p>
-                    </Td>
+                    </Td> */}
                     {/* // # Date */}
                     <Td h="64px" boxShadow="inset 0px -0.868333px 0px #E0E0E0">
                       <chakra.p
@@ -219,46 +237,78 @@ const StockMovementTable = () => {
             {/* </Table> */}
           </Table>
 
-          {(stockMovements.data?.next_page_url || stockMovements.data?.prev_page_url) && <chakra.div
+          {stockMovements.data && <chakra.div
             h="41.68px"
             w="100%"
             display="flex"
             alignItems="center"
-            justifyContent="end"
+            justifyContent="space-between"
+            bg="white"
           >
-            <chakra.p fontSize="12px" fontWeight="500" color="#506176">
-              Rows per page:
-            </chakra.p>
-            <chakra.p
-              color="#1E2134"
-              fontWeight="400"
-              fontSize="10.42px"
-              letterSpacing="0.2605px"
-              px="10px"
-            >
-              15
-            </chakra.p>
-            <chakra.p color="" fontWeight="500" fontSize="12px" px="20px">
-              {/* 1-5 of 13 */}
-            </chakra.p>
-            <chakra.button
-              disabled={stockMovements.data?.prev_page_url === null}
-              cursor="pointer"
-              _disabled={{ cursor: "not-allowed" }}
-              px="20px"
-              onClick={() => prevPage(stockMovements.data?.prev_page_url)}
-            >
-              <PagiPrev />
-            </chakra.button>
-            <chakra.button
-              disabled={stockMovements.data?.next_page_url === null}
-              cursor="pointer"
-              _disabled={{ cursor: "not-allowed" }}
-              px="20px"
-              onClick={() => nextPage(stockMovements.data?.next_page_url)}
-            >
-              <PagiNext />
-            </chakra.button>
+            <chakra.div display="flex" alignItems="center">
+              <chakra.p fontSize="12px" fontWeight="500" color="#506176" ml="10px">
+                Showing:
+              </chakra.p>
+              <chakra.p
+                color="#1E2134"
+                fontWeight="400"
+                fontSize="10.42px"
+                letterSpacing="0.2605px"
+                px="10px"
+              >
+                {`${stockMovements.data?.from} - ${stockMovements.data?.to} of ${stockMovements.data?.total}`}
+              </chakra.p>
+            </chakra.div>
+
+            <chakra.div display="flex" alignItems="center" justifyContent="space-between">
+              <chakra.button
+                disabled={!stockMovements.data?.first_page_url}
+                cursor="pointer"
+                _disabled={{ cursor: "not-allowed" }}
+                px="10px"
+                fontSize="0.75rem"
+                onClick={() => router.push({ ...router, query: { ...router.query, page: 1 } })}
+              >
+                First page
+              </chakra.button>
+              <chakra.button
+                disabled={!stockMovements.data?.prev_page_url}
+                cursor="pointer"
+                _disabled={{ cursor: "not-allowed" }}
+                px="10px"
+                onClick={() => router.push({ ...router, query: { ...router.query, page: stockMovements.data.current_page - 1 } })}
+              >
+                <PagiPrev />
+              </chakra.button>
+              <chakra.p
+                color="#1E2134"
+                fontWeight="600"
+                fontSize="12px"
+                letterSpacing="0.2605px"
+                px="10px"
+              >
+                {stockMovements.data?.current_page}
+              </chakra.p>
+              <chakra.button
+                disabled={!stockMovements.data?.next_page_url}
+                cursor="pointer"
+                _disabled={{ cursor: "not-allowed" }}
+                px="10px"
+                onClick={() => router.push({ ...router, query: { ...router.query, page: stockMovements.data.current_page + 1 } })}
+              >
+                <PagiNext />
+              </chakra.button>
+              <chakra.button
+                disabled={!stockMovements.data?.last_page_url}
+                cursor="pointer"
+                _disabled={{ cursor: "not-allowed" }}
+                px="10px"
+                fontSize="0.75rem"
+                onClick={() => router.push({ ...router, query: { ...router.query, page: stockMovements.data.last_page } })}
+              >
+                Last page
+              </chakra.button>
+            </chakra.div>
           </chakra.div>}
         </TableContainer>
       </chakra.div>

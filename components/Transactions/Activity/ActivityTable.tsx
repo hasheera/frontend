@@ -14,22 +14,24 @@ import {
 } from "@chakra-ui/react";
 import { formatPrice } from "@utils/helpers";
 import dayjs from "dayjs";
-import { useAppSelector } from "hooks";
+import { useAppDispatch, useAppSelector } from "hooks";
 import { cartsData, setTransactionsSales } from "store/slices/carts";
-import { shopsData } from "store/slices/shops";
+import { getShopActivity, shopsData } from "store/slices/shops";
 import AuthAxios from "@utils/api/authAxios";
+import { useEffect } from "react";
 import { MoreIcon, PagiNext, PagiPrev } from "../../../public/assets";
 
 
 const ActivityTable = () => {
   const { transactionSales } = useAppSelector(cartsData);
   const { singleShop, shopActivity } = useAppSelector(shopsData);
+  const dispatch = useAppDispatch();
   const router = useRouter();
 
   const tableHeadData: string[] = [
-    "No",
     "Date",
-    "Name",
+    "Product",
+    "Activity",
     "Type",
     "Action",
   ];
@@ -75,6 +77,22 @@ const ActivityTable = () => {
       .catch((e) => e);
   };
 
+  useEffect(() => {
+    if (!router.query.page) {
+      router.replace({
+        ...router,
+        query: {
+          ...router.query,
+          page: 1
+        }
+      })
+    }
+
+    if (router.query.page && Number(router.query.page) !== shopActivity.data?.current_page) {
+      dispatch<any>(getShopActivity({ id: singleShop.selectedShop.id, page: router.query.page as string }));
+    }
+  }, [router]);
+
   return (
     <>
       <chakra.div display={{ base: "none", xl: "block" }}>
@@ -106,7 +124,7 @@ const ActivityTable = () => {
                     key={data.id}
                   >
                     {/* // # Number */}
-                    <Td
+                    {/* <Td
                       h="62.52px"
                       boxShadow="inset 0px -0.868333px 0px #E0E0E0"
                     >
@@ -119,7 +137,7 @@ const ActivityTable = () => {
                       >
                         {data.id}
                       </chakra.p>
-                    </Td>
+                    </Td> */}
                     {/* // # Date */}
                     <Td h="64px" boxShadow="inset 0px -0.868333px 0px #E0E0E0">
                       <chakra.p
@@ -131,6 +149,20 @@ const ActivityTable = () => {
                       >
                         {dayjs(data.created_at).format('MMM DD, YYYY; hh:mma')}
                       </chakra.p>
+                    </Td>
+                    {/* // # product */}
+                    <Td h="64px" boxShadow="inset 0px -0.868333px 0px #E0E0E0">
+                      <Flex justifyContent="space-between" alignItems="center">
+                        <chakra.p
+                          color="#1E2134"
+                          fontSize="12.16px"
+                          fontWeight="400"
+                          lineHeight="19.09px"
+                          letterSpacing="0.13025px"
+                        >
+                          {`${data.shop_product?.product?.name} - ${data.shop_product?.product_unit?.name}`}
+                        </chakra.p>
+                      </Flex>
                     </Td>
                     {/* // # name */}
                     <Td h="64px" boxShadow="inset 0px -0.868333px 0px #E0E0E0">
@@ -182,47 +214,79 @@ const ActivityTable = () => {
             {/* </Table> */}
           </Table>
 
-          <chakra.div
+          {shopActivity.data && <chakra.div
             h="41.68px"
             w="100%"
             display="flex"
             alignItems="center"
-            justifyContent="end"
+            justifyContent="space-between"
+            bg="white"
           >
-            <chakra.p fontSize="12px" fontWeight="500" color="#506176">
-              Rows per page:
-            </chakra.p>
-            <chakra.p
-              color="#1E2134"
-              fontWeight="400"
-              fontSize="10.42px"
-              letterSpacing="0.2605px"
-              px="10px"
-            >
-              15
-            </chakra.p>
-            <chakra.p color="" fontWeight="500" fontSize="12px" px="20px">
-              {/* 1-5 of 13 */}
-            </chakra.p>
-            <chakra.button
-              disabled={shopActivity.data?.prev_page_url === null}
-              cursor="pointer"
-              _disabled={{ cursor: "not-allowed" }}
-              px="20px"
-              onClick={() => prevPage(shopActivity.data?.prev_page_url)}
-            >
-              <PagiPrev />
-            </chakra.button>
-            <chakra.button
-              disabled={shopActivity.data?.next_page_url === null}
-              cursor="pointer"
-              _disabled={{ cursor: "not-allowed" }}
-              px="20px"
-              onClick={() => nextPage(shopActivity.data?.next_page_url)}
-            >
-              <PagiNext />
-            </chakra.button>
-          </chakra.div>
+            <chakra.div display="flex" alignItems="center">
+              <chakra.p fontSize="12px" fontWeight="500" color="#506176" ml="10px">
+                Showing:
+              </chakra.p>
+              <chakra.p
+                color="#1E2134"
+                fontWeight="400"
+                fontSize="10.42px"
+                letterSpacing="0.2605px"
+                px="10px"
+              >
+                {`${shopActivity.data?.from} - ${shopActivity.data?.to} of ${shopActivity.data?.total}`}
+              </chakra.p>
+            </chakra.div>
+
+            <chakra.div display="flex" alignItems="center" justifyContent="space-between">
+              <chakra.button
+                disabled={!shopActivity.data?.first_page_url}
+                cursor="pointer"
+                _disabled={{ cursor: "not-allowed" }}
+                px="10px"
+                fontSize="0.75rem"
+                onClick={() => router.push({ ...router, query: { ...router.query, page: 1 } })}
+              >
+                First page
+              </chakra.button>
+              <chakra.button
+                disabled={!shopActivity.data?.prev_page_url}
+                cursor="pointer"
+                _disabled={{ cursor: "not-allowed" }}
+                px="10px"
+                onClick={() => router.push({ ...router, query: { ...router.query, page: shopActivity.data.current_page - 1 } })}
+              >
+                <PagiPrev />
+              </chakra.button>
+              <chakra.p
+                color="#1E2134"
+                fontWeight="600"
+                fontSize="12px"
+                letterSpacing="0.2605px"
+                px="10px"
+              >
+                {shopActivity.data?.current_page}
+              </chakra.p>
+              <chakra.button
+                disabled={!shopActivity.data?.next_page_url}
+                cursor="pointer"
+                _disabled={{ cursor: "not-allowed" }}
+                px="10px"
+                onClick={() => router.push({ ...router, query: { ...router.query, page: shopActivity.data.current_page + 1 } })}
+              >
+                <PagiNext />
+              </chakra.button>
+              <chakra.button
+                disabled={!shopActivity.data?.last_page_url}
+                cursor="pointer"
+                _disabled={{ cursor: "not-allowed" }}
+                px="10px"
+                fontSize="0.75rem"
+                onClick={() => router.push({ ...router, query: { ...router.query, page: shopActivity.data.last_page } })}
+              >
+                Last page
+              </chakra.button>
+            </chakra.div>
+          </chakra.div>}
         </TableContainer>
       </chakra.div>
 

@@ -13,7 +13,9 @@ import {
 import AuthAxios from "@utils/api/authAxios";
 import { formatPrice } from "@utils/helpers";
 import { useAppDispatch, useAppSelector } from "hooks";
-import { cartsData, setTransactionsExpenses } from "store/slices/carts";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { cartsData, getTransactionsExpenses, setTransactionsExpenses } from "store/slices/carts";
 import { shopsData } from "store/slices/shops";
 import { MoreIcon, PagiNext, PagiPrev } from "../../../public/assets";
 
@@ -30,6 +32,7 @@ const SalesTable = () => {
     "Amount Spent",
     "Payment Status",
   ];
+  const router = useRouter();
 
   const orderStatusColor = (paymentStatus: string) => {
     switch (paymentStatus) {
@@ -67,6 +70,23 @@ const SalesTable = () => {
       })
       .catch((e) => e);
   };
+
+
+  useEffect(() => {
+    if (!router.query.page) {
+      router.replace({
+        ...router,
+        query: {
+          ...router.query,
+          page: 1
+        }
+      })
+    }
+
+    if (router.query.page && Number(router.query.page) !== transactionExpenses.data?.current_page) {
+      dispatch<any>(getTransactionsExpenses({ id: singleShop.selectedShop.id, page: router.query.page as string }));
+    }
+  }, [router]);
 
   return (
     <>
@@ -189,6 +209,80 @@ const SalesTable = () => {
             </Tbody>
             {/* </Table> */}
           </Table>
+
+          {transactionExpenses.data && <chakra.div
+            h="41.68px"
+            w="100%"
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+            bg="white"
+          >
+            <chakra.div display="flex" alignItems="center">
+              <chakra.p fontSize="12px" fontWeight="500" color="#506176" ml="10px">
+                Showing:
+              </chakra.p>
+              <chakra.p
+                color="#1E2134"
+                fontWeight="400"
+                fontSize="10.42px"
+                letterSpacing="0.2605px"
+                px="10px"
+              >
+                {`${transactionExpenses.data?.from} - ${transactionExpenses.data?.to} of ${transactionExpenses.data?.total}`}
+              </chakra.p>
+            </chakra.div>
+
+            <chakra.div display="flex" alignItems="center" justifyContent="space-between">
+              <chakra.button
+                disabled={!transactionExpenses.data?.first_page_url}
+                cursor="pointer"
+                _disabled={{ cursor: "not-allowed" }}
+                px="10px"
+                fontSize="0.75rem"
+                onClick={() => router.push({ ...router, query: { ...router.query, page: 1 } })}
+              >
+                First page
+              </chakra.button>
+              <chakra.button
+                disabled={!transactionExpenses.data?.prev_page_url}
+                cursor="pointer"
+                _disabled={{ cursor: "not-allowed" }}
+                px="10px"
+                onClick={() => router.push({ ...router, query: { ...router.query, page: transactionExpenses.data.current_page - 1 } })}
+              >
+                <PagiPrev />
+              </chakra.button>
+              <chakra.p
+                color="#1E2134"
+                fontWeight="600"
+                fontSize="12px"
+                letterSpacing="0.2605px"
+                px="10px"
+              >
+                {transactionExpenses.data?.current_page}
+              </chakra.p>
+              <chakra.button
+                disabled={!transactionExpenses.data?.next_page_url}
+                cursor="pointer"
+                _disabled={{ cursor: "not-allowed" }}
+                px="10px"
+                onClick={() => router.push({ ...router, query: { ...router.query, page: transactionExpenses.data.current_page + 1 } })}
+              >
+                <PagiNext />
+              </chakra.button>
+              <chakra.button
+                disabled={!transactionExpenses.data?.last_page_url}
+                cursor="pointer"
+                _disabled={{ cursor: "not-allowed" }}
+                px="10px"
+                fontSize="0.75rem"
+                onClick={() => router.push({ ...router, query: { ...router.query, page: transactionExpenses.data.last_page } })}
+              >
+                Last page
+              </chakra.button>
+            </chakra.div>
+          </chakra.div>}
           {(transactionExpenses.data?.prev_page_url || transactionExpenses.data?.next_page_url) && <chakra.div
             h="41.68px"
             w="100%"

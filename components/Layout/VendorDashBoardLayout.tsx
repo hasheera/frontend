@@ -34,7 +34,7 @@ const VendorDashBoardLayout = ({ children }: Props) => {
         <chakra.div
           // pt={{ base: "28px", md: "32px" }}
           px={{ base: "16px", xl: "24px" }}
-          pb="26px"
+          pb={{ base: "100px", lg: "26px" }}
         >
           {children}
         </chakra.div>

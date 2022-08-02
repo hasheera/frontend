@@ -151,7 +151,7 @@ const MobileFooterNav = () => {
       </Link>
 
       <Link href={singleShop.loaded ?
-        `/transactions/${singleShop.selectedShop?.shop.name.split(' ').join('-').toLowerCase()}-${singleShop.selectedShop?.shop_id}`
+        `/sales/${singleShop.selectedShop?.shop.name.split(' ').join('-').toLowerCase()}-${singleShop.selectedShop?.shop_id}`
         : ""} passHref>
         <chakra.a
           fontSize="0.75rem"
