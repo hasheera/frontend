@@ -63,7 +63,7 @@ const CreateShopProductImage: FC<Props> = ({ isOpen, onClose }) => {
 
       if (res.status === 200) {
         toast({
-          position: "top",
+          position: "top-right",
           status: "success",
           duration: 3000,
           description: "Product Imsge Created Successfully",

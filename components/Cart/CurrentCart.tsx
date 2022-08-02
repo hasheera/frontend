@@ -19,6 +19,7 @@ import { useAppDispatch, useAppSelector } from "hooks";
 import { addToCart, cartsData, getOpenCart } from "store/slices/carts";
 import AuthAxios from "@utils/api/authAxios";
 import { shopsData } from "store/slices/shops";
+import { DeleteIcon } from "@public/assets";
 
 interface CartItem {
   id: number;
@@ -31,6 +32,7 @@ interface CartItem {
   };
   quantity: number;
   price: number;
+  is_shop_owner: number;
 }
 
 const CurrentCart = () => {
@@ -61,7 +63,7 @@ const CurrentCart = () => {
               res.data.message.slice(1),
             status: "error",
             duration: 1000,
-            position: "top",
+            position: "top-right",
           });
         }
         if (res.data.status === 401) {
@@ -71,7 +73,7 @@ const CurrentCart = () => {
               res.data.message.slice(1),
             status: "error",
             duration: 1500,
-            position: "top",
+            position: "top-right",
           });
         }
         dispatch<any>(getOpenCart(singleShop.selectedShop.shop_id));
@@ -86,7 +88,7 @@ const CurrentCart = () => {
           description: "Checkout successful",
           status: "success",
           duration: 1000,
-          position: "top",
+          position: "top-right",
         });
       }
       return res;
@@ -139,7 +141,7 @@ const CurrentCart = () => {
                     qty={item.quantity}
                     subTotal={item.price}
                     stock_count={item.shop_product?.stock_count}
-                    shopOwner={carts[0].is_shop_owner}
+                    shopOwner={item.is_shop_owner}
                   />
                 ))}
             </Accordion>
@@ -264,7 +266,7 @@ export const CartItem = ({
         description: res.data.data,
         status: "info",
         duration: 1000,
-        position: "top",
+        position: "top-right",
       });
       return dispatch<any>(getOpenCart(singleShop.selectedShop.shop_id));
     } catch (e) {
@@ -279,7 +281,7 @@ export const CartItem = ({
         description: res.data.data.message,
         status: "info",
         duration: 1000,
-        position: "top",
+        position: "top-right",
       });
       return dispatch<any>(getOpenCart(singleShop.selectedShop.shop_id));
     } catch (e) {
@@ -287,14 +289,7 @@ export const CartItem = ({
     }
   };
 
-  const updateCart = async (
-    // cartsId: any,
-    // productId: any,
-    // quantity: any,
-    // subAmount: any,
-    // itemId: any,
-    // shopOwner: number
-  ) => {
+  const updateCart = async () => {
     try {
       setIsRequest(true);
       const res = await dispatch<any>(addToCart({
@@ -315,7 +310,7 @@ export const CartItem = ({
           description: res.payload.message,
           status: "success",
           duration: 1000,
-          position: "top",
+          position: "top-right",
         });
       }
       return res;
@@ -386,7 +381,7 @@ export const CartItem = ({
           ml="auto"
           cursor="pointer"
         >
-          {/* <FontAwesomeIcon icon={faTimes} color="#F03D3E" /> */}
+          <DeleteIcon color="#F03D3E" />
         </chakra.div>
         <chakra.div borderBottom="1px solid #EEE" pb="12px">
           <chakra.p fontSize="0.75rem" color="#777">

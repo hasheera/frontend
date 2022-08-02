@@ -43,7 +43,7 @@ const ShoppingSummary: React.FC = () => {
               res.data.message.slice(1),
             status: "error",
             duration: 1000,
-            position: "top",
+            position: "top-right",
           });
         }
         if (res.data.status === 401) {
@@ -53,17 +53,17 @@ const ShoppingSummary: React.FC = () => {
               res.data.message.slice(1),
             status: "error",
             duration: 1500,
-            position: "top",
+            position: "top-right",
           });
         }
         toast({
           description: "Checkout successful",
           status: "success",
           duration: 1000,
-          position: "top",
+          position: "top-right",
         });
-        dispatch<any>(getOpenCart(singleShop.selectedShop.shop_id))
         router.replace(`/invoice/${router.query.singleShop}/${res.data.data.order.order_number}`)
+        dispatch<any>(getOpenCart(singleShop.selectedShop.shop_id))
       }
       return res;
     } catch (e) {

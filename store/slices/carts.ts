@@ -89,9 +89,9 @@ export const getOpenCart = createAsyncThunk(
 
 export const getTransactionSales = createAsyncThunk(
   'transactionSales',
-  async (id: string | number, { rejectWithValue }) => {
+  async ({id, search, page }: { id: string | number, search?: string, page?: string }, { rejectWithValue }) => {
     try {
-      const response = await AuthAxios.get(`oga/order/index?shop_id=${id}`);
+      const response = await AuthAxios.get(`/oga/order/index?shop_id=${id}${search ? `&search=${search}` : ""}${page ? `&page=${page}` : ""}`);
 
       return response.data;
     } catch (ex) {
@@ -102,10 +102,10 @@ export const getTransactionSales = createAsyncThunk(
 
 export const getTransactionsExpenses = createAsyncThunk(
   'transactionExpenses',
-  async (id: string | number, { rejectWithValue }) => {
+  async ({ id, page }: { id: string | number, page: string }, { rejectWithValue }) => {
     try {
       const response = await AuthAxios.get(
-        `oga/shop/expense/index?shop_id=${id}`,
+        `/oga/shop/expense/index?shop_id=${id}${page ? "?" : ""}${page ? `page=${page}` : ""}`,
       );
 
       return response.data;

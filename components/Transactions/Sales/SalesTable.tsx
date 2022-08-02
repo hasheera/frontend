@@ -14,16 +14,18 @@ import {
 } from "@chakra-ui/react";
 import { formatPrice } from "@utils/helpers";
 import dayjs from "dayjs";
-import { useAppSelector } from "hooks";
-import { cartsData, setTransactionsSales } from "store/slices/carts";
+import { useAppDispatch, useAppSelector } from "hooks";
+import { cartsData, getTransactionSales, setTransactionsSales } from "store/slices/carts";
 import { shopsData } from "store/slices/shops";
 import AuthAxios from "@utils/api/authAxios";
+import { useEffect } from "react";
 import { MoreIcon, PagiNext, PagiPrev } from "../../../public/assets";
 
 
 const SalesTable = () => {
   const { transactionSales } = useAppSelector(cartsData);
   const { singleShop } = useAppSelector(shopsData);
+  const dispatch = useAppDispatch();
   const router = useRouter();
 
   const tableHeadData: string[] = [
@@ -53,7 +55,7 @@ const SalesTable = () => {
     router.push(`/invoice/${router.query.singleShop}/${orderNumber}`);
   };
 
-  const nextPage = (url: string) => {
+  const goToPage = (url: string) => {
     AuthAxios.get(`${url}&shop_id=${singleShop.selectedShop.shop_id}`)
       .then((res) => {
         setTransactionsSales({
@@ -76,6 +78,22 @@ const SalesTable = () => {
       })
       .catch((e) => e);
   };
+
+  useEffect(() => {
+    if (!router.query.page) {
+      router.replace({
+        ...router,
+        query: {
+          ...router.query,
+          page: 1
+        }
+      })
+    }
+
+    if (router.query.page && Number(router.query.page) !== transactionSales.data?.current_page) {
+      dispatch<any>(getTransactionSales({ id: singleShop.selectedShop.id, page: router.query.page as string }));
+    }
+  }, [router])
 
   return (
     <>
@@ -137,15 +155,13 @@ const SalesTable = () => {
                     </Td>
                     {/* // # Customer */}
                     <Td h="64px" boxShadow="inset 0px -0.868333px 0px #E0E0E0">
-                      <Flex justifyContent="space-between" alignItems="center">
-                        <Box marginRight="8.60153px">
-                          <Avatar
-                            size="sm"
-                            src=""
-                            // name={`${data.user.surname} ${data.user.first_name}`}
-                            name={data.customer_name}
-                          />
-                        </Box>
+                      <Flex gap="8px" alignItems="center">
+                        <Avatar
+                          size="sm"
+                          src=""
+                          // name={`${data.user.surname} ${data.user.first_name}`}
+                          name={data.customer_name}
+                        />
                         <chakra.p
                           color="#1E2134"
                           fontSize="12.16px"
@@ -217,75 +233,122 @@ const SalesTable = () => {
             {/* </Table> */}
           </Table>
 
-          <chakra.div
+          {transactionSales.data && <chakra.div
             h="41.68px"
             w="100%"
             display="flex"
             alignItems="center"
-            justifyContent="end"
+            justifyContent="space-between"
+            bg="white"
           >
-            <chakra.p fontSize="12px" fontWeight="500" color="#506176">
-              Rows per page:
-            </chakra.p>
-            <chakra.p
-              color="#1E2134"
-              fontWeight="400"
-              fontSize="10.42px"
-              letterSpacing="0.2605px"
-              px="10px"
-            >
-              15
-            </chakra.p>
-            <chakra.p color="" fontWeight="500" fontSize="12px" px="20px">
-              {/* 1-5 of 13 */}
-            </chakra.p>
-            <chakra.button
-              disabled={transactionSales.data?.prev_page_url === null}
-              cursor="pointer"
-              _disabled={{ cursor: "not-allowed" }}
-              px="20px"
-              onClick={() => prevPage(transactionSales.data?.prev_page_url)}
-            >
-              <PagiPrev />
-            </chakra.button>
-            <chakra.button
-              disabled={transactionSales.data?.next_page_url === null}
-              cursor="pointer"
-              _disabled={{ cursor: "not-allowed" }}
-              px="20px"
-              onClick={() => nextPage(transactionSales.data?.next_page_url)}
-            >
-              <PagiNext />
-            </chakra.button>
-          </chakra.div>
+            <chakra.div display="flex" alignItems="center">
+              <chakra.p fontSize="12px" fontWeight="500" color="#506176" ml="10px">
+                Showing:
+              </chakra.p>
+              <chakra.p
+                color="#1E2134"
+                fontWeight="400"
+                fontSize="10.42px"
+                letterSpacing="0.2605px"
+                px="10px"
+              >
+                {`${transactionSales.data?.from} - ${transactionSales.data?.to} of ${transactionSales.data?.total}`}
+              </chakra.p>
+            </chakra.div>
+
+            <chakra.div display="flex" alignItems="center" justifyContent="space-between">
+              <chakra.button
+                disabled={!transactionSales.data?.first_page_url}
+                cursor="pointer"
+                _disabled={{ cursor: "not-allowed" }}
+                px="10px"
+                fontSize="0.75rem"
+                onClick={() => router.push({ ...router, query: { ...router.query, page: 1 } })}
+              >
+                First page
+              </chakra.button>
+              <chakra.button
+                disabled={!transactionSales.data?.prev_page_url}
+                cursor="pointer"
+                _disabled={{ cursor: "not-allowed" }}
+                px="10px"
+                onClick={() => router.push({ ...router, query: { ...router.query, page: transactionSales.data.current_page - 1 } })}
+              >
+                <PagiPrev />
+              </chakra.button>
+              <chakra.p
+                color="#1E2134"
+                fontWeight="600"
+                fontSize="12px"
+                letterSpacing="0.2605px"
+                px="10px"
+              >
+                {transactionSales.data?.current_page}
+              </chakra.p>
+              <chakra.button
+                disabled={!transactionSales.data?.next_page_url}
+                cursor="pointer"
+                _disabled={{ cursor: "not-allowed" }}
+                px="10px"
+                onClick={() => router.push({ ...router, query: { ...router.query, page: transactionSales.data.current_page + 1 } })}
+              >
+                <PagiNext />
+              </chakra.button>
+              <chakra.button
+                disabled={!transactionSales.data?.last_page_url}
+                cursor="pointer"
+                _disabled={{ cursor: "not-allowed" }}
+                px="10px"
+                fontSize="0.75rem"
+                onClick={() => router.push({ ...router, query: { ...router.query, page: transactionSales.data.last_page } })}
+              >
+                Last page
+              </chakra.button>
+            </chakra.div>
+          </chakra.div>}
         </TableContainer>
       </chakra.div>
 
       {/* Mobile */}
       <chakra.div
         display={{ base: "flex", xl: "none" }}
+        flexWrap="wrap"
+        gap="20px"
         w="100%"
-        flexDirection="column"
         justifyContent="center"
         alignItems="center"
+        pb="100px"
       >
         {transactionSales.loaded &&
           transactionSales.data?.data.map((data) => (
             <chakra.div
               key={data.id}
               w="100%"
-              maxW="393px"
-              h="118.65px"
+              maxW="340px"
               borderRadius="6px"
               bg="#FFFFFF"
-              margin="7px 0px"
+              p="16px"
             >
+              <chakra.div display="flex" justifyContent="space-between">
+                <chakra.p
+                  fontWeight="700"
+                  fontSize="15.35px"
+                  lineHeight="23.02px"
+                  color="#333333"
+                  opacity="87%"
+                  mt="-4px"
+                >
+                  &#8358;{formatPrice(data.amount_to_pay)}
+                </chakra.p>
+                <chakra.div cursor="pointer" ml="20px">
+                  <MoreIcon />
+                </chakra.div>
+              </chakra.div>
+
               <chakra.div
                 display="flex"
-                p="10px"
-                pl="15px"
-                pt="15"
                 justifyContent="space-between"
+                mt="24px"
               >
                 <chakra.div display="flex" alignItems="center">
                   <Avatar
@@ -293,7 +356,7 @@ const SalesTable = () => {
                     // name={`${data.user.surname} ${data.user.first_name}`}
                     name={data.customer_name}
                   />
-                  <chakra.div ml="7px">
+                  <chakra.div ml="16px">
                     <chakra.p
                       fontSize="14px"
                       fontWeight="500"
@@ -317,25 +380,11 @@ const SalesTable = () => {
                     </chakra.p>
                   </chakra.div>
                 </chakra.div>
-                <chakra.div display="flex">
-                  <chakra.p
-                    fontWeight="700"
-                    fontSize="15.35px"
-                    lineHeight="23.02px"
-                    color="#333333"
-                    opacity="87%"
-                    mt="-4px"
-                  >
-                    &#8358;{formatPrice(data.amount_to_pay)}
-                  </chakra.p>
-                  <chakra.div cursor="pointer" ml="20px">
-                    <MoreIcon />
-                  </chakra.div>
-                </chakra.div>
               </chakra.div>
-              <chakra.div display="flex" justifyContent="space-around" pl="40px">
+
+              <chakra.div display="flex" justifyContent="space-between" mt="20px">
                 <chakra.div
-                  w="92px"
+                  px="8px"
                   h="27.56px"
                   bg="#F7F8FA"
                   borderRadius="12px"
@@ -349,11 +398,12 @@ const SalesTable = () => {
                     lineHeight="18px"
                     fontSize="12px"
                   >
-                    {`Quantity:${data.cart.quantity}`}
+                    {`Qty: ${data.cart.quantity}`}
                   </chakra.p>
                 </chakra.div>
+
                 <chakra.div
-                  w="84.1px"
+                  px="8px"
                   h="27.56px"
                   bg="#F7F8FA"
                   borderRadius="12px"
@@ -370,8 +420,9 @@ const SalesTable = () => {
                     {data.channel}
                   </chakra.p>
                 </chakra.div>
+
                 <chakra.div
-                  w="84.1px"
+                  px="8px"
                   h="27.56px"
                   bg={orderStatusColor(data.status)}
                   borderRadius="12px"

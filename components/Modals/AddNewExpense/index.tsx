@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "hooks";
 import { shopsData } from "store/slices/shops";
 import AuthAxios from "@utils/api/authAxios";
 import { getTransactionsExpenses } from "store/slices/carts";
+import { useRouter } from "next/router";
 import ModalUI from "..";
 
 type Props = {
@@ -30,6 +31,9 @@ const AddNewExpense = ({ isOpen, onClose }: Props) => {
   });
 
   const toast = useToast();
+  const router = useRouter();
+  const { page }: any = router.query
+  
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -41,15 +45,33 @@ const AddNewExpense = ({ isOpen, onClose }: Props) => {
     e.preventDefault();
 
     try {
-      setIsRequest(true);
       const { amount, purpose, description } = form;
-
+      
+      if(!amount) {
+        return toast({
+          duration: 2000,
+          position: "top-right",
+          description: "Please add amount",
+          status: "info",
+        });
+      };
+      
+      if(!purpose) {
+        return toast({
+          duration: 2500,
+          position: "top-right",
+          description: "Please add purpose of expense",
+          status: "info",
+        });
+      };
+      
+      setIsRequest(true);
       const res = await AuthAxios.post(
         `oga/shop/expense/create?shop_id=${singleShop.selectedShop.shop_id}&amount=${amount}&amount_paid=${amount}&spent_on=${purpose}&description=${description}`
       );
 
       if (res.status === 200) {
-        dispatch<any>(getTransactionsExpenses(singleShop.selectedShop.shop_id));
+        dispatch<any>(getTransactionsExpenses({ id: singleShop.selectedShop.shop_id, page }));
         setIsRequest(false);
         onClose();
         setForm({
@@ -59,7 +81,7 @@ const AddNewExpense = ({ isOpen, onClose }: Props) => {
         });
         return toast({
           duration: 3000,
-          position: "top",
+          position: "top-right",
           description: `${res.data.message}`,
           status: "success",
         });

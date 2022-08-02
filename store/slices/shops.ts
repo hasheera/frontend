@@ -104,9 +104,9 @@ export const deleteProduct = createAsyncThunk(
 
 export const getStockMovement = createAsyncThunk(
   'getStockMovement',
-  async (id: string | number, { rejectWithValue }) => {
+  async ({ id, page }: {id: string | number, page: string | string[] }, { rejectWithValue }) => {
     try {
-      const response = await AuthAxios.get(`/oga/shop/product/stock/transfer/shop/index?shop_id=${id}`);
+      const response = await AuthAxios.get(`/oga/shop/product/stock/transfer/shop/index?shop_id=${id}${page ? "?" : ""}${page ? `page=${page}` : ""}`);
       return response;
 
     } catch (ex) {
@@ -154,16 +154,29 @@ export const getTeams = createAsyncThunk(
   },
 );
 
+export const getCategories = createAsyncThunk(
+  'getCategories',
+  async (id: string | number, { rejectWithValue }) => {
+    try {
+      const response = await AuthAxios.get(`/oga/product/category/index?shop_id=${id}`);
+      return response;
+
+    } catch (ex) {
+      return rejectWithValue(getExceptionPayload(ex));
+    }
+  },
+);
+
 export const getShopActivity = createAsyncThunk(
   'getShopActivity',
   async (arg: any, { rejectWithValue }) => {
-    const { id, directDate, startDate, endDate } = arg;
+    const { id, directDate, startDate, endDate, page } = arg;
     try {
       const response = await AuthAxios.get(`/oga/activity/shop/product/index?shop_id=${id}${directDate
-      ? `&direct_date=${directDate}`
+      ? `&direct_date=${directDate}${page ? `&page=${page}` : ""}`
       : `${startDate ? `&date_from=${startDate}` : ""}${
           endDate ? `&date_to=${endDate}` : ""
-        }`
+        }${page ? `&page=${page}` : ""}`
   }`);
       return response;
 
@@ -274,9 +287,9 @@ export const shopsSlice = createSlice({
           state.hasShop = true
         }
       })
-      .addCase(getSingleShop.pending, state => {
-        state.singleShop.loaded = false
-      })
+      // .addCase(getSingleShop.pending, state => {
+      //   state.singleShop.loaded = false
+      // })
       .addCase(getSingleShop.fulfilled, (state, { payload }) => {
         state.singleShop.loaded = true
         state.singleShop.shopData = payload.data
@@ -303,6 +316,10 @@ export const shopsSlice = createSlice({
       .addCase(getShopActivity.fulfilled, (state, { payload }) => {
         state.shopActivity.loaded = true
         state.shopActivity.data = payload.data.data
+      })
+      .addCase(getCategories.fulfilled, (state, { payload }) => {
+        state.categories.loaded = true
+        state.categories.data = payload.data.data.data
       })
   },
 });

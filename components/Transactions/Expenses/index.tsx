@@ -17,7 +17,7 @@ const Expenses: FC = () => {
   useEffect(() => {
     if (singleShop.loaded) {
       if(!transactionExpenses.loaded) {
-        dispatch<any>(getTransactionsExpenses(singleShop.selectedShop.shop_id));
+        // dispatch<any>(getTransactionsExpenses(singleShop.selectedShop.shop_id));
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps

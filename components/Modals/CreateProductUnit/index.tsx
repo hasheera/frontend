@@ -72,7 +72,7 @@ const [addForm, setAddForm] = useState(true);
           onClose();
           setIsRequest(false);
           toast({
-            position: "top",
+            position: "top-right",
             description: "varient created successfully",
             status: "success",
             duration: 2000,
@@ -81,7 +81,7 @@ const [addForm, setAddForm] = useState(true);
       })
       .catch((err) => {
         toast({
-          position: "top",
+          position: "top-right",
           description: "An Error occured Please try again",
           status: "error",
           duration: 2000,

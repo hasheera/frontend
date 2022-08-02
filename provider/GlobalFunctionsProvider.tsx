@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { createContext, ReactElement, useCallback, useEffect, useState } from "react";
 import { getOpenCart, getTransactionSales } from "store/slices/carts";
-import { getSingleShop, getVendorShops, setSingleShop, shopsData, updateHasShopRole } from "store/slices/shops";
+import { getCategories, getSingleShop, getVendorShops, setSingleShop, shopsData, updateHasShopRole } from "store/slices/shops";
 import { getUser, userData } from "store/slices/user";
 
 interface GlobalFunctionsProps {
@@ -43,7 +43,7 @@ const GlobalFunctionsProvider = ({ children }: { children: ReactElement }) => {
     if (vendorShops.shops && vendorShops.shops.length) {
       if (!singleShop.loaded && !router.query.singleShop) {
         const selected = vendorShops.shops[0]
-        dispatch<any>(getSingleShop(selected.id))
+        // dispatch<any>(getSingleShop(selected.id))
         dispatch<any>(setSingleShop(selected))
         // Cookies.set("shop", selected.shop.name.split(" ").join("-").toLowerCase())
         // Cookies.set("alphaShopId", selected.shop.shop_id);
@@ -53,7 +53,7 @@ const GlobalFunctionsProvider = ({ children }: { children: ReactElement }) => {
         const querySplit = (router.query.singleShop as string).split("-");
         const shopId = querySplit[querySplit.length - 1];
         const selected = vendorShops.shops?.find((shop: { shop_id: number }) => shop.shop_id === Number(shopId));
-        dispatch<any>(getSingleShop(shopId));
+        // dispatch<any>(getSingleShop(shopId));
         dispatch<any>(setSingleShop(selected))
       }
     }
@@ -63,10 +63,11 @@ const GlobalFunctionsProvider = ({ children }: { children: ReactElement }) => {
   useEffect(() => {
     if (singleShop.loaded && singleShop.selectedShop) {
       dispatch<any>(getOpenCart(singleShop.selectedShop.shop_id))
-      dispatch<any>(getTransactionSales(singleShop.selectedShop.shop_id))
+      // dispatch<any>(getTransactionSales({ id: singleShop.selectedShop.shop_id }))
+      dispatch<any>(getCategories(singleShop.selectedShop.shop_id))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [singleShop.loaded])
+  }, [singleShop])
 
   useEffect(() => {
     if (userLoaded && singleShop.selectedShop) {

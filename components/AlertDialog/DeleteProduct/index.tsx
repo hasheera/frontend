@@ -24,12 +24,12 @@ const DeleteProductDialog: FC<Props> = ({
     setIsRequest(true);
     const res: any = await dispatch<any>(deleteProduct({ id: deleteShopProductId, shopId: singleShop.selectedShop.shop_id }));
     if (res.payload) {
-      dispatch<any>(getSingleShop(deleteShopProductId))
+      dispatch<any>(getSingleShop(singleShop.selectedShop.shop_id))
       setIsRequest(false);
       toast({
-        description: `${res.data.data.message}`,
+        description: `${res.payload.data.data.message}`,
         status: "success",
-        position: "top",
+        position: "top-right",
         duration: 3000,
       });
       onClose();

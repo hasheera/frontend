@@ -15,6 +15,7 @@ export const getDashboardData = createAsyncThunk(
   'dashboardData',
   async (arg: any, { rejectWithValue }) => {
     const { id, directDate, startDate, endDate } = arg;
+    console.log(startDate)
     try {
       const response = await AuthAxios.get(`/oga/dashboard?shop_id=${id}${
         directDate

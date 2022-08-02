@@ -53,7 +53,7 @@ const AddProduct: FC<Props> = ({ isOpen, onClose, product, product_unit }) => {
             description: res.data.data.message,
             status: "info",
             duration: 3000,
-            position: "top",
+            position: "top-right",
           });
         } else {
           // onClose();
@@ -63,7 +63,7 @@ const AddProduct: FC<Props> = ({ isOpen, onClose, product, product_unit }) => {
             description: "Product added to shop successfully",
             status: "success",
             duration: 3000,
-            position: "top",
+            position: "top-right",
           });
         }
       }

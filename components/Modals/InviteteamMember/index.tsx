@@ -12,9 +12,9 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import AuthAxios from "@utils/api/authAxios";
-import { useAppSelector } from "hooks";
+import { useAppDispatch, useAppSelector } from "hooks";
 import { ReactElement, useState } from "react";
-import { shopsData } from "store/slices/shops";
+import { getTeams, shopsData } from "store/slices/shops";
 import ModalUI from "..";
 
 interface Props {
@@ -25,6 +25,7 @@ interface Props {
 
 const InviteTeamModal = ({ isOpen, onClose, roles }: Props): ReactElement => {
   const { singleShop } = useAppSelector(shopsData);
+  const dispatch = useAppDispatch();
   const [isRequest, setIsRequest] = useState(false);
   const [formValues, setFormValues] = useState({
     user_phone_number: "",
@@ -40,7 +41,7 @@ const InviteTeamModal = ({ isOpen, onClose, roles }: Props): ReactElement => {
         description: "Please assign a role to user",
         status: "info",
         duration: 3000,
-        position: "top",
+        position: "top-right",
       });
     }
     try {
@@ -55,11 +56,12 @@ const InviteTeamModal = ({ isOpen, onClose, roles }: Props): ReactElement => {
       if (res.status === 200) {
         setIsRequest(false);
         onClose();
+        dispatch<any>(getTeams(singleShop.selectedShop.shop_id));
         return toast({
           description: "Invite has been sent to user",
           status: "success",
           duration: 3000,
-          position: "top",
+          position: "top-right",
         });
       }
       return res;
@@ -124,7 +126,7 @@ const InviteTeamModal = ({ isOpen, onClose, roles }: Props): ReactElement => {
             >
               <option>Select role</option>
               {roles.length > 0 &&
-                roles.map((role) => (
+                roles.filter(r => r.name !== "shopOwner").map((role) => (
                     <option key={role.id} value={role.name}>
                       {role.name.charAt(0).toUpperCase() + role.name.slice(1)}
                     </option>

@@ -35,7 +35,7 @@ const Invoice: NextPage = () => {
     data: any;
     loaded: boolean;
   }>({ data: null, loaded: false });
-  const [pay, setPay] = useState(invoiceData.data?.amount)
+  const [pay, setPay] = useState("")
   const [paymentMethod, setPaymentMethod] = useState("");
   const router = useRouter();
   const toast = useToast();
@@ -45,6 +45,7 @@ const Invoice: NextPage = () => {
     AuthAxios.get(`oga/order/show/${router.query.orderNumber}?shop_id=${id}`)
       .then((res) => {
         setInvoiceData({ data: res.data.data, loaded: true });
+        setPay(res.data.data.amount_to_pay)
       })
       .catch((e) => e);
   };
@@ -93,7 +94,7 @@ const Invoice: NextPage = () => {
     try {
       setRequest(true);
       const res = await AuthAxios.post(
-        `oga/order/init-order-payment?order_number=${invoiceData.data.order_number
+        `/oga/order/init-order-payment?order_number=${invoiceData.data.order_number
         }&payment_type=${paymentType}&amount=${["cash", "pos", "bank-transfer"].includes(paymentType) ? pay : "0"
         }`
       );
@@ -111,6 +112,10 @@ const Invoice: NextPage = () => {
       }
       return res;
     } catch (e) {
+      const { code, message } = e.response.data
+      if(code === 422 && message.includes("already initiated")) {
+        return completePayment()
+      }
       setRequest(false);
       toast({
         description: "Payment unsuccessful",
@@ -119,6 +124,33 @@ const Invoice: NextPage = () => {
         position: "top-right",
       });
       return e;
+    }
+  };
+
+  const refundPaid = async () => {
+    try {
+      setRequest(true);
+      const res = await AuthAxios.post(`/oga/order/refund?shop_id=${invoiceData.data.shop.id}&order_id=${invoiceData.data.id}`)
+      if(res.status === 200) {
+        setRequest(false);
+        getSingleOrder(invoiceData.data.shop.id)
+        toast({
+          description: "Refund successful",
+          status: "success",
+          duration: 2000,
+          position: "top-right",
+        });
+      }
+      return res;
+    } catch (error) {
+      setRequest(false);
+      toast({
+        description: "Refund unsuccessful",
+        status: "error",
+        duration: 2000,
+        position: "top-right",
+      });
+      return error
     }
   }
 
@@ -135,8 +167,8 @@ const Invoice: NextPage = () => {
 
   useEffect(() => {
     if (shopSettings) {
-      const a = shopSettings?.find(n => n.key === "receipt_note")
-      setReceiptNote({ status: true, value: a.value })
+      const a = shopSettings?.find((n: { key: string; }) => n.key === "receipt_note")
+      setReceiptNote({ status: true, value: a.value ? a.value : "" })
     }
   }, [shopSettings]);
 
@@ -334,7 +366,7 @@ const Invoice: NextPage = () => {
                     {receiptNote.status &&
                       <>
                         <chakra.p fontSize="0.75rem" fontWeight="500" mt="20px">Notes:</chakra.p>
-                        <chakra.p color="#9DA1AA" fontSize="0.75rem">
+                        <chakra.p fontSize="0.75rem">
                           {receiptNote.value}
                         </chakra.p>
                       </>
@@ -425,7 +457,7 @@ const Invoice: NextPage = () => {
                     {receiptNote.status &&
                       <>
                         <chakra.p fontSize="0.75rem" fontWeight="500" mt="40px">Notes:</chakra.p>
-                        <chakra.p color="#9DA1AA">
+                        <chakra.p>
                           {receiptNote.value}
                         </chakra.p>
                       </>
@@ -437,10 +469,12 @@ const Invoice: NextPage = () => {
               <PaymentModal
                 paymentMethod={paymentMethod}
                 setPaymentMethod={setPaymentMethod}
-                amount={invoiceData.data?.remaining_amount || 0}
-                setAmount={e => setPay(e.target.value)}
+                orderAmount={invoiceData.data?.remaining_amount || 0}
+                setOrderAmount={e => setPay(e.target.value)}
                 status={invoiceData.data.status}
                 pay={makePayment}
+                refund={refundPaid}
+                payments={invoiceData.data?.payments}
                 request={request}
                 disabled={!paymentMethod || request}
               />

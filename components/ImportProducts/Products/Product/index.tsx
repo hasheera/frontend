@@ -19,13 +19,15 @@ interface Props {
       name: string;
       photo: string;
     };
-  };
+  } | any;
+  productName?: string;
 }
 
 const Product: FC<Props> = ({ shop_product }) => {
   const { singleShop } = useAppSelector(shopsData)
   const toast = useToast();
   const addProductModal = useDisclosure();
+  
 
   const addShopProduct = async (id: string | number, prodId: string | number) => {
     try {
@@ -47,14 +49,14 @@ const Product: FC<Props> = ({ shop_product }) => {
             description: res.data.data.message,
             status: "info",
             duration: 3000,
-            position: "top",
+            position: "top-right",
           });
         } else {
           toast({
             description: "Product added to shop successfully",
             status: "success",
             duration: 3000,
-            position: "top",
+            position: "top-right",
           });
         }
       }
@@ -94,7 +96,7 @@ const Product: FC<Props> = ({ shop_product }) => {
               fontWeight="500"
               color="#19191D"
             >
-              {`${shop_product?.product?.name} ${shop_product?.product_unit?.name}`}
+              {`${shop_product?.product?.name} - ${shop_product?.product_unit?.name}`}
             </chakra.p>
           </chakra.div>
         </chakra.div>

@@ -79,7 +79,7 @@ const UpdateProduct = (props: ModalProps) => {
         description: "Cannot remove more than available stock",
         status: "error",
         duration: 2000,
-        position: "top",
+        position: "top-right",
       });
     }
     setRequest(true);
@@ -93,7 +93,7 @@ const UpdateProduct = (props: ModalProps) => {
             description: "Product stock updated",
             status: "success",
             duration: 3000,
-            position: "top",
+            position: "top-right",
           });
           dispatch<any>(getSingleShop(singleShop.selectedShop.shop_id));
           return fetchProduct(singleProduct.id);
@@ -127,7 +127,7 @@ const UpdateProduct = (props: ModalProps) => {
             description: "Product updated successfully",
             status: "success",
             duration: 3000,
-            position: "top",
+            position: "top-right",
           });
           setTimeout(() => {
             setFormValues({
@@ -267,12 +267,12 @@ const UpdateProduct = (props: ModalProps) => {
             </chakra.div>
             <chakra.div
               display="flex"
-              justifyContent="space-around"
               alignItems="center"
+              gap="20px"
             >
               <chakra.button
                 onClick={() => updateStock(1)}
-                w="40%"
+                w="50%"
                 disabled={request}
                 bg="#2153CC"
                 color="white"
@@ -294,7 +294,7 @@ const UpdateProduct = (props: ModalProps) => {
 
               <chakra.button
                 onClick={() => updateStock(0)}
-                w="40%"
+                w="50%"
                 disabled={request}
                 bg="#2153CC"
                 color="white"
@@ -332,7 +332,7 @@ const UpdateProduct = (props: ModalProps) => {
               gridGap="16px"
               mt="8px"
             >
-              <chakra.div display="flex" flexDir="column">
+              <chakra.div display="flex" flexDir="column" w="full">
                 <chakra.label fontSize="0.75rem" fontWeight="500">
                   Product cost price
                 </chakra.label>
@@ -353,7 +353,7 @@ const UpdateProduct = (props: ModalProps) => {
                   _focus={{ border: "1px solid #1739E8", outline: "none" }}
                   value={formValues.cost_price}
                   onChange={(e) => {
-                    if (Number(e.target.value) > singleProduct.sell_price) {
+                    if (Number(e.target.value) > formValues.sell_price) {
                       return setFormValues({
                         ...formValues,
                         cost_price: Number(singleProduct.sell_price)
@@ -370,7 +370,8 @@ const UpdateProduct = (props: ModalProps) => {
 
                 />
               </chakra.div>
-              <chakra.div display="flex" flexDir="column">
+
+              <chakra.div display="flex" flexDir="column" w="full">
                 <chakra.label fontSize="0.75rem" fontWeight="500">
                   Product selling price
                 </chakra.label>
@@ -401,7 +402,8 @@ const UpdateProduct = (props: ModalProps) => {
                   }
                 />
               </chakra.div>
-              <chakra.div display="flex" flexDir="column">
+
+              <chakra.div display="flex" flexDir="column" w="full">
                 <chakra.label fontSize="0.75rem" fontWeight="500">
                   Set Expiry date -Optional:{" "}
                   {singleProduct.expired_date !== null &&
@@ -426,7 +428,8 @@ const UpdateProduct = (props: ModalProps) => {
                   }
                 />
               </chakra.div>
-              <chakra.div display="flex" flexDir="column">
+
+              <chakra.div display="flex" flexDir="column" w="full">
                 <chakra.label fontSize="0.75rem" fontWeight="500">
                   Restock Alert level: {singleProduct.restock_alert}
                 </chakra.label>
@@ -452,9 +455,10 @@ const UpdateProduct = (props: ModalProps) => {
                 </NumberInput>
               </chakra.div>
             </chakra.div>
+
             <chakra.div display="flex" justifyContent="center">
               <chakra.button
-                w="80%"
+                w="full"
                 disabled={request}
                 bg="#2153CC"
                 color="white"

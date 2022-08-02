@@ -111,7 +111,7 @@ const AddShopProduct = (props: ModalProps) => {
             description: res.data.data.message,
             status: "info",
             duration: 3000,
-            position: "top",
+            position: "top-right",
           });
           dispatch<any>(getSingleShop(singleShop.selectedShop.shop_id));
         } else {
@@ -119,7 +119,7 @@ const AddShopProduct = (props: ModalProps) => {
             description: "Product added to shop successfully",
             status: "success",
             duration: 3000,
-            position: "top",
+            position: "top-right",
           });
           dispatch<any>(getSingleShop(singleShop.selectedShop.shop_id));
         }
@@ -150,7 +150,7 @@ const AddShopProduct = (props: ModalProps) => {
             }`,
           status: "info",
           duration: 2500,
-          position: "top",
+          position: "top-right",
         });
       }
     }
@@ -174,7 +174,7 @@ const AddShopProduct = (props: ModalProps) => {
           description: "Product submited for admin approval",
           status: "success",
           duration: 3000,
-          position: "top",
+          position: "top-right",
         });
 
         setFormValues({
@@ -195,7 +195,7 @@ const AddShopProduct = (props: ModalProps) => {
         description: "Sorry, something went wrong. Contact your administrator",
         status: "error",
         duration: 5000,
-        position: "top",
+        position: "top-right",
       });
       return err;
     }
