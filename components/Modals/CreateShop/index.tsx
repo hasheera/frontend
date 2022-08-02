@@ -19,6 +19,8 @@ import {
 import { CheckIcon, PrevIcon } from "public/assets";
 import { getCities, getStates } from "@utils/queries";
 import AuthAxios from "@utils/api/authAxios";
+import { getVendorShops } from "store/slices/shops";
+import { useAppDispatch } from "hooks";
 import ModalUI from "..";
 
 type Props = {
@@ -193,7 +195,7 @@ const CityOptions = ({ stateId }: { stateId: number | string }) => {
 };
 
 const CreateShop: FC<Props> = ({ isOpen, onClose }) => {
-  // const { getAllVendorShops } = useContext(ShopContext);
+  const dispatch = useAppDispatch();
   const toast = useToast();
   const [isRequest, setIsRequest] = useState<boolean>(false);
   const [createAdress, setCreateAdress] = useState<boolean>(false);
@@ -266,22 +268,30 @@ const CreateShop: FC<Props> = ({ isOpen, onClose }) => {
   const createShop = async (shop) => {
     const formData = new FormData();
 
-    // for (let key in shop) {
-    //   formData.append(key, shop[key]);
-    // }
-    const data = Object.entries(shop)
-    data.forEach((e: any) => formData.append(e, shop[e]));
-
-
+    if(shop.logo.size > 800000) {
+      return toast({
+        position: "top-right",
+        description: "Logo must be less than 800kb",
+        status: "info",
+        duration: 3000,
+      });
+    }
+    const data = Object.keys(shop);
+    
+    data.forEach((e: any) => {
+      if(e !== "logo") {
+        formData.append(e, shop[e]);
+      }
+    });
     formData.append("logo", shop.logo);
-
+    
     try {
       setIsRequest(true);
       const newShop = await AuthAxios.post("/oga/shop/create", formData);
 
       if (newShop.status === 200) {
         setIsRequest(false);
-        // getAllVendorShops();
+        dispatch<any>(getVendorShops())
         toast({
           description: "Shop created successfully",
           status: "success",
@@ -542,7 +552,7 @@ const CreateShop: FC<Props> = ({ isOpen, onClose }) => {
                     </Box>
                   </chakra.div>
                 </FormLabel>
-                <Input
+                <chakra.input
                   name="logo"
                   id="logo"
                   type="file"
@@ -557,6 +567,7 @@ const CreateShop: FC<Props> = ({ isOpen, onClose }) => {
                     });
                   }}
                   accept=".png,.jpg,.jpeg"
+                  size={800000}
                 />
               </FormControl>
             </VStack>

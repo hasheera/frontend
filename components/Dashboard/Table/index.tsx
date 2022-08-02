@@ -76,7 +76,7 @@ const DashboardTable = () => {
               <ArrowUpDownIcon />
             </chakra.div>
 
-            <Link href={`/transactions/${router.query.singleShop}`} passHref>
+            <Link href={`/sales/${router.query.singleShop}`} passHref>
               <chakra.a textDecor="underline">View all</chakra.a>
             </Link>
           </chakra.div>

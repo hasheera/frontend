@@ -98,11 +98,11 @@ const VendorSideBar = () => {
   }, [router]);
 
   useEffect(() => {
-    dispatch<any>(getDashboardData({ id: singleShop.selectedShop?.shop_id }));
-    dispatch<any>(getOpenCart(singleShop.selectedShop?.shop_id));
-    dispatch<any>(getTopSellingData(singleShop.selectedShop?.shop_id));
-    dispatch<any>(getTransactionSales({ id: singleShop.selectedShop?.shop_id }));
-    dispatch<any>(getTransactionsExpenses(singleShop.selectedShop?.shop_id));
+    // dispatch<any>(getDashboardData({ id: singleShop.selectedShop?.shop_id }));
+    // dispatch<any>(getOpenCart(singleShop.selectedShop?.shop_id));
+    // dispatch<any>(getTopSellingData(singleShop.selectedShop?.shop_id));
+    // dispatch<any>(getTransactionSales({ id: singleShop.selectedShop?.shop_id }));
+    // dispatch<any>(getTransactionsExpenses(singleShop.selectedShop?.shop_id));
     // if(singleShop.selectedShop.shop_id !== ) {
     // }
   }, [singleShop.selectedShop])
@@ -295,7 +295,7 @@ const VendorSideBar = () => {
         <Link
           href={
             singleShop.loaded
-              ? `/transactions/${singleShop.selectedShop?.shop?.name
+              ? `/sales/${singleShop.selectedShop?.shop?.name
                 .split(" ")
                 .join("-")
                 .toLowerCase()}-${singleShop.selectedShop?.shop_id}`

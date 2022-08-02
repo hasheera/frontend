@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import VendorDashBoardLayout from "@components/Layout/VendorDashBoardLayout";
 import {
   chakra,
@@ -26,6 +26,7 @@ import Activity from "@components/Transactions/Activity";
 import { useAppDispatch, useAppSelector } from "hooks";
 import { getTransactionSales } from "store/slices/carts";
 import { shopsData } from "store/slices/shops";
+import { useRouter } from "next/router";
 
 
 const TransactionsPage: NextPage = () => {
@@ -35,6 +36,21 @@ const TransactionsPage: NextPage = () => {
   const addNewExpense = useDisclosure();
   const [sales, setSales] = useState(false);
   const [transaction, setTransaction] = useState("sales");
+  const router = useRouter();
+  const { transactions }: any = router.query;
+
+  useEffect(() => {
+    if(!router.query.transactions || !["sales", "expenses", "stock-movement", "activity"].includes(transactions)) {
+      router.replace({
+        ...router,
+        query: {
+          ...router.query,
+          transactions: "sales"
+        }
+      })
+    }
+  }, [router]);
+  
 
   return (
     <VendorDashBoardLayout>
@@ -51,7 +67,7 @@ const TransactionsPage: NextPage = () => {
           gap="20px"
           m="20px 0"
         >
-          {transaction === "sales" && (
+          {transactions === "sales" && (
             <chakra.div>
               <InputGroup w={{ base: "full", sm: "200px", xl: "411.52px" }}>
                 <Input
@@ -71,7 +87,7 @@ const TransactionsPage: NextPage = () => {
               </InputGroup>
             </chakra.div>
           )}
-          {transaction === "expenses" && (
+          {transactions === "expenses" && (
             <chakra.div display="flex" alignItems="center">
               <InputGroup w={{ base: "full", sm: "200px", xl: "411.52px" }}>
                 <Input
@@ -599,11 +615,11 @@ const TransactionsPage: NextPage = () => {
             </chakra.div>
           )}
 
-          {transaction === "stock movement" && (
+          {transactions === "stock-movement" && (
             <chakra.div />
           )}
 
-          {transaction === "activity" && (
+          {transactions === "activity" && (
             <chakra.div />
             // <chakra.div>
             //   <InputGroup w={{ base: "200px", xl: "411.52px" }}>
@@ -628,23 +644,23 @@ const TransactionsPage: NextPage = () => {
             {({ isOpen }) => (
               <>
                 <MenuButton
-                  bg={transaction ? "#2153CC" : "white"}
+                  bg={transactions ? "#2153CC" : "white"}
                   h="36px"
                   p="10px"
                   borderRadius="4px"
                   border="none"
-                  color={transaction ? "white" : "#242533"}
+                  color={transactions ? "white" : "#242533"}
                   fontSize="0.875rem"
                   fontWeight="500"
                   css={{
                     span: {
-                      color: transaction || isOpen ? "white" : "#A3AED0"
+                      color: transactions || isOpen ? "white" : "#A3AED0"
                     },
                   }}
                 >
                   <chakra.span display="flex" alignItems="center" justifyContent="space-between">
                     <chakra.span mr="14px" textTransform="capitalize">
-                      {transaction || "All Products"}
+                      {transactions.split("-").join(" ")}
                     </chakra.span>
                     <chakra.span
                       transform={isOpen ? "rotate(180deg)" : "rotate(0deg)"}
@@ -652,7 +668,7 @@ const TransactionsPage: NextPage = () => {
                       <DropDownIcon
                         width={10}
                         height={6}
-                        color={transaction ? "white" : "#242533"}
+                        color={transactions ? "white" : "#242533"}
                       />
                     </chakra.span>
                   </chakra.span>
@@ -666,7 +682,7 @@ const TransactionsPage: NextPage = () => {
                   w="fit-content"
                 >
                   <MenuItem
-                    onClick={() => setTransaction("sales")}
+                    onClick={() => router.push({ ...router, query: { ...router.query, transactions: "sales" } })}
                     p="10px"
                     fontSize="0.75rem"
                     color="#242533"
@@ -679,7 +695,7 @@ const TransactionsPage: NextPage = () => {
                   </MenuItem>
                   <MenuItem
                     textTransform="capitalize"
-                    onClick={() => setTransaction("expenses")}
+                    onClick={() => router.push({ ...router, query: { ...router.query, transactions: "expenses" } })}
                     p="10px"
                     fontSize="0.75rem"
                     color="#242533"
@@ -692,7 +708,7 @@ const TransactionsPage: NextPage = () => {
                   </MenuItem>
                   <MenuItem
                     textTransform="capitalize"
-                    onClick={() => setTransaction("stock movement")}
+                    onClick={() => router.push({ ...router, query: { ...router.query, transactions: "stock-movement" } })}
                     p="10px"
                     fontSize="0.75rem"
                     color="#242533"
@@ -705,7 +721,7 @@ const TransactionsPage: NextPage = () => {
                   </MenuItem>
                   <MenuItem
                     textTransform="capitalize"
-                    onClick={() => setTransaction("activity")}
+                    onClick={() => router.push({ ...router, query: { ...router.query, transactions: "activity" } })}
                     p="10px"
                     fontSize="0.75rem"
                     color="#242533"
@@ -722,10 +738,10 @@ const TransactionsPage: NextPage = () => {
           </Menu>
         </chakra.div>
 
-        {transaction === "sales" && <Sales />}
-        {transaction === "expenses" && <Expenses />}
-        {transaction === "stock movement" && <StockMovement />}
-        {transaction === "activity" && <Activity />}
+        {router.query.transactions === "sales" && <Sales />}
+        {router.query.transactions === "expenses" && <Expenses />}
+        {router.query.transactions === "stock-movement" && <StockMovement />}
+        {router.query.transactions === "activity" && <Activity />}
       </chakra.div>
       <AddNewExpense isOpen={addNewExpense.isOpen} onClose={addNewExpense.onClose} />
     </VendorDashBoardLayout>

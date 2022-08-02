@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import { chakra, useDisclosure } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   CartCircularIcon,
   EditCircularIcon,
@@ -16,9 +16,10 @@ import CartItem from "@components/Modals/CartItem";
 import Transfer from "@components/Modals/TransferProduct";
 import CreateShopProductImage from "@components/Modals/CreateShopProductImage";
 import DeleteProductDialog from "@components/AlertDialog/DeleteProduct";
-import { setSearchProducts, setSingleProduct, shopsData } from "store/slices/shops";
+import { getSingleShop, setSearchProducts, setSingleProduct, shopsData } from "store/slices/shops";
 import { useAppDispatch, useAppSelector } from "hooks";
 import AuthAxios from "@utils/api/authAxios";
+import { useRouter } from "next/router";
 import { formatNum, formatPrice } from "../../utils/helpers";
 
 const ProductGridView = ({ shopProducts }) => {
@@ -30,6 +31,7 @@ const ProductGridView = ({ shopProducts }) => {
   const transferModal = useDisclosure();
   const createPhotoModal = useDisclosure();
   const deleteProductDialog = useDisclosure();
+  const router = useRouter();
 
   const handleProduct = (product, type: string) => {
     dispatch(setSingleProduct(product));
@@ -77,7 +79,7 @@ const ProductGridView = ({ shopProducts }) => {
     return "pointer"
   }
 
-  const nextPage = (url: string) => {
+  const goToPage = (url: string) => {
     AuthAxios.get(`${url}&shop_id=${singleShop.selectedShop.shop_id}`)
       .then((res) => {
         dispatch(setSearchProducts({
@@ -88,16 +90,22 @@ const ProductGridView = ({ shopProducts }) => {
       .catch((e) => e);
   };
 
-  const prevPage = (url) => {
-    AuthAxios.get(`${url}&shop_id=${singleShop.selectedShop.shop_id}`)
-      .then((res) => {
-        dispatch(setSearchProducts({
-          ...singleShop,
-          shopData: { ...res.data.data }
-        }));
+  useEffect(() => {
+    if(!router.query.page) {
+      router.replace({
+        ...router,
+        query: {
+          ...router.query,
+          page: 1
+        }
       })
-      .catch((e) => e);
-  };
+    }
+
+    if(router.query.page && Number(router.query.page) !== shopProducts?.current_page) {
+      dispatch<any>(getSingleShop(singleShop.selectedShop.id));
+    }
+  }, [router])
+  
 
   return (
     <>
@@ -237,7 +245,7 @@ const ProductGridView = ({ shopProducts }) => {
               )
             )}
           </chakra.div>
-          {(shopProducts?.next_page_url || shopProducts?.prev_page_url) && <chakra.div
+          <chakra.div
             h="41.68px"
             w="100%"
             display="flex"
@@ -245,19 +253,9 @@ const ProductGridView = ({ shopProducts }) => {
             justifyContent="space-between"
             bg="white"
           >
-            <chakra.p
-              color="#1E2134"
-              fontWeight="400"
-              fontSize="10.42px"
-              letterSpacing="0.2605px"
-              px="10px"
-            >
-              {`Showing ${shopProducts?.data.length} products`}
-            </chakra.p>
-
             <chakra.div display="flex" alignItems="center">
-              <chakra.p fontSize="12px" fontWeight="500" color="#506176">
-                Rows per page:
+              <chakra.p fontSize="12px" fontWeight="500" color="#506176" ml="10px">
+                Showing:
               </chakra.p>
               <chakra.p
                 color="#1E2134"
@@ -266,31 +264,60 @@ const ProductGridView = ({ shopProducts }) => {
                 letterSpacing="0.2605px"
                 px="10px"
               >
-                15
+                {`${shopProducts?.from} - ${shopProducts?.to} of ${shopProducts?.total}`}
               </chakra.p>
-              <chakra.p color="" fontWeight="500" fontSize="12px" px="20px">
-                {/* 1-5 of 13 */}
-              </chakra.p>
+            </chakra.div>
+
+            <chakra.div display="flex" alignItems="center" justifyContent="space-between">
               <chakra.button
-                disabled={shopProducts?.prev_page_url === null}
+                disabled={!shopProducts?.first_page_url}
                 cursor="pointer"
                 _disabled={{ cursor: "not-allowed" }}
-                px="20px"
-                onClick={() => prevPage(shopProducts?.prev_page_url)}
+                px="10px"
+                fontSize="0.75rem"
+                onClick={() => router.push({ ...router, query: { ...router.query, page: 1 } })}
+              >
+                First page
+              </chakra.button>
+              <chakra.button
+                disabled={!shopProducts?.prev_page_url}
+                cursor="pointer"
+                _disabled={{ cursor: "not-allowed" }}
+                px="10px"
+                onClick={() => router.push({ ...router, query: { ...router.query, page: shopProducts.current_page - 1 } })}
               >
                 <PagiPrev />
               </chakra.button>
+              <chakra.p
+                color="#1E2134"
+                fontWeight="600"
+                fontSize="12px"
+                letterSpacing="0.2605px"
+                px="10px"
+              >
+                {shopProducts?.current_page}
+              </chakra.p>
               <chakra.button
-                disabled={shopProducts?.next_page_url === null}
+                disabled={!shopProducts?.next_page_url}
                 cursor="pointer"
                 _disabled={{ cursor: "not-allowed" }}
-                px="20px"
-                onClick={() => nextPage(shopProducts?.next_page_url)}
+                px="10px"
+                onClick={() => router.push({ ...router, query: { ...router.query, page: shopProducts.current_page + 1 } })}
               >
                 <PagiNext />
               </chakra.button>
+              <chakra.button
+                disabled={!shopProducts?.last_page_url}
+                cursor="pointer"
+                _disabled={{ cursor: "not-allowed" }}
+                px="10px"
+                fontSize="0.75rem"
+                onClick={() => router.push({ ...router, query: { ...router.query, page: shopProducts?.last_page } })}
+              >
+                Last page
+              </chakra.button>
             </chakra.div>
-          </chakra.div>}
+          </chakra.div>
         </>
       ) : (
         <chakra.div textAlign="center" mt="20px">No results were returned</chakra.div>

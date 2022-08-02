@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "hooks";
 import { shopsData } from "store/slices/shops";
 import AuthAxios from "@utils/api/authAxios";
 import { getTransactionsExpenses } from "store/slices/carts";
+import { useRouter } from "next/router";
 import ModalUI from "..";
 
 type Props = {
@@ -30,6 +31,9 @@ const AddNewExpense = ({ isOpen, onClose }: Props) => {
   });
 
   const toast = useToast();
+  const router = useRouter();
+  const { page }: any = router.query
+  
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -67,7 +71,7 @@ const AddNewExpense = ({ isOpen, onClose }: Props) => {
       );
 
       if (res.status === 200) {
-        dispatch<any>(getTransactionsExpenses(singleShop.selectedShop.shop_id));
+        dispatch<any>(getTransactionsExpenses({ id: singleShop.selectedShop.shop_id, page }));
         setIsRequest(false);
         onClose();
         setForm({
