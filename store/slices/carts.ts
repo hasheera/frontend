@@ -120,11 +120,11 @@ export const initialState: cartsState = {
   carts: null,
   transactionSales: {
     loaded: false,
-    data: null,
+    data: null
   },
   transactionExpenses: {
     loaded: false,
-    data: null,
+    data: null
   },
 };
 
