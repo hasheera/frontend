@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { chakra } from '@chakra-ui/react'
 
 type Props = {

@@ -1,18 +1,10 @@
 import { chakra } from "@chakra-ui/react";
 import Head from "next/head";
-import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
 
 
+// eslint-disable-next-line arrow-body-style
 const Navbar = () => {
-  const router = useRouter();
-  
-  useEffect(() => {
-    console.log(router)
-  }, [router])
-  
 
   return (
     <>
@@ -38,11 +30,11 @@ const Navbar = () => {
           h="full"
           maxW="151.2rem"
           mx="auto"
-          px={{ base: "2rem", md: "4rem", xl: "12rem" }}
+          px={{ xl: "12rem" }}
         >
           <Link href="/" passHref>
             <chakra.a href="/">
-              <Image src="/assets/image/logo.svg" width={501} height={30} />
+              <chakra.img src="/assets/image/logo.svg" w={{ base: "20rem" }} h={{ base: "4rem" }} />
             </chakra.a>
           </Link>
 
@@ -92,6 +84,7 @@ const Navbar = () => {
 
             <Link href="register/patient" passHref>
               <chakra.a
+                display={{ base: "none", lg: "inline" }}
                 fontWeight="700"
                 fontSize="1.4rem"
                 lineHeight="2.1rem"
